@@ -10,9 +10,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="css/styles.css">
+    <!-- slick -->
+    <link href="js/slick-1.8.1/slick/slick-theme.css" rel="stylesheet" type="text/css">
+    <link href="js/slick-1.8.1/slick/slick.css" rel="stylesheet" type="text/css">
+
 
     <!-- 静的html読み込みライブラリ -->
     <script type="text/javascript" src="js/include.js"></script>
+
 
     <title>Gourmet</title>
 </head>
@@ -23,6 +28,699 @@
     <script type="text/javascript">
         include("header.html");
     </script>
+
+
+    <!--*** contens ***-->
+    <div class="container-fluid main-content">
+        <div class="row">
+
+            <!-- form -->
+            <div class="col-md-3">
+                <div class="card search">
+                    <div class="card-header">
+                        検索条件
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <!--大エリア-->
+                            <div class="form-group">
+                                <label for="large-area">大エリア</label>
+                                <select class="form-control" id="large-area">
+                                    <option selected disabled value="">選択...</option>
+                                    <option>東京</option>
+                                    <option>神奈川</option>
+                                    <option>埼玉</option>
+                                    <option>千葉</option>
+                                    <option>茨城</option>
+                                    <option>...</option>
+                                </select>
+                            </div>
+                            <!--/大エリア-->
+
+                            <!--小エリア-->
+                            <div class="form-group">
+                                <label for="small-area">小エリア</label>
+                                <select class="form-control" id="small-area">
+                                    <option selected disabled value="">選択...</option>
+                                    <option>銀座・有楽町・新橋・築地・月島</option>
+                                    <option>水道橋・飯田橋・神楽坂</option>
+                                    <option>お台場</option>
+                                    <option>東京・大手町・日本橋・人形町</option>
+                                    <option>四ツ谷・麹町・市ヶ谷・九段下</option>
+                                    <option>...</option>
+                                </select>
+                            </div>
+                            <!--/小エリア-->
+
+                            <!--ジャンル-->
+                            <div class="form-group">
+                                <label for="genre">ジャンル</label>
+                                <select class="form-control" id="genre">
+                                    <option value=""></option>
+                                    <option value="G001">居酒屋</option>
+                                    <option value="G002">ダイニングバー・バル</option>
+                                    <option value="G003">創作料理</option>
+                                    <option value="G004">和食</option>
+                                    <option value="G005">洋食</option>
+                                    <option value="G006">イタリアン・フレンチ</option>
+                                    <option value="G007">中華</option>
+                                    <option value="G008">焼肉・ホルモン</option>
+                                    <option value="G017">韓国料理</option>
+                                    <option value="G009">アジア・エスニック料理</option>
+                                    <option value="G010">各国料理</option>
+                                    <option value="G011">カラオケ・パーティ</option>
+                                    <option value="G012">バー・カクテル</option>
+                                    <option value="G013">ラーメン</option>
+                                    <option value="G016">お好み焼き・もんじゃ</option>
+                                    <option value="G014">カフェ・スイーツ</option>
+                                    <option value="G015">その他グルメ</option>
+                                </select>
+                            </div>
+                            <!--/ジャンル-->
+
+                            <!--予算-->
+                            <div class="form-group">
+                                <label for="budget">予算</label>
+                                <select class="form-control" id="budget">
+                                    <option value=""></option>
+                                    <option value="B009">～500円</option>
+                                    <option value="B010">501～1000円</option>
+                                    <option value="B011">1001～1500円</option>
+                                    <option value="B001">1501～2000円</option>
+                                    <option value="B002">2001～3000円</option>
+                                    <option value="B003">3001～4000円</option>
+                                    <option value="B008">4001～5000円</option>
+                                    <option value="B004">5001～7000円</option>
+                                    <option value="B005">7001～10000円</option>
+                                    <option value="B006">10001～15000円</option>
+                                    <option value="B012">15001～20000円</option>
+                                    <option value="B013">20001～30000円</option>
+                                    <option value="B014">30001円～</option>
+                                </select>
+                            </div>
+                            <!--/予算-->
+
+                            <!-- 並び順 -->
+                            <div class="form-group">
+                                <label for="order">並び順</label>
+                                <select class="form-control" id="order">
+                                    <option value="1">店名かな順</option>
+                                    <option value="2">ジャンル順</option>
+                                    <option value="3" selected="">エリア順</option>
+                                    <option value="4">おススメ順</option>
+                                </select>
+                            </div>
+                            <!-- 並び順 -->
+
+                            <!-- 検索 -->
+                            <div class="form-group row pt-3">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary btn-block">検索</button>
+                                </div>
+                            </div>
+                            <!--/検索-->
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /form -->
+
+
+
+            <!-- main-contents -->
+            <div class="col-md-9 content-area">
+                <div class="container-fluid">
+                    <div class="row py-3">
+                        <div class="col-md-12">
+                            <h3 class="mb-4">最近気になったお店</h3>
+                            <ul class="slider">
+                                <li class="px-2">
+                                    <div class="card">
+                                        <img class="card-img-top" src="img/restaurant_4.jpg" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">A shop</h5>
+                                            <div class="card-text">hogehoge..</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-2">
+                                    <div class="card">
+                                        <img class="card-img-top" src="img/restaurant_2.jpg" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">B shop</h5>
+                                            <div class="card-text">foofoo...</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-2">
+                                    <div class="card">
+                                        <img class="card-img-top" src="img/restaurant_3.jpg" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">C shop</h5>
+                                            <div class="card-text">varvar...</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-2">
+                                    <div class="card">
+                                        <img class="card-img-top" src="img/restaurant_4.jpg" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">D shop</h5>
+                                            <div class="card-text">wowow...</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-2">
+                                    <div class="card">
+                                        <img class="card-img-top" src="img/pizza.jpg" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">E shop</h5>
+                                            <div class="card-text">yapyap...</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-2">
+                                    <div class="card">
+                                        <img class="card-img-top" src="img/restaurant_1.jpg" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <div class="card-text">Card text...</div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="result">
+                        <div class="row py-3">
+                            <div class="col-md-12">
+                                <h3>検索結果</h3>
+                                <p class="text-right shop-number">（４／１０）件表示中</p>
+                            </div>
+                        </div>
+
+                        <!-- ** table-item ** -->
+                        <div class="d-md-flex align-items-md-startflex-nowrap shop-header">
+                            <p class="shop_logo">
+                                <img src="https://imgfp.hotp.jp/IMGH/08/60/P035000860/P035000860_69.jpg" alt="">
+                            </p>
+                            <div class="flex-md-fill shop-summary ml-4">
+                                <p class="d-md-inline-block shop-category">居酒屋</p>
+                                <p class="d-md-inline-block shop-catch">大宮駅2分！飲み放題付コース2980円～♪</p>
+                                <p class="shop-name">菜の門 NaNoMoN 大宮店</p>
+                            </div>
+                        </div>
+
+
+                        <div class="d-md-flex align-items-md-startflex-nowrap justify-content-md-between shop-body">
+                            <div class="shop-main-img">
+                                <p class="mb-md-0">
+                                    <a href="居酒屋" target="_blank" rel="noopener noreferrer" class="d-block">
+                                        <img src="https://imgfp.hotp.jp/IMGH/26/91/P036022691/P036022691_238.jpg"
+                                            alt="VeSS ベス 大宮店">
+                                        <br>
+                                        <span class="mt-md-2 m-blank d-md-inline-block">店舗ページを見る</span>
+                                    </a>
+                                </p>
+                            </div>
+                            <table class="shop-table ml-md-5">
+                                <tbody>
+                                    <tr>
+                                        <th>住所</th>
+                                        <td>埼玉県さいたま市大宮区桜木町１-8-3 サンユービル9F<br>
+                                            <a href="https://maps.google.co.jp/maps?q=%E8%8F%9C%E3%81%AE%E9%96%80%20NaNoMoN%20%E5%A4%A7%E5%AE%AE%E5%BA%97"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-txt-hover p-map-link">Google Mapで見る</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>アクセス</th>
+                                        <td>★JR大宮駅西口 徒歩2分</td>
+                                    </tr>
+                                    <tr>
+                                        <th>営業時間</th>
+                                        <td>月～金、祝前日: 16:30～23:30 （料理L.O. 22:30 ドリンクL.O. 23:00）土、日、祝日: 13:00～23:30
+                                            （料理L.O.
+                                            22:30 ドリンクL.O. 23:00）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ランチ</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クレジット<br class="nopc">カード</th>
+                                        <td>利用可</td>
+                                    </tr>
+                                    <tr>
+                                        <th>禁煙・喫煙</th>
+                                        <td>禁煙席なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Wi-Fi</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>駐車場</th>
+                                        <td>なし ：お近くのコインパーキングをご利用ください。お酒を飲まれる際はお車でのお越しはご遠慮ください。</td>
+                                    </tr>
+                                    <tr>
+                                        <th>平均予算</th>
+                                        <td>2800円（お会計 20％OFF／2時間飲み放題 777円）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>料金備考</th>
+                                        <td> お通し350円(税別)／席料 5%　(アラカルトのお客様のみ)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クーポン</th>
+                                        <td><a href="https://www.hotpepper.jp/strJ001178233/map/?vos=nhppalsa000016"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-blank m-txt-hover">クーポンを見る</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- ** /table-item ** -->
+
+                        <!-- ** table-item ** -->
+                        <div class="d-md-flex align-items-md-startflex-nowrap shop-header">
+                            <p class="shop_logo">
+                                <img src="https://imgfp.hotp.jp/IMGH/08/32/P017080832/P017080832_69.jpg" alt=""> </p>
+                            <div class="flex-md-fill shop-summary ml-4">
+                                <p class="d-md-inline-block shop-category">居酒屋</p>
+                                <p class="d-md-inline-block shop-catch">大宮駅2分！飲み放題付コース2980円～♪</p>
+                                <p class="shop-name">菜の門 NaNoMoN 大宮店</p>
+                            </div>
+                        </div>
+
+
+                        <div class="d-md-flex align-items-md-startflex-nowrap justify-content-md-between shop-body">
+                            <div class="shop-main-img">
+                                <p class="mb-md-0">
+                                    <a href="居酒屋" target="_blank" rel="noopener noreferrer" class="d-block">
+                                        <img src="https://imgfp.hotp.jp/IMGH/02/54/P031070254/P031070254_238.jpg"
+                                            alt="CONA コナ 渋谷宇田川町店">
+                                        <br>
+                                        <span class="mt-md-2 m-blank d-md-inline-block">店舗ページを見る</span>
+                                    </a>
+                                </p>
+                            </div>
+                            <table class="shop-table ml-md-5">
+                                <tbody>
+                                    <tr>
+                                        <th>住所</th>
+                                        <td>埼玉県さいたま市大宮区桜木町１-8-3 サンユービル9F<br>
+                                            <a href="https://maps.google.co.jp/maps?q=%E8%8F%9C%E3%81%AE%E9%96%80%20NaNoMoN%20%E5%A4%A7%E5%AE%AE%E5%BA%97"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-txt-hover p-map-link">Google Mapで見る</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>アクセス</th>
+                                        <td>★JR大宮駅西口 徒歩2分</td>
+                                    </tr>
+                                    <tr>
+                                        <th>営業時間</th>
+                                        <td>月～金、祝前日: 16:30～23:30 （料理L.O. 22:30 ドリンクL.O. 23:00）土、日、祝日: 13:00～23:30
+                                            （料理L.O.
+                                            22:30 ドリンクL.O. 23:00）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ランチ</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クレジット<br class="nopc">カード</th>
+                                        <td>利用可</td>
+                                    </tr>
+                                    <tr>
+                                        <th>禁煙・喫煙</th>
+                                        <td>禁煙席なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Wi-Fi</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>駐車場</th>
+                                        <td>なし ：お近くのコインパーキングをご利用ください。お酒を飲まれる際はお車でのお越しはご遠慮ください。</td>
+                                    </tr>
+                                    <tr>
+                                        <th>平均予算</th>
+                                        <td>2800円（お会計 20％OFF／2時間飲み放題 777円）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>料金備考</th>
+                                        <td> お通し350円(税別)／席料 5%　(アラカルトのお客様のみ)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クーポン</th>
+                                        <td><a href="https://www.hotpepper.jp/strJ001178233/map/?vos=nhppalsa000016"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-blank m-txt-hover">クーポンを見る</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- ** /table-item ** -->
+
+                        <!-- ** table-item ** -->
+                        <div class="d-md-flex align-items-md-startflex-nowrap shop-header">
+                            <p class="shop_logo">
+                                <img src="https://imgfp.hotp.jp/IMGH/62/48/P036376248/P036376248_69.jpg" alt="">
+                            </p>
+                            <div class="flex-md-fill shop-summary ml-4">
+                                <p class="d-md-inline-block shop-category">居酒屋</p>
+                                <p class="d-md-inline-block shop-catch">大宮駅2分！飲み放題付コース2980円～♪</p>
+                                <p class="shop-name">菜の門 NaNoMoN 大宮店</p>
+                            </div>
+                        </div>
+
+
+                        <div class="d-md-flex align-items-md-startflex-nowrap justify-content-md-between shop-body">
+                            <div class="shop-main-img">
+                                <p class="mb-md-0">
+                                    <a href="居酒屋" target="_blank" rel="noopener noreferrer" class="d-block">
+                                        <img src="https://imgfp.hotp.jp/IMGH/62/44/P036376244/P036376244_238.jpg"
+                                            alt="うに幕府のかに将軍 品川店"> alt="VeSS ベス 大宮店">
+                                        <br>
+                                        <span class="mt-md-2 m-blank d-md-inline-block">店舗ページを見る</span>
+                                    </a>
+                                </p>
+                            </div>
+                            <table class="shop-table ml-md-5">
+                                <tbody>
+                                    <tr>
+                                        <th>住所</th>
+                                        <td>埼玉県さいたま市大宮区桜木町１-8-3 サンユービル9F<br>
+                                            <a href="https://maps.google.co.jp/maps?q=%E8%8F%9C%E3%81%AE%E9%96%80%20NaNoMoN%20%E5%A4%A7%E5%AE%AE%E5%BA%97"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-txt-hover p-map-link">Google Mapで見る</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>アクセス</th>
+                                        <td>★JR大宮駅西口 徒歩2分</td>
+                                    </tr>
+                                    <tr>
+                                        <th>営業時間</th>
+                                        <td>月～金、祝前日: 16:30～23:30 （料理L.O. 22:30 ドリンクL.O. 23:00）土、日、祝日: 13:00～23:30
+                                            （料理L.O.
+                                            22:30 ドリンクL.O. 23:00）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ランチ</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クレジット<br class="nopc">カード</th>
+                                        <td>利用可</td>
+                                    </tr>
+                                    <tr>
+                                        <th>禁煙・喫煙</th>
+                                        <td>禁煙席なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Wi-Fi</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>駐車場</th>
+                                        <td>なし ：お近くのコインパーキングをご利用ください。お酒を飲まれる際はお車でのお越しはご遠慮ください。</td>
+                                    </tr>
+                                    <tr>
+                                        <th>平均予算</th>
+                                        <td>2800円（お会計 20％OFF／2時間飲み放題 777円）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>料金備考</th>
+                                        <td> お通し350円(税別)／席料 5%　(アラカルトのお客様のみ)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クーポン</th>
+                                        <td><a href="https://www.hotpepper.jp/strJ001178233/map/?vos=nhppalsa000016"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-blank m-txt-hover">クーポンを見る</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- ** /table-item ** -->
+
+                        <!-- ** table-item ** -->
+                        <div class="d-md-flex align-items-md-startflex-nowrap shop-header">
+                            <p class="shop_logo">
+                                <img src="https://imgfp.hotp.jp/IMGH/08/60/P035000860/P035000860_69.jpg" alt="">
+                            </p>
+                            <div class="flex-md-fill shop-summary ml-4">
+                                <p class="d-md-inline-block shop-category">居酒屋</p>
+                                <p class="d-md-inline-block shop-catch">大宮駅2分！飲み放題付コース2980円～♪</p>
+                                <p class="shop-name">菜の門 NaNoMoN 大宮店</p>
+                            </div>
+                        </div>
+
+
+                        <div class="d-md-flex align-items-md-startflex-nowrap justify-content-md-between shop-body">
+                            <div class="shop-main-img">
+                                <p class="mb-md-0">
+                                    <a href="居酒屋" target="_blank" rel="noopener noreferrer" class="d-block">
+                                        <img src="https://imgfp.hotp.jp/IMGH/26/91/P036022691/P036022691_238.jpg"
+                                            alt="VeSS ベス 大宮店">
+                                        <br>
+                                        <span class="mt-md-2 m-blank d-md-inline-block">店舗ページを見る</span>
+                                    </a>
+                                </p>
+                            </div>
+                            <table class="shop-table ml-md-5">
+                                <tbody>
+                                    <tr>
+                                        <th>住所</th>
+                                        <td>埼玉県さいたま市大宮区桜木町１-8-3 サンユービル9F<br>
+                                            <a href="https://maps.google.co.jp/maps?q=%E8%8F%9C%E3%81%AE%E9%96%80%20NaNoMoN%20%E5%A4%A7%E5%AE%AE%E5%BA%97"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-txt-hover p-map-link">Google Mapで見る</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>アクセス</th>
+                                        <td>★JR大宮駅西口 徒歩2分</td>
+                                    </tr>
+                                    <tr>
+                                        <th>営業時間</th>
+                                        <td>月～金、祝前日: 16:30～23:30 （料理L.O. 22:30 ドリンクL.O. 23:00）土、日、祝日: 13:00～23:30
+                                            （料理L.O.
+                                            22:30 ドリンクL.O. 23:00）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ランチ</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クレジット<br class="nopc">カード</th>
+                                        <td>利用可</td>
+                                    </tr>
+                                    <tr>
+                                        <th>禁煙・喫煙</th>
+                                        <td>禁煙席なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Wi-Fi</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>駐車場</th>
+                                        <td>なし ：お近くのコインパーキングをご利用ください。お酒を飲まれる際はお車でのお越しはご遠慮ください。</td>
+                                    </tr>
+                                    <tr>
+                                        <th>平均予算</th>
+                                        <td>2800円（お会計 20％OFF／2時間飲み放題 777円）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>料金備考</th>
+                                        <td> お通し350円(税別)／席料 5%　(アラカルトのお客様のみ)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クーポン</th>
+                                        <td><a href="https://www.hotpepper.jp/strJ001178233/map/?vos=nhppalsa000016"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-blank m-txt-hover">クーポンを見る</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- ** /table-item ** -->
+
+                        <!-- ** table-item ** -->
+                        <div class="d-md-flex align-items-md-startflex-nowrap shop-header">
+                            <p class="shop_logo">
+                                <img src="https://imgfp.hotp.jp/IMGH/08/60/P035000860/P035000860_69.jpg" alt="">
+                            </p>
+                            <div class="flex-md-fill shop-summary ml-4">
+                                <p class="d-md-inline-block shop-category">居酒屋</p>
+                                <p class="d-md-inline-block shop-catch">大宮駅2分！飲み放題付コース2980円～♪</p>
+                                <p class="shop-name">菜の門 NaNoMoN 大宮店</p>
+                            </div>
+                        </div>
+
+
+                        <div class="d-md-flex align-items-md-startflex-nowrap justify-content-md-between shop-body">
+                            <div class="shop-main-img">
+                                <p class="mb-md-0">
+                                    <a href="居酒屋" target="_blank" rel="noopener noreferrer" class="d-block">
+                                        <img src="https://imgfp.hotp.jp/IMGH/26/91/P036022691/P036022691_238.jpg"
+                                            alt="VeSS ベス 大宮店">
+                                        <br>
+                                        <span class="mt-md-2 m-blank d-md-inline-block">店舗ページを見る</span>
+                                    </a>
+                                </p>
+                            </div>
+                            <table class="shop-table ml-md-5">
+                                <tbody>
+                                    <tr>
+                                        <th>住所</th>
+                                        <td>埼玉県さいたま市大宮区桜木町１-8-3 サンユービル9F<br>
+                                            <a href="https://maps.google.co.jp/maps?q=%E8%8F%9C%E3%81%AE%E9%96%80%20NaNoMoN%20%E5%A4%A7%E5%AE%AE%E5%BA%97"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-txt-hover p-map-link">Google Mapで見る</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>アクセス</th>
+                                        <td>★JR大宮駅西口 徒歩2分</td>
+                                    </tr>
+                                    <tr>
+                                        <th>営業時間</th>
+                                        <td>月～金、祝前日: 16:30～23:30 （料理L.O. 22:30 ドリンクL.O. 23:00）土、日、祝日: 13:00～23:30
+                                            （料理L.O.
+                                            22:30 ドリンクL.O. 23:00）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ランチ</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クレジット<br class="nopc">カード</th>
+                                        <td>利用可</td>
+                                    </tr>
+                                    <tr>
+                                        <th>禁煙・喫煙</th>
+                                        <td>禁煙席なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Wi-Fi</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>駐車場</th>
+                                        <td>なし ：お近くのコインパーキングをご利用ください。お酒を飲まれる際はお車でのお越しはご遠慮ください。</td>
+                                    </tr>
+                                    <tr>
+                                        <th>平均予算</th>
+                                        <td>2800円（お会計 20％OFF／2時間飲み放題 777円）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>料金備考</th>
+                                        <td> お通し350円(税別)／席料 5%　(アラカルトのお客様のみ)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クーポン</th>
+                                        <td><a href="https://www.hotpepper.jp/strJ001178233/map/?vos=nhppalsa000016"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-blank m-txt-hover">クーポンを見る</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- ** /table-item ** -->
+
+                        <!-- ** table-item ** -->
+                        <div class="d-md-flex align-items-md-startflex-nowrap shop-header">
+                            <p class="shop_logo">
+                                <img src="https://imgfp.hotp.jp/IMGH/08/60/P035000860/P035000860_69.jpg" alt="">
+                            </p>
+                            <div class="flex-md-fill shop-summary ml-4">
+                                <p class="d-md-inline-block shop-category">居酒屋</p>
+                                <p class="d-md-inline-block shop-catch">大宮駅2分！飲み放題付コース2980円～♪</p>
+                                <p class="shop-name">菜の門 NaNoMoN 大宮店</p>
+                            </div>
+                        </div>
+
+
+                        <div class="d-md-flex align-items-md-startflex-nowrap justify-content-md-between shop-body">
+                            <div class="shop-main-img">
+                                <p class="mb-md-0">
+                                    <a href="居酒屋" target="_blank" rel="noopener noreferrer" class="d-block">
+                                        <img src="https://imgfp.hotp.jp/IMGH/26/91/P036022691/P036022691_238.jpg"
+                                            alt="VeSS ベス 大宮店">
+                                        <br>
+                                        <span class="mt-md-2 m-blank d-md-inline-block">店舗ページを見る</span>
+                                    </a>
+                                </p>
+                            </div>
+                            <table class="shop-table ml-md-5">
+                                <tbody>
+                                    <tr>
+                                        <th>住所</th>
+                                        <td>埼玉県さいたま市大宮区桜木町１-8-3 サンユービル9F<br>
+                                            <a href="https://maps.google.co.jp/maps?q=%E8%8F%9C%E3%81%AE%E9%96%80%20NaNoMoN%20%E5%A4%A7%E5%AE%AE%E5%BA%97"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-txt-hover p-map-link">Google Mapで見る</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>アクセス</th>
+                                        <td>★JR大宮駅西口 徒歩2分</td>
+                                    </tr>
+                                    <tr>
+                                        <th>営業時間</th>
+                                        <td>月～金、祝前日: 16:30～23:30 （料理L.O. 22:30 ドリンクL.O. 23:00）土、日、祝日: 13:00～23:30
+                                            （料理L.O.
+                                            22:30 ドリンクL.O. 23:00）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ランチ</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クレジット<br class="nopc">カード</th>
+                                        <td>利用可</td>
+                                    </tr>
+                                    <tr>
+                                        <th>禁煙・喫煙</th>
+                                        <td>禁煙席なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Wi-Fi</th>
+                                        <td>なし</td>
+                                    </tr>
+                                    <tr>
+                                        <th>駐車場</th>
+                                        <td>なし ：お近くのコインパーキングをご利用ください。お酒を飲まれる際はお車でのお越しはご遠慮ください。</td>
+                                    </tr>
+                                    <tr>
+                                        <th>平均予算</th>
+                                        <td>2800円（お会計 20％OFF／2時間飲み放題 777円）</td>
+                                    </tr>
+                                    <tr>
+                                        <th>料金備考</th>
+                                        <td> お通し350円(税別)／席料 5%　(アラカルトのお客様のみ)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>クーポン</th>
+                                        <td><a href="https://www.hotpepper.jp/strJ001178233/map/?vos=nhppalsa000016"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="m-blank m-txt-hover">クーポンを見る</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- ** /table-item ** -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -46,6 +744,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
+    <!-- slick -->
+    <script type="text/javascript" src="js/slick-1.8.1/slick/slick.min.js"></script>
+    <script type="text/javascript" src="js/slider.js"></script>
 </body>
 
 </html>

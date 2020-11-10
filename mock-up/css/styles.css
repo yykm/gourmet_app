@@ -5,15 +5,23 @@ header.jumbotron {
     color: #424242;
 }
 
-header .container {
-    margin-top: 5%;
+.container-fluid {
+    padding-right: 3%;
+    padding-left: 3%;
+}
+
+.main-content {
+    margin-bottom: 2rem;
 }
 
 header .header-back-color {
     background-color: rgba(255, 255, 255, 0.6);
     display: inline-block;
-    padding: 15px;
-    border-radius: 10px;
+    padding: 3vw;
+}
+
+header .header_font {
+    font-family: 'Amatic SC', cursive;
 }
 
 footer {
@@ -24,4 +32,151 @@ footer {
 
 footer a {
     color: #424242;
+}
+
+.main-content .card,
+.content-area {
+    padding: 0px;
+}
+
+/* ログイン/新規登録のスタイル */
+header .midashi-btn {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #555555;
+}
+
+
+/* slick */
+.slider {
+    margin: auto;
+    width: 100%;
+    padding: 0px 3vw;
+}
+
+.slider img {
+    width: 100%;
+    height: 10vw;
+    object-fit: cover;
+}
+
+.slick-prev {
+    left: -0vw !important;
+}
+
+.slick-next {
+    right: -0vw !important;
+}
+
+/*slick setting*/
+.slick-prev:before,
+.slick-next:before {
+    color: rgba(48, 48, 48) !important;
+    opacity: 0.5 !important;
+}
+
+
+/* result画面ショップ一覧のスタイル */
+.shop-number {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 15px;
+    margin-bottom: 0px;
+}
+
+.shop-category {
+    border: 1px solid currentColor;
+    padding: 2px 8px 2px;
+    border-radius: 3px;
+    margin-right: 1em;
+    font-size: 1rem;
+    margin-bottom: 0rem;
+}
+
+.shop-catch {
+    font-size: 1rem;
+    margin-bottom: 0rem;
+}
+
+.shop-name {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
+
+.shop-body {
+    margin-top: 20px;
+}
+
+.shop-main-img a {
+    text-decoration: none;
+    color: #072840;
+    outline: none;
+    transition: opacity .3s ease-in-out;
+}
+
+.shop-main-img a:hover {
+    opacity: 0.6;
+}
+
+.shop-main-img img {
+    max-width: 100%;
+    height: auto;
+    border: 0;
+    vertical-align: bottom;
+}
+
+.m-blank {
+    padding-right: 1.6em;
+    background-image: url(../img/icon/icn_blank_link.svg);
+    background-repeat: no-repeat;
+    background-position: right 0.2em center;
+    background-size: 0.86em;
+}
+
+.shop-table {
+    width: 80%;
+    line-height: 1.4;
+}
+
+.shop-table th {
+    width: 20%;
+    padding: 8px 0;
+    font-size: 1.0rem;
+}
+
+.shop-table td {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+}
+
+.shop-table a {
+    color: #072840;
+}
+
+.p-map-link {
+    display: inline-block;
+    padding: 0.1em 2em 0 0;
+    background-image: url(../img/icon/icn_map.svg);
+    background-repeat: no-repeat;
+    background-position: right 0.1em center;
+    background-size: 1.5em;
+}
+
+.m-txt-hover {
+    text-decoration: underline;
+}
+
+.m-txt-hover:hover {
+    text-decoration: none;
+}
+
+table, tbody, tr, td {
+    vertical-align: baseline;
+}
+
+.result .shop-body+.shop-header {
+    margin-top: 60px;
+    padding-top: 60px;
+    border-top: 1px solid #6c717438;
 }
