@@ -10,11 +10,11 @@
 
 <script>
 export default {
-  name: "SearchIp",
+  name: 'SearchIp',
   methods: {
     getIp() {
       this.axios
-        .get("https://httpbin.org/get")
+        .get('https://httpbin.org/get')
         .then(response => {
           alert(response.data.origin);
         })
