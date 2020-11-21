@@ -1,27 +1,8 @@
 <template>
-  <div id="search-ip">
-    <div>
-      <div>
-        <input @click="getIp" type="button" value="IPを取得" />
-      </div>
-    </div>
+  <div class="about">
+    <h1>This is an about page</h1>
+    <b-button size="lg" variant="outline-primary">
+      Bootstrap Button
+    </b-button>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'SearchIp',
-  methods: {
-    getIp() {
-      this.axios
-        .get('https://httpbin.org/get')
-        .then(response => {
-          alert(response.data.origin);
-        })
-        .catch(e => {
-          alert(e);
-        });
-    }
-  }
-};
-</script>
