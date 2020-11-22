@@ -1,15 +1,17 @@
 <template>
   <div class="search">
-    <b-form-select v-model="selected" :options="options"></b-form-select>
-    <b-form-select
-      v-model="selected"
-      :options="options"
-      size="sm"
-      class="mt-3"
-    ></b-form-select>
-    <div class="mt-3">
-      Selected: <strong>{{ selected }}</strong>
-    </div>
+    <aside>
+      <b-form-select v-model="selected" :options="options"></b-form-select>
+      <b-form-select
+        v-model="selected"
+        :options="options"
+        size="sm"
+        class="mt-3"
+      ></b-form-select>
+      <div class="mt-3">
+        Selected: <strong>{{ selected }}</strong>
+      </div>
+    </aside>
   </div>
 </template>
 
