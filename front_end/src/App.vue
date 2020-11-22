@@ -1,10 +1,19 @@
 <template>
   <div id="app">
-    <div class="container-fluid px-0">
-      <Header></Header>
-      <Search></Search>
-      <Footer></Footer>
-    </div>
+    <b-container fluid class="bv-example-row">
+      <b-row align-h="around">
+        <b-col cols="12" class="px-0"> <Header></Header></b-col>
+      </b-row>
+
+      <b-row align-h="around">
+        <b-col cols="3"><Search></Search></b-col>
+        <b-col cols="8"><History></History></b-col>
+      </b-row>
+
+      <b-row align-h="around">
+        <b-col cols="12" class="px-0"><Footer></Footer></b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -13,13 +22,15 @@
 import Header from '@/components/Header.vue';
 import Search from '@/components/Search.vue';
 import Footer from '@/components/Footer.vue';
+import History from '@/components/History.vue';
 
 export default {
   name: 'App',
   components: {
     Header,
     Search,
-    Footer
+    Footer,
+    History
   }
 };
 </script>
