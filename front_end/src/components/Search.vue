@@ -4,7 +4,8 @@
       <div>
         <b-card header="検索条件" header-tag="header">
           <b-card-text>
-            <b-form @submit="onSubmit" @reset="onReset">
+            <!-- <b-form @submit="onSubmit" @reset="onReset"> -->
+            <b-form>
               <!-- 大エリア -->
               <b-form-group id="hoge" label="大エリア:" label-for="input-3">
                 <b-form-select
