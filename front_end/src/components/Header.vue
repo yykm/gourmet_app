@@ -1,9 +1,9 @@
 <template>
   <div class="jumbotron jumbotron-extend text-center m-0">
-    <div class="jumbotron-container p-4 p-lg-5">
+    <div class="jumbotron-container p-4 p-md-5 shadow">
       <h1 class="display-4 site-name">{{ site_name }}</h1>
       <p>
-        <b-button class="btn-black px-3 px-lg-4">LOGIN</b-button>
+        <b-button class="btn-black px-2 px-md-4 mt-md-1">ログイン</b-button>
       </p>
     </div>
   </div>
@@ -24,11 +24,16 @@ export default {
 <style scoped>
 .jumbotron-extend {
   position: relative;
-  height: 50vh;
   min-height: 300px;
+  height: 50vh;
   background: url(/img/pizza.jpg) no-repeat center center;
   background-size: cover;
   border-radius: 0%;
+}
+@media (min-width: 768px) {
+  .jumbotron-extend {
+    height: 100vh;
+  }
 }
 
 .jumbotron-container {
@@ -37,7 +42,7 @@ export default {
   top: 50%;
   transform: translateY(-50%);
   /* ヘッダー背景 */
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.6);
   display: inline-block;
   border-radius: 50%;
 }
@@ -45,6 +50,14 @@ export default {
 .site-name {
   margin-bottom: 35px;
   font-family: 'Playfair Display', serif;
+  color: #2e210fe5;
+}
+@media (min-width: 768px) {
+  .site-name {
+    font-size: 5rem;
+    font-weight: 300;
+    line-height: 1.2;
+  }
 }
 
 .btn-black {
