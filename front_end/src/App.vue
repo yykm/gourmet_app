@@ -4,6 +4,8 @@
     <Search></Search>
     <h2 class="text-center m-5 border-bottom p-1">Works</h2>
 
+    <!-- <Result></Result> -->
+
     <div class="container">
       <section class="row d-flex mb-4">
         <a
@@ -115,12 +117,14 @@
 // @ is an alias to /src
 import Header from '@/components/Header.vue';
 import Search from '@/components/Search.vue';
+// import Search from '@/components/Result.vue';
 
 export default {
   name: 'App',
   components: {
     Header,
     Search
+    // Result
   }
 };
 </script>

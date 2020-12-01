@@ -1,2 +1,3 @@
 # メモ
 *.txt
+.php_cs.cache
