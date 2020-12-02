@@ -13,11 +13,111 @@
           <b-button variant="primary" class="buttons ml-md-3">Save</b-button>
         </b-form>
       </div>
-
-      {{ message }}
-
-      {{ gourmetList }}
     </b-container>
+    
+    
+    <!-- ********************************************************* -->
+    <!-- shops/shopsCountのみ -->
+    <div class="result" v-if="shops.length > 0">
+      <p class="">{{ shopsCount }}件表示中</p>
+
+      <ul class="p-list">
+        <li v-for="shop of shops" v-bind:key="shop.id">
+          <!-- お店のヘッダー部 -->
+          <div class="p-name-wrap">
+            <!-- // ロゴ画像 -->
+            <p class="p-shop-logo"><img :src="shop.logo" alt="" /></p>
+            <!-- お店の種類・副題・店名 -->
+            <div class="p-name-content">
+              <p class="p-category">{{ shop.category }}</p>
+              <p class="p-catch">{{ shop.catch }}</p>
+              <p class="p-name">{{ shop.name }}</p>
+            </div>
+          </div>
+
+          <!-- お店のメインコンテンツ -->
+          <div calss="p-content">
+            <!-- お店の画像  -->
+            <div class="p-main-img">
+              <p>
+                <a :href="shop.url" target="_blank" rel="noopener noreferrer">
+                  <img :src="shop.photo" :alt="shop.name" /><br />
+                  <span class="mt20 spmt20 m-blank">店舗ページを見る</span>
+                </a>
+              </p>
+            </div>
+
+            <!-- お店の詳細情報 -->
+            <table class="p-table">
+              <tr>
+                <th>住所</th>
+                <td>
+                  {{ shop.address }}<br />
+                  <a
+                    :href="shop.map"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="m-txt-hover p-map-link m-blank"
+                    >Google Mapで見る</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th>アクセス</th>
+                <td>{{ shop.access }}</td>
+              </tr>
+              <tr>
+                <th>営業時間</th>
+                <td>{{ shop.open }}</td>
+              </tr>
+              <tr>
+                <th>ランチ</th>
+                <td>{{ shop.lunch }}</td>
+              </tr>
+              <tr>
+                <th>クレジット<br class="nopc" />カード</th>
+                <td>{{ shop.card }}</td>
+              </tr>
+              <tr>
+                <th>禁煙・喫煙</th>
+                <td>{{ shop.smoking }}</td>
+              </tr>
+              <tr>
+                <th>Wi-Fi</th>
+                <td>{{ shop.wifi }}</td>
+              </tr>
+              <tr>
+                <th>駐車場</th>
+                <td>{{ shop.parking }}</td>
+              </tr>
+              <tr>
+                <th>平均予算</th>
+                <td>{{ shop.average }}</td>
+              </tr>
+              <tr v-if="shop.memo">
+                <th>料金備考</th>
+                <td>{{ shop.memo }}</td>
+              </tr>
+              <tr>
+                <th>クーポン</th>
+                <td>
+                  <a
+                    :href="shop.coupon"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="m-blank m-txt-hover"
+                    >クーポンを見る</a
+                  >
+                </td>
+              </tr>
+            </table>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- ******************************************************** -->
+    
+    
   </div>
 </template>
 
@@ -29,8 +129,8 @@ export default {
         keyword: '' // キーワード
       },
       getting: true, // 取得中アイコン
-      gourmetCount: 0, // 検索件数
-      gourmetList: [], // 検索結果
+      shopsCount: 0, // 検索件数
+      shops: [], // 検索結果
       timer: null, // タイマー
       iniPosition: 0, // 検索フォーム初期位置
       curPosition: 0, // 検索フォーム現在位置
@@ -122,15 +222,16 @@ export default {
         .then(function(response) {
           // 成功時
           $this.getting = true;
-          $this.gourmetList = [];
+          $this.shops = [];
 
           let result = response.data.results;
-          $this.gourmetCount =
+          $this.shopsCount =
             result.results_available > 100 ? 100 : result.results_available;
 
-          let shops = result.shop;
-          for (let shop of shops) {
-            $this.gourmetList.push({
+          let getted_shops = result.shop;
+          for (let shop of getted_shops) {
+            $this.shops.push({
+              id: shop.id, // お店ID
               name: shop.name, // 店名
               url: shop.urls.pc, // 店舗url
               logo: shop.logo_image, // ロゴ
@@ -142,7 +243,7 @@ export default {
               access: shop.mobile_access, // アクセス
               open: shop.open, // 営業時間
               lunch: shop.lunch, // ランチ
-              card: shop.card, // クレジットカード
+              card: shop.card, // クレジットカード利用可能か不可か
               smoking: shop.non_smoking, // 喫煙・禁煙
               wifi: shop.wifi, // wifi
               parking: shop.parking, // 駐車場
@@ -151,6 +252,7 @@ export default {
               coupon: shop.coupon_urls.pc // クーポン
             });
           }
+          console.log($this.shops);
         })
         .catch(function(error) {
           // 失敗時
@@ -163,14 +265,14 @@ export default {
 </script>
 
 <style scoped>
-.is-fix {
+/* .is-fix {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   margin: auto;
   z-index: 1000;
-}
+} */
 .search {
   background-color: white;
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);
