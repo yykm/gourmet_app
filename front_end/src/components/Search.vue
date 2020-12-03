@@ -1,5 +1,5 @@
 <template>
-  <div class="search" :class="{ 'is-fix': isFix }">
+  <div class="search" :class="{ 'is-fix': isFix() }">
     <b-container>
       <div class="wrapper py-4">
         <b-form inline class="justify-content-center flex-column flex-md-row">
@@ -52,18 +52,17 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getURLs']),
-
-    // 検索フォームがウィンドウ内かを判定して返す
-    isFix: function() {
-      if (this.curPosition > this.iniPosition) return true;
-      else return false;
-    }
+    ...mapGetters(['getURLs'])
   },
 
   methods: {
     ...mapActions([UPDATE_SHOPS]),
 
+    // 検索フォームがウィンドウ内かを判定して返す
+    isFix: function() {
+      if (this.iniPosition < this.curPosition) return true;
+      else return false;
+    },
     setIniPosition() {
       // 検索フォームの位置を取得
       const rect = document.querySelector('.search').getBoundingClientRect();
@@ -85,8 +84,6 @@ export default {
     // ウィンドウのサイズを変える度に検索フォームの初期位置を取得
     onResize: function() {
       this.setIniPosition();
-      clearTimeout(this.timer);
-      this.timer = null;
     },
     // 検索処理
     onInput: function() {
@@ -125,11 +122,11 @@ export default {
 
           const shops = result.shop.map(getted_shop => ({
             id: getted_shop.id, // お店ID
-            name: getted_shop.name, // 店名
+            name: getted_shop.name, // 掲載店名
             url: getted_shop.urls.pc, // 店舗url
-            logo: getted_shop.logo_image, // ロゴ
-            category: getted_shop.genre.name, // カテゴリ
-            catch: getted_shop.genre.catch, // キャッチコピー
+            logo: getted_shop.logo_image, // 	ロゴ画像
+            category: getted_shop.genre.name, // お店ジャンル名
+            catch: getted_shop.genre.catch, // お店ジャンルキャッチ
             photo: getted_shop.photo.pc.l, // メイン画像
             address: getted_shop.address, // 住所
             map:

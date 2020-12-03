@@ -1,12 +1,12 @@
 <template>
-  <div class="jumbotron jumbotron-extend text-center m-0">
+  <header class="jumbotron jumbotron-extend text-center m-0">
     <div class="jumbotron-container p-4 p-md-5 shadow">
       <h1 class="display-4 site-name">{{ site_name }}</h1>
       <p>
         <b-button class="btn-black px-2 px-md-4 mt-md-1">ログイン</b-button>
       </p>
     </div>
-  </div>
+  </header>
 </template>
 
 <script>
