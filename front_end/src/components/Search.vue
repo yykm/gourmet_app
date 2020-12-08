@@ -1,17 +1,67 @@
 <template>
-  <div class="search" :class="{ 'is-fix': isFix() }">
+  <div class="search" :class="{ 'is-fix': isFix }">
     <b-container>
       <div class="wrapper py-4">
-        <b-form inline class="justify-content-center flex-column flex-md-row">
+        <b-form
+          inline
+          class="justify-content-center flex-column flex-md-row flex-md-nowrap"
+        >
           <b-form-input
             class="keyword"
             placeholder="フリーワード検索（店名 地名、駅名など）"
-            v-model="form.keyword"
             @input="onInput"
           ></b-form-input>
+          <!-- v-model="form.keyword" -->
 
-          <b-button variant="primary" class="buttons ml-md-3">Save</b-button>
+          <b-button
+            variant="light"
+            class="buttons ml-md-4 text-nowrap"
+            @click.prevent="getGeo"
+            >現在地から検索</b-button
+          >
+          <div class="selects ml-md-4" v-show="geoActive">
+            <b-form-select
+              v-model="form.range"
+              :options="options"
+              required
+              @change="changeGeo"
+            ></b-form-select>
+          </div>
         </b-form>
+
+        <!-- 検索結果表示領域 -->
+
+        <div
+          class="d-flex align-items-center justify-content-center flex-column flex-md-row mt-4"
+        >
+          <p class="search-conditions mb-0 mx-2 px-1" v-if="form.keyword">
+            キーワード：『{{ form.keyword }}』
+          </p>
+          <p class="search-conditions mb-0 mx-2 px-1" v-if="form.range == 1">
+            現在地から300m圏内
+          </p>
+          <p
+            class="search-conditions mb-0 mx-2 px-1"
+            v-else-if="form.range == 2"
+          >
+            現在地から500m圏内
+          </p>
+          <p
+            class="search-conditions mb-0 mx-2 px-1"
+            v-else-if="form.range == 4"
+          >
+            現在地から2000m圏内
+          </p>
+          <p
+            class="search-conditions mb-0 mx-2 px-1"
+            v-else-if="form.range == 5"
+          >
+            現在地から3000m圏内
+          </p>
+          <p class="search-conditions mb-0 mx-2 px-1" v-show="geoActive" v-else>
+            現在地から1000m圏内
+          </p>
+        </div>
       </div>
     </b-container>
   </div>
@@ -27,9 +77,20 @@ export default {
   data() {
     return {
       form: {
-        keyword: '' // キーワード
+        keyword: '', // キーワード
+        range: 3 //範囲
       },
-      getting: true, // 取得中アイコン
+      options: [
+        { value: '0', text: '範囲を指定しない' },
+        { value: '1', text: '300m圏内' },
+        { value: '2', text: '500m圏内' },
+        { value: '3', text: '1000m圏内' },
+        { value: '4', text: '2000m圏内' },
+        { value: '5', text: '3000m圏内' }
+      ],
+      lat: '', // 緯度
+      lon: '', // 経度
+      geoActive: false, //現在地が有効かどうか
       timer: null, // タイマー
       iniPosition: 0, // 検索フォーム初期位置
       curPosition: 0, // 検索フォーム現在位置
@@ -52,17 +113,18 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getURLs'])
-  },
-
-  methods: {
-    ...mapActions([UPDATE_SHOPS]),
+    ...mapGetters(['getURLs']),
 
     // 検索フォームがウィンドウ内かを判定して返す
     isFix: function() {
       if (this.iniPosition < this.curPosition) return true;
       else return false;
-    },
+    }
+  },
+
+  methods: {
+    ...mapActions([UPDATE_SHOPS]),
+
     setIniPosition() {
       // 検索フォームの位置を取得
       const rect = document.querySelector('.search').getBoundingClientRect();
@@ -70,46 +132,51 @@ export default {
     },
     // 検索フォームの現在位置を取得
     onScroll: function() {
-      if (this.timer === null) {
-        this.timer = setTimeout(
-          function() {
-            this.curPosition = window.pageYOffset;
-            clearTimeout(this.timer);
-            this.timer = null;
-          }.bind(this),
-          50
-        );
-      }
+      this.curPosition = window.pageYOffset;
     },
     // ウィンドウのサイズを変える度に検索フォームの初期位置を取得
     onResize: function() {
-      this.setIniPosition();
+      clearTimeout(this.timer);
+
+      this.timer = setTimeout(
+        function() {
+          this.setIniPosition();
+        }.bind(this),
+        50
+      );
     },
     // 検索処理
-    onInput: function() {
-      this.getting = false;
+    onInput: function(value) {
+      clearTimeout(this.timer);
 
-      if (this.timer === null) {
-        this.timer = setTimeout(
-          function() {
-            this.getGourmet(this.keyword, this.lat, this.lon, this.range);
-
-            clearTimeout(this.timer);
-            this.timer = null;
-          }.bind(this),
-          500
-        );
-      }
+      this.timer = setTimeout(
+        function() {
+          // 遅れて表示に反映させたい為、v-modelは使わない
+          this.form.keyword = value;
+          this.geoActive
+            ? this.getGourmet(this.keyword, this.lat, this.lon, this.form.range)
+            : this.getGourmet(this.keyword);
+        }.bind(this),
+        500
+      );
     },
 
     getGourmet: function() {
-      this.getting = false;
-
       const params = new URLSearchParams();
-      params.append('keyword', this.form.keyword);
-      // params.append('lat', this.lat);
-      // params.append('lon', this.lon);
-      // params.append('range', this.range);
+      if (this.form.keyword !== '') {
+        params.append('keyword', this.form.keyword);
+      }
+      if (this.geoActive === true) {
+        params.append('lat', this.lat);
+        params.append('lon', this.lon);
+        params.append('range', this.form.range);
+      }
+      // 検索条件が無い場合は問い合わせを実行しない
+      if (params.toString() === '') {
+        this[UPDATE_SHOPS](null);
+        return;
+      }
+
       const url = this.getURLs.baseURL + this.getURLs.relativeURL.search;
       let $this = this;
 
@@ -117,7 +184,6 @@ export default {
         .post(url, params)
         .then(function(response) {
           // 成功時
-          $this.getting = true;
           let result = response.data.results;
 
           const shops = result.shop.map(getted_shop => ({
@@ -151,31 +217,96 @@ export default {
           $this.getting = true;
           $this.message = error;
         });
+    },
+    // 現在位置の取得
+    getGeo: function() {
+      // 成功時の処理
+      const successCallback = position => {
+        // 範囲を初期化
+        this.form.range = 3;
+        this.geoActive = true;
+
+        (this.lat = position.coords.latitude), // 緯度
+          (this.lon = position.coords.longitude); // 経度
+
+        this.getGourmet(this.keyword, this.lat, this.lon, this.form.range);
+      };
+      // 失敗時の処理
+      const errorCallback = error => {
+        this.geoActive = false;
+
+        if (error.code == 1) {
+          alert('位置情報取得が許可されていません。');
+        } else if (error.code == 2) {
+          alert('位置情報取得に失敗しました。');
+        } else {
+          alert('タイムアウトしました。');
+        }
+      };
+
+      /* Geolocation APIを利用できる環境向けの処理 */
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          successCallback,
+          errorCallback
+        );
+      } else {
+        this.geoActive = false;
+
+        /* Geolocation APIを利用できない環境向けの処理 */
+        alert('この端末では位置情報取得ができません。');
+      }
+    },
+    changeGeo: function(selected) {
+      if (selected === '0') {
+        this.geoActive = false;
+        this.getGourmet(this.keyword);
+      } else {
+        this.geoActive = true;
+        this.getGourmet(this.keyword, this.lat, this.lon, this.form.range);
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-.is-fix {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  z-index: 1000;
+@media (min-width: 768px) {
+  .is-fix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 1000;
+  }
 }
 .search {
-  background-color: white;
+  /* background-color: rgb(245 246 249 / 80%); */
+  background-color: rgb(255, 255, 255, 0.9);
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);
 }
-
+.buttons {
+  color: rgb(134 135 136);
+  padding-left: 1.9em;
+  background-image: url(/img/icon/icn_pin.svg);
+  background-repeat: no-repeat;
+  background-position: 0.6em center;
+  background-size: 1.1em;
+  line-height: 1.5;
+  border: 1px solid #ced4da;
+  background-color: white;
+}
+.search-conditions {
+  background: linear-gradient(transparent 60%, #ddeeff 0%);
+}
 @media (max-width: 767.98px) {
   .keyword {
     width: 90% !important;
   }
-  .buttons {
-    margin-top: 0.75rem;
+  .buttons,
+  .selects {
+    margin-top: 1rem;
   }
 }
 @media (min-width: 768px) {

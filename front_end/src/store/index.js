@@ -8,7 +8,7 @@ export default new Vuex.Store({
   strict: true,
 
   state: {
-    shops: [], // 検索結果
+    shops: null, // 検索結果
     host: {
       // 基底URL
       baseURL: 'http://ec2-13-230-134-90.ap-northeast-1.compute.amazonaws.com',
@@ -26,7 +26,19 @@ export default new Vuex.Store({
     },
     // 検索件数の取得
     shopsCount(state) {
-      return state.shops.length;
+      if (state.shops === null) {
+        return null;
+      } else {
+        return state.shops.length;
+      }
+    },
+    getShopsByPage(state) {
+      return (curPage, perPage) => {
+        return state.shops.slice(
+          (curPage - 1) * perPage,
+          (curPage - 1) * perPage + perPage
+        );
+      };
     },
     // URLの取得
     getURLs(state) {

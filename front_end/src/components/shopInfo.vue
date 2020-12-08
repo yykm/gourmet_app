@@ -1,12 +1,17 @@
 <!-- props:shops/shopsCount -->
 <template>
-  <div class="result" v-if="shopsCount > 0">
+  <div class="result" v-if="shopsCount !== null">
     <div class="container mt-3">
       <!-- 検索件数表示部 -->
-      <div class="result-count text-right">{{ shopsCount }}件表示中</div>
+      <p class="result-count text-right" v-if="shopsCount > 0">
+        {{ shopsCount }}件表示中
+      </p>
+      <p class="result-count text-center text-danger" v-else>
+        検索結果に該当するお店はありません。別のキーワードでお試しください。
+      </p>
 
       <!-- 店舗情報表示部   -->
-      <ul class="shops-list p-0">
+      <ul class="shops-list p-0 mb-5">
         <li v-for="shop of shops" v-bind:key="shop.id">
           <!-- 店舗ヘッダー部 -->
           <div class="p-name-wrap">
@@ -107,21 +112,50 @@
           </b-row>
         </li>
       </ul>
+
+      <b-pagination
+        :value="curPage"
+        :total-rows="shopsCount"
+        :per-page="perPage"
+        align="center"
+        @change="onChange"
+      ></b-pagination>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'shop-info',
-  props: {
-    shops: {
-      type: Array,
-      default: new Array()
+  computed: {
+    ...mapGetters(['shopsCount', 'getShopsByPage', 'getShops'])
+  },
+  data() {
+    return {
+      shops: [],
+      perPage: 5, // ページ毎に表示する店舗数
+      curPage: 0 // 現在のページ番号
+    };
+  },
+  watch: {
+    getShops: function() {
+      this.curPage = 1;
+      this.shops = this.getShopsByPage(this.curPage, this.perPage);
     },
-    shopsCount: {
-      type: Number,
-      default: 0
+    shops: function() {
+      this.$nextTick(() => {
+        // 検索結果更新のたび上部までスクロール
+        const scrollY = document.getElementsByTagName('header')[0].clientHeight;
+        window.scrollTo(0, scrollY);
+      });
+    }
+  },
+  methods: {
+    onChange(page) {
+      this.curPage = page;
+      this.shops = this.getShopsByPage(this.curPage, this.perPage);
     }
   }
 };
@@ -154,7 +188,7 @@ td {
 }
 /* フォント調整  */
 .result-count {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   line-height: 1.7;
   letter-spacing: 0.03em;
 }

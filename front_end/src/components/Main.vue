@@ -1,7 +1,7 @@
 <template>
   <main role="main">
     <!-- 検索結果の表示領域 -->
-    <shopInfo :shops="getShops" :shopsCount="shopsCount"></shopInfo>
+    <shopInfo></shopInfo>
 
     <h2 class="text-center m-5 border-bottom p-1">Works</h2>
 
@@ -114,15 +114,11 @@
 
 <script>
 import shopInfo from '@/components/shopInfo.vue';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'Main',
   components: {
     shopInfo
-  },
-  computed: {
-    ...mapGetters(['getShops', 'shopsCount'])
   }
 };
 </script>
