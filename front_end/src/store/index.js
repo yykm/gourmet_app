@@ -11,7 +11,7 @@ export default new Vuex.Store({
     shops: null, // 検索結果
     host: {
       // 基底URL
-      baseURL: 'http://ec2-13-230-134-90.ap-northeast-1.compute.amazonaws.com',
+      baseURL: 'http://ec2-13-114-9-67.ap-northeast-1.compute.amazonaws.com',
       // 相対URL
       relativeURL: {
         search: '/search' // 検索結果の取得用URL
