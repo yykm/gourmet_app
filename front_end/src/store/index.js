@@ -12,6 +12,8 @@ export default new Vuex.Store({
     host: {
       // 基底URL
       baseURL: 'http://ec2-13-114-9-67.ap-northeast-1.compute.amazonaws.com',
+      // プレフィックス
+      prefix: '/api',
       // 相対URL
       relativeURL: {
         search: '/search' // 検索結果の取得用URL

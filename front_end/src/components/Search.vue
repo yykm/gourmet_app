@@ -177,7 +177,10 @@ export default {
         return;
       }
 
-      const url = this.getURLs.baseURL + this.getURLs.relativeURL.search;
+      const url =
+        this.getURLs.baseURL +
+        this.getURLs.prefix +
+        this.getURLs.relativeURL.search;
       let $this = this;
 
       this.axios
