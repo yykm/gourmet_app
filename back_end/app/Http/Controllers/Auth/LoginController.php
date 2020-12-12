@@ -51,4 +51,17 @@ class LoginController extends Controller
         // ログインしたユーザを返す
         return $user;
     }
+    
+    
+    /**
+     * ログアウト完了後の処理メソッドをオーバライド
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function loggedOut(Request $request)
+    {
+        // ステータス200を返す
+        return response()->json();
+    }
 }
