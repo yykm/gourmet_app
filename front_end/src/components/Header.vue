@@ -3,7 +3,12 @@
     <div class="jumbotron-container p-4 p-md-5 shadow">
       <h1 class="display-4 site-name">{{ site_name }}</h1>
       <p>
-        <b-button class="btn-black px-2 px-md-4 mt-md-1">ログイン</b-button>
+        <b-button class="btn-black px-2 px-md-4 mx-2 mt-md-1"
+          >ログイン</b-button
+        >
+        <b-button class="btn-black px-2 px-md-4 mx-2 mt-md-1"
+          >新規登録</b-button
+        >
       </p>
     </div>
   </header>
@@ -65,6 +70,7 @@ export default {
   background-color: #000;
   color: #fff;
   font-family: 'Avenir', serif;
+  border-color: transparent;
 }
 .btn-black:hover {
   background-color: #fff;
