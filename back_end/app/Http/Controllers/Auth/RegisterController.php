@@ -73,7 +73,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * 登録完了後の処理メソッドをオーバオーライド
+     * 登録完了後の処理メソッドをオーバーライド
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\User  $user
@@ -81,6 +81,7 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
+        // 登録されたユーザーを返す
         return $user;
     }
 }
