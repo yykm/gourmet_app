@@ -1,69 +1,77 @@
 <template>
-  <div class="search" :class="{ 'is-fix': isFix }">
-    <b-container>
-      <div class="wrapper py-4">
-        <b-form
-          inline
-          class="justify-content-center flex-column flex-md-row flex-md-nowrap"
-        >
-          <b-form-input
-            class="keyword"
-            placeholder="フリーワード検索（店名 地名、駅名など）"
-            @input="onInput"
-          ></b-form-input>
-          <!-- v-model="form.keyword" -->
-
-          <b-button
-            variant="light"
-            class="buttons ml-md-4 text-nowrap"
-            @click.prevent="getGeo"
-            >現在地から検索</b-button
+  <div class="search">
+    <div class="search-form" :class="{ 'is-fix': isFix }">
+      <b-container>
+        <div class="wrapper py-4">
+          <b-form
+            inline
+            class="justify-content-center flex-column flex-md-row flex-md-nowrap"
           >
-          <div class="selects ml-md-4" v-show="geoActive">
-            <b-form-select
-              v-model="form.range"
-              :options="options"
-              required
-              @change="changeGeo"
-            ></b-form-select>
+            <b-form-input
+              class="keyword"
+              placeholder="フリーワード検索（店名 地名、駅名など）"
+              @input="onInput"
+            ></b-form-input>
+            <!-- v-model="form.keyword" -->
+
+            <b-button
+              variant="light"
+              class="buttons ml-md-4 text-nowrap"
+              @click.prevent="getGeo"
+              >現在地から検索</b-button
+            >
+            <div class="selects ml-md-4" v-show="geoActive">
+              <b-form-select
+                v-model="form.range"
+                :options="options"
+                required
+                @change="changeGeo"
+              ></b-form-select>
+            </div>
+          </b-form>
+
+          <!-- 検索結果表示領域 -->
+
+          <div
+            class="d-flex align-items-center justify-content-center flex-column flex-md-row mt-4"
+          >
+            <p class="search-conditions mb-0 mx-2 px-1" v-if="form.keyword">
+              キーワード：『{{ form.keyword }}』
+            </p>
+            <p class="search-conditions mb-0 mx-2 px-1" v-if="form.range == 1">
+              現在地から300m圏内
+            </p>
+            <p
+              class="search-conditions mb-0 mx-2 px-1"
+              v-else-if="form.range == 2"
+            >
+              現在地から500m圏内
+            </p>
+            <p
+              class="search-conditions mb-0 mx-2 px-1"
+              v-else-if="form.range == 4"
+            >
+              現在地から2000m圏内
+            </p>
+            <p
+              class="search-conditions mb-0 mx-2 px-1"
+              v-else-if="form.range == 5"
+            >
+              現在地から3000m圏内
+            </p>
+            <p
+              class="search-conditions mb-0 mx-2 px-1"
+              v-show="geoActive"
+              v-else
+            >
+              現在地から1000m圏内
+            </p>
           </div>
-        </b-form>
-
-        <!-- 検索結果表示領域 -->
-
-        <div
-          class="d-flex align-items-center justify-content-center flex-column flex-md-row mt-4"
-        >
-          <p class="search-conditions mb-0 mx-2 px-1" v-if="form.keyword">
-            キーワード：『{{ form.keyword }}』
-          </p>
-          <p class="search-conditions mb-0 mx-2 px-1" v-if="form.range == 1">
-            現在地から300m圏内
-          </p>
-          <p
-            class="search-conditions mb-0 mx-2 px-1"
-            v-else-if="form.range == 2"
-          >
-            現在地から500m圏内
-          </p>
-          <p
-            class="search-conditions mb-0 mx-2 px-1"
-            v-else-if="form.range == 4"
-          >
-            現在地から2000m圏内
-          </p>
-          <p
-            class="search-conditions mb-0 mx-2 px-1"
-            v-else-if="form.range == 5"
-          >
-            現在地から3000m圏内
-          </p>
-          <p class="search-conditions mb-0 mx-2 px-1" v-show="geoActive" v-else>
-            現在地から1000m圏内
-          </p>
         </div>
-      </div>
-    </b-container>
+      </b-container>
+    </div>
+    <!-- 検索結果表示領域 -->
+    <Result></Result>
   </div>
 </template>
 
@@ -71,9 +79,13 @@
 import { mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
 import { UPDATE_SHOPS } from '@/store/mutation-types';
+import Result from '@/components/Result.vue';
 
 export default {
   name: 'Search',
+  components: {
+    Result
+  },
   data() {
     return {
       form: {
@@ -284,7 +296,7 @@ export default {
     z-index: 1000;
   }
 }
-.search {
+.search-form {
   /* background-color: rgb(245 246 249 / 80%); */
   background-color: rgb(255, 255, 255, 0.9);
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);

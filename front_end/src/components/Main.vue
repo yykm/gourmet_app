@@ -1,7 +1,7 @@
 <template>
   <main role="main">
     <!-- 検索結果の表示領域 -->
-    <shopInfo></shopInfo>
+    <Search></Search>
 
     <h2 class="text-center m-5 border-bottom p-1">Works</h2>
 
@@ -113,12 +113,12 @@
 </template>
 
 <script>
-import shopInfo from '@/components/shopInfo.vue';
+import Search from '@/components/Search.vue';
 
 export default {
   name: 'Main',
   components: {
-    shopInfo
+    Search
   }
 };
 </script>

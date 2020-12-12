@@ -1,6 +1,6 @@
 <!-- props:shops/shopsCount -->
 <template>
-  <div class="result" v-if="shopsCount !== null">
+  <div class="search-result" v-if="shopsCount !== null">
     <div class="container mt-3">
       <!-- 検索件数表示部 -->
       <p class="result-count text-right" v-if="shopsCount > 0">
@@ -128,7 +128,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'shop-info',
+  name: 'Result',
   computed: {
     ...mapGetters(['shopsCount', 'getShopsByPage', 'getShops'])
   },
