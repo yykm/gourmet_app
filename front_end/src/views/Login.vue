@@ -11,7 +11,11 @@
               <b-nav-item to="register">新規登録</b-nav-item>
             </b-nav>
           </template>
-          <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+          <b-form
+            @submit="onSubmit.prevent"
+            @reset="onReset.prevent"
+            v-if="show"
+          >
             <b-form-group label="Eメールアドレス：" label-for="email">
               <b-form-input
                 id="email"
@@ -47,6 +51,9 @@
                 >リセット</b-button
               >
             </div>
+            <div class="text-center mt-3">
+              <b-link to="reset">パスワードをお忘れですか？</b-link>
+            </div>
           </b-form>
         </b-card>
       </b-container>
@@ -75,10 +82,10 @@ export default {
     onSubmit() {
       alert(JSON.stringify(this.form));
     },
-    onReset(evt) {
-      evt.preventDefault();
+    onReset() {
       // Reset our form values
       this.form.email = '';
+      this.form.password = '';
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {

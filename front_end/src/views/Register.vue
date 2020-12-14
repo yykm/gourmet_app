@@ -11,7 +11,11 @@
               <b-nav-item active>新規登録</b-nav-item>
             </b-nav>
           </template>
-          <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+          <b-form
+            @submit="onSubmit.prevent"
+            @reset="onReset.prevent"
+            v-if="show"
+          >
             <b-form-group label="名前：" label-for="name">
               <b-form-input
                 id="name"
@@ -91,10 +95,12 @@ export default {
     onSubmit() {
       alert(JSON.stringify(this.form));
     },
-    onReset(evt) {
-      evt.preventDefault();
+    onReset() {
       // Reset our form values
+      this.form.name = '';
       this.form.email = '';
+      this.form.password = '';
+      this.form.confirm = '';
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
