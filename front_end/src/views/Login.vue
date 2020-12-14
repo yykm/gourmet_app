@@ -1,10 +1,6 @@
 <template>
   <div class="login">
-    <header>
-      <h1 class="logo">
-        <a href="https://www.hulu.jp/" tabindex="1">Gourmet</a>
-      </h1>
-    </header>
+    <Header :site_name="'Gourmet'"></Header>
 
     <main class="py-4">
       <b-container class="">
@@ -42,7 +38,10 @@
             </b-form-group>
 
             <div class="text-center mb-2">
-              <b-button type="submit" variant="primary" class="px-3 px-md-4 mr-4"
+              <b-button
+                type="submit"
+                variant="primary"
+                class="px-3 px-md-4 mr-4"
                 >ログイン</b-button
               >
               <b-button type="reset" variant="danger" class="px-3 px-md-4"
@@ -57,8 +56,13 @@
 </template>
 
 <script>
+import Header from '@/components/Header.vue';
+
 export default {
   name: 'Login',
+  components: {
+    Header
+  },
   data() {
     return {
       form: {
