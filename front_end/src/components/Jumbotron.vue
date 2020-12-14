@@ -3,7 +3,7 @@
     <div class="jumbotron-container p-4 p-md-5 shadow">
       <h1 class="display-4 site-name">{{ site_name }}</h1>
       <p>
-        <b-button to="Login" class="btn-black px-2 px-md-4 mx-2 mt-md-1"
+        <b-button to="/login" class="btn-black px-2 px-md-4 mx-2 mt-md-1"
           >ログイン</b-button
         >
       </p>
