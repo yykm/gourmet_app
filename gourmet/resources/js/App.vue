@@ -1,23 +1,13 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">App</div>
-
-                    <div class="card-body">
-                        APP_I'm an example component.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
-    }
+export default {
+  name: 'App'
+};
 </script>
+
+<style></style>
