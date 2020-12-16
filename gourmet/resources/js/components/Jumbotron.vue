@@ -51,7 +51,6 @@ export default {
 
 .site-name {
   margin-bottom: 35px;
-  font-family: 'Playfair Display', serif;
   color: #2e210fe5;
 }
 @media (min-width: 768px) {
