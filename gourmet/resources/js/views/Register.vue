@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="register">
     <Header :site_name="'Gourmet'"></Header>
 
     <main class="py-4">
@@ -7,13 +7,13 @@
         <b-card class="mx-auto" tag="main">
           <template #header>
             <b-nav tabs>
-              <b-nav-item to="login">ログイン</b-nav-item>
+            <b-nav-item to="login">ログイン</b-nav-item>
               <b-nav-item active>新規登録</b-nav-item>
             </b-nav>
           </template>
           <b-form
-            @submit="onSubmit.prevent"
-            @reset="onReset.prevent"
+            @submit.prevent="onSubmit"
+            @reset.prevent="onReset"
             v-if="show"
           >
             <b-form-group label="名前：" label-for="name">
@@ -76,7 +76,7 @@
 import Header from './../components/Header.vue';
 
 export default {
-  name: 'Login',
+  name: 'Register',
   components: {
     Header
   },

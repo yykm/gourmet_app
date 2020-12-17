@@ -12,8 +12,8 @@
             </b-nav>
           </template>
           <b-form
-            @submit="onSubmit.prevent"
-            @reset="onReset.prevent"
+            @submit.prevent="onSubmit"
+            @reset.prevent="onReset"
             v-if="show"
           >
             <b-form-group label="Eメールアドレス：" label-for="email">
