@@ -2,7 +2,12 @@
   <header class="jumbotron jumbotron-extend text-center m-0">
     <div class="jumbotron-container p-4 p-md-5 shadow">
       <h1 class="display-4 site-name">{{ site_name }}</h1>
-      <p>
+      <p v-if="isLogin">
+        <b-button @click.prevent="onClick" class="btn-black px-2 px-md-4 mx-2 mt-md-1"
+          >ログアウト</b-button
+        >
+      </p>
+      <p v-else>
         <b-button to="/login" class="btn-black px-2 px-md-4 mx-2 mt-md-1"
           >ログイン</b-button
         >
@@ -12,12 +17,27 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Jumbotron',
   props: {
     site_name: {
       type: String,
       default: 'site_name'
+    }
+  },
+  computed: {
+    ...mapGetters(['isLogin']),
+  },
+  methods: {
+    ...mapActions(['logout']),
+
+    // ログアウト
+    async onClick(){
+      await this.logout();
+      this.$router.push('/login');
     }
   }
 };

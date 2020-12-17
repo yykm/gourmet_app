@@ -47,7 +47,7 @@
 
             <b-form-input
               id="password"
-              v-model="form.confirm"
+              v-model="form.password_confirmation"
               type="password"
               class="mb-4 mb-md-5"
               required
@@ -74,6 +74,8 @@
 
 <script>
 import Header from './../components/Header.vue';
+import { mapActions } from 'vuex';
+import { SET_USER } from './../store/mutation-types';
 
 export default {
   name: 'Register',
@@ -86,14 +88,21 @@ export default {
         name: '',
         email: '',
         password: '',
-        confirm: ''
+        password_confirmation: ''
       },
       show: true
     };
   },
   methods: {
-    onSubmit() {
-      alert(JSON.stringify(this.form));
+    ...mapActions([SET_USER]),
+
+    // ユーザ登録
+    async onSubmit() {
+      // ストアのsetUserアクションを呼び出す
+      await this[SET_USER](this.form);
+
+      // トップページに移動する
+      this.$router.push('/')
     },
     onReset() {
       // Reset our form values

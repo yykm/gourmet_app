@@ -4,7 +4,7 @@ import store from './store';
 import App from './App.vue';
 import './bootstrap';
 
-new Vue({
+const a = new Vue({
   router,
   store,
   render: h => h(App)

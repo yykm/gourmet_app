@@ -190,12 +190,11 @@ export default {
       }
 
       const url =
-        this.getURLs.baseURL +
         this.getURLs.prefix +
-        this.getURLs.relativeURL.search;
+        this.getURLs.rel.search;
       let $this = this;
 
-      this.axios
+      axios
         .post(url, params)
         .then(function(response) {
           // 成功時

@@ -63,6 +63,7 @@
 
 <script>
 import Header from './../components/Header.vue';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Login',
@@ -79,8 +80,14 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
-      alert(JSON.stringify(this.form));
+    ...mapActions(['login']),
+
+    async onSubmit() {
+      // ストアのloginアクションを呼び出す
+      await this.login(this.form)
+
+      // トップページに移動する
+      this.$router.push('/')
     },
     onReset() {
       // Reset our form values
