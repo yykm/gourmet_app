@@ -109,7 +109,7 @@ export default {
       this.form.name = '';
       this.form.email = '';
       this.form.password = '';
-      this.form.confirm = '';
+      this.form.password_confirmation = '';
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {

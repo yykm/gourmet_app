@@ -3,161 +3,167 @@
   <div class="search-result" v-if="shopsCount !== null">
     <div class="container mt-3">
       <!-- 検索件数表示部 -->
-      <p class="result-count text-right" v-if="shopsCount > 0">
-        {{ shopsCount }}件表示中
-      </p>
-      <p class="result-count text-center text-danger" v-else>
-        検索結果に該当するお店はありません。別のキーワードでお試しください。
-      </p>
+      <div v-if="shopsCount > 0">
+        <p class="result-count text-right">{{ shopsCount }}件表示中</p>
 
-      <!-- 店舗情報表示部   -->
-      <ul class="shops-list p-0 mb-5">
-        <li v-for="shop of shops" v-bind:key="shop.id">
-          <!-- 店舗ヘッダー部 -->
-          <div class="p-name-wrap">
-            <div class="d-flex align-items-center">
-              <!-- ロゴ画像 -->
-              <div class="p-shop-logo">
-                <img :src="shop.logo" alt="" />
-              </div>
-              <!-- 	店舗ジャンル名・お店ジャンルキャッチ・掲載店名 -->
-              <div class="p-name-content ml-4">
-                <p class="p-category mr-3 text-center">{{ shop.category }}</p>
-                <p class="p-catch">{{ shop.catch }}</p>
-                <p class="p-name">{{ shop.name }}</p>
+        <!-- 店舗情報表示部   -->
+        <ul class="shops-list p-0 mb-5">
+          <li v-for="shop of shops" v-bind:key="shop.id">
+            <!-- 店舗ヘッダー部 -->
+            <div class="p-name-wrap">
+              <div class="d-flex align-items-center">
+                <!-- ロゴ画像 -->
+                <div class="p-shop-logo">
+                  <img :src="shop.logo" alt="" />
+                </div>
+                <!-- 	店舗ジャンル名・お店ジャンルキャッチ・掲載店名 -->
+                <div class="p-name-content ml-4">
+                  <p class="p-category mr-3 text-center">{{ shop.category }}</p>
+                  <p class="p-catch">{{ shop.catch }}</p>
+                  <p class="p-name">{{ shop.name }}</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- お店のメインコンテンツ -->
-          <b-row class="p-content mt-4" align-h="between">
-            <b-col cols="12" md="3">
-              <!-- お店の画像  -->
-              <div class="p-main-img">
-                <p>
-                  <a :href="shop.url" target="_blank" rel="noopener noreferrer">
-                    <img :src="shop.photo" :alt="shop.name" /><br />
-                    <span class="mt-2 m-blank">店舗ページを見る</span>
-                  </a>
-                </p>
-              </div>
-            </b-col>
-
-            <b-col cols="12" md="9">
-              <!-- お店の詳細情報 -->
-              <table class="p-table">
-                <tr>
-                  <th>住所</th>
-                  <td>
-                    {{ shop.address }}<br />
+            <!-- お店のメインコンテンツ -->
+            <b-row class="p-content mt-4" align-h="between">
+              <b-col cols="12" md="3">
+                <!-- お店の画像  -->
+                <div class="p-main-img">
+                  <p>
                     <a
-                      :href="shop.map"
+                      :href="shop.url"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="m-txt-hover p-map-link"
-                      >Google Mapで見る</a
                     >
-                  </td>
-                </tr>
-                <tr>
-                  <th>アクセス</th>
-                  <td>{{ shop.access }}</td>
-                </tr>
-                <tr>
-                  <th>営業時間</th>
-                  <td>{{ shop.open }}</td>
-                </tr>
-                <tr>
-                  <th>ランチ</th>
-                  <td>{{ shop.lunch }}</td>
-                </tr>
-                <tr>
-                  <th>クレジット<br class="nopc" />カード</th>
-                  <td>{{ shop.card }}</td>
-                </tr>
-                <tr>
-                  <th>禁煙・喫煙</th>
-                  <td>{{ shop.smoking }}</td>
-                </tr>
-                <tr>
-                  <th>Wi-Fi</th>
-                  <td>{{ shop.wifi }}</td>
-                </tr>
-                <tr>
-                  <th>駐車場</th>
-                  <td>{{ shop.parking }}</td>
-                </tr>
-                <tr>
-                  <th>平均予算</th>
-                  <td>{{ shop.average }}</td>
-                </tr>
-                <tr v-if="shop.memo">
-                  <th>料金備考</th>
-                  <td>{{ shop.memo }}</td>
-                </tr>
-                <tr>
-                  <th>クーポン</th>
-                  <td>
-                    <a
-                      :href="shop.coupon"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="m-blank m-txt-hover"
-                      >クーポンを見る</a
-                    >
-                  </td>
-                </tr>
-              </table>
-            </b-col>
-          </b-row>
-        </li>
-      </ul>
+                      <img :src="shop.photo" :alt="shop.name" /><br />
+                      <span class="mt-2 m-blank">店舗ページを見る</span>
+                    </a>
+                  </p>
+                </div>
+              </b-col>
 
-      <b-pagination
-        :value="curPage"
-        :total-rows="shopsCount"
-        :per-page="perPage"
-        align="center"
-        @change="onChange"
-      ></b-pagination>
+              <b-col cols="12" md="9">
+                <!-- お店の詳細情報 -->
+                <table class="p-table">
+                  <tr>
+                    <th>住所</th>
+                    <td>
+                      {{ shop.address }}<br />
+                      <a
+                        :href="shop.map"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="m-txt-hover p-map-link"
+                        >Google Mapで見る</a
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>アクセス</th>
+                    <td>{{ shop.access }}</td>
+                  </tr>
+                  <tr>
+                    <th>営業時間</th>
+                    <td>{{ shop.open }}</td>
+                  </tr>
+                  <tr>
+                    <th>ランチ</th>
+                    <td>{{ shop.lunch }}</td>
+                  </tr>
+                  <tr>
+                    <th>クレジット<br class="nopc" />カード</th>
+                    <td>{{ shop.card }}</td>
+                  </tr>
+                  <tr>
+                    <th>禁煙・喫煙</th>
+                    <td>{{ shop.smoking }}</td>
+                  </tr>
+                  <tr>
+                    <th>Wi-Fi</th>
+                    <td>{{ shop.wifi }}</td>
+                  </tr>
+                  <tr>
+                    <th>駐車場</th>
+                    <td>{{ shop.parking }}</td>
+                  </tr>
+                  <tr>
+                    <th>平均予算</th>
+                    <td>{{ shop.average }}</td>
+                  </tr>
+                  <tr v-if="shop.memo">
+                    <th>料金備考</th>
+                    <td>{{ shop.memo }}</td>
+                  </tr>
+                  <tr>
+                    <th>クーポン</th>
+                    <td>
+                      <a
+                        :href="shop.coupon"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="m-blank m-txt-hover"
+                        >クーポンを見る</a
+                      >
+                    </td>
+                  </tr>
+                </table>
+              </b-col>
+            </b-row>
+          </li>
+        </ul>
+
+        <b-pagination
+          :value="curPage"
+          :total-rows="shopsCount"
+          :per-page="perPage"
+          align="center"
+          @change="onChange"
+        ></b-pagination>
+      </div>
+      <div v-else>
+        <p class="result-count text-center text-danger">
+          検索結果に該当するお店はありません。別のキーワードでお試しください。
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Result',
+  name: "Result",
   computed: {
-    ...mapGetters(['shopsCount', 'getShopsByPage', 'getShops'])
+    ...mapGetters(["shopsCount", "getShopsByPage", "getShops"]),
   },
   data() {
     return {
       shops: [],
       perPage: 5, // ページ毎に表示する店舗数
-      curPage: 0 // 現在のページ番号
+      curPage: 0, // 現在のページ番号
     };
   },
   watch: {
-    getShops: function() {
+    getShops: function () {
       this.curPage = 1;
       this.shops = this.getShopsByPage(this.curPage, this.perPage);
     },
-    shops: function() {
+    shops: function () {
       this.$nextTick(() => {
         // 検索結果更新のたび上部までスクロール
-        const scrollY = document.getElementsByTagName('header')[0].clientHeight;
+        const scrollY = document.getElementsByTagName("header")[0].clientHeight;
         window.scrollTo(0, scrollY);
       });
-    }
+    },
   },
   methods: {
     onChange(page) {
       this.curPage = page;
       this.shops = this.getShopsByPage(this.curPage, this.perPage);
-    }
-  }
+    },
+  },
 };
 </script>
 

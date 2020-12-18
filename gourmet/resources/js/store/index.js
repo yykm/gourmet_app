@@ -46,7 +46,7 @@ export default new Vuex.Store({
     // ページングごとのページ取得
     getShopsByPage(state) {
       return (curPage, perPage) => {
-        return state.shops.slice(
+        return state.shops === null ? [] : state.shops.slice(
           (curPage - 1) * perPage,
           (curPage - 1) * perPage + perPage
         );
