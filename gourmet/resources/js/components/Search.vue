@@ -76,9 +76,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { mapActions } from 'vuex';
-import { UPDATE_SHOPS } from './../store/mutation-types';
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters, mapActions } = createNamespacedHelpers('App');
 import Result from './../components/Result.vue';
 
 export default {
@@ -135,7 +134,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([UPDATE_SHOPS]),
+    ...mapActions(['updateShops']),
 
     setIniPosition() {
       // 検索フォームの位置を取得
@@ -185,7 +184,7 @@ export default {
       }
       // 検索条件が無い場合は問い合わせを実行しない
       if (params.toString() === '') {
-        this[UPDATE_SHOPS](null);
+        this.updateShops(null);
         return;
       }
 
@@ -224,7 +223,7 @@ export default {
           }));
 
           // ストアへ更新
-          $this[UPDATE_SHOPS](shops);
+          $this.updateShops(shops);
         })
         .catch(function(error) {
           // 失敗時

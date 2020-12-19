@@ -74,8 +74,8 @@
 
 <script>
 import Header from './../components/Header.vue';
-import { mapActions } from 'vuex';
-import { SET_USER } from './../store/mutation-types';
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions } = createNamespacedHelpers('App');
 
 export default {
   name: 'Register',
@@ -94,12 +94,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions([SET_USER]),
+    ...mapActions(['setUser']),
 
     // ユーザ登録
     async onSubmit() {
       // ストアのsetUserアクションを呼び出す
-      await this[SET_USER](this.form);
+      await this.setUser(this.form);
 
       // トップページに移動する
       this.$router.push('/')

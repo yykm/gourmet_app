@@ -63,7 +63,8 @@
 
 <script>
 import Header from './../components/Header.vue';
-import { mapActions } from 'vuex';
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions } = createNamespacedHelpers('App');
 
 export default {
   name: 'Login',

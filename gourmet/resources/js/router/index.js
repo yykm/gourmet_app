@@ -10,7 +10,7 @@ Vue.use(VueRouter);
 
 // 認証状態で認証済ページへ遷移時にガード
 const authGuard = function (to, from, next) {
-  if (store.getters['isLogin']) {
+  if (store.getters['App/isLogin']) {
     // 認証済みならホームへ
     next('/');
   } else {
@@ -23,7 +23,11 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    beforeEnter(to, from, next){
+      store.dispatch('App/updateShops', null);
+      next();
+    }
   },
   {
     path: '/login',

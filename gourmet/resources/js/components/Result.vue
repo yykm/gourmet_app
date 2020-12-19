@@ -131,7 +131,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('App');
 
 export default {
   name: "Result",
@@ -142,7 +143,7 @@ export default {
     return {
       shops: [],
       perPage: 5, // ページ毎に表示する店舗数
-      curPage: 0, // 現在のページ番号
+      curPage: 1, // 現在のページ番号
     };
   },
   watch: {
