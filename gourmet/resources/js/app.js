@@ -4,8 +4,15 @@ import store from './store';
 import App from './App.vue';
 import './bootstrap';
 
-const a = new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app');
+// 認証状態を取得してからVueインスタンス生成
+const createApp = async () => {
+  await store.dispatch('currentUser');
+
+  new Vue({
+    router,
+    store,
+    render: h => h(App)
+  }).$mount('#app');
+}
+
+createApp();

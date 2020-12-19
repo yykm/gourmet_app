@@ -1,11 +1,23 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import store from './../store';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Reset from '../views/Reset.vue';
 
 Vue.use(VueRouter);
+
+// 認証状態で認証済ページへ遷移時にガード
+const authGuard = function (to, from, next) {
+  if (store.getters['isLogin']) {
+    // 認証済みならホームへ
+    next('/');
+  } else {
+    // そうでなければ遷移先へ
+    next();
+  }
+}
 
 const routes = [
   {
@@ -16,28 +28,21 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    beforeEnter: authGuard
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register
+    component: Register,
+    beforeEnter: authGuard
   },
   {
     path: '/reset',
     name: 'Reset',
-    component: Reset
+    component: Reset,
+    beforeEnter: authGuard
   }
-
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
 ];
 
 const router = new VueRouter({

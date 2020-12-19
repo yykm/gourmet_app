@@ -23,6 +23,7 @@ export default new Vuex.Store({
         register: '/register', // ユーザ登録
         login: '/login', // ログイン
         logout: '/logout', // ログアウト
+        user: '/user', // ログインユーザ
       }
     }
   },
@@ -32,8 +33,13 @@ export default new Vuex.Store({
     getShops(state) {
       return state.shops;
     },
+    // 認証状態
     isLogin(state) {
-      return state.user ?? false;
+      return !! state.user;
+    },
+    // ユーザ名
+    userName(state) {
+      return state.user ? state.user.name : '';
     },
     // 検索件数の取得
     shopsCount(state) {
@@ -99,6 +105,16 @@ export default new Vuex.Store({
         this.getters.getURLs.rel.logout
       );
       commit(SET_USER, null);
+    },
+    // ログインユーザ取得API
+    async currentUser ({ commit }) {
+      const response = await axios.get(
+        this.getters.getURLs.prefix +
+        this.getters.getURLs.rel.user
+      );
+      const user = (response.data === '' ? null : response.data);
+      console.log(response.data);
+      commit(SET_USER, user);
     }
   },
 });

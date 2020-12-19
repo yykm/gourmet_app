@@ -7,6 +7,9 @@
           >ログアウト</b-button
         >
       </p>
+      <span v-if="isLogin">
+        {{ userName }}さん、ログイン中
+      </span>
       <p v-else>
         <b-button to="/login" class="btn-black px-2 px-md-4 mx-2 mt-md-1"
           >ログイン</b-button
@@ -29,7 +32,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isLogin']),
+    ...mapGetters(['isLogin', 'userName']),
   },
   methods: {
     ...mapActions(['logout']),
