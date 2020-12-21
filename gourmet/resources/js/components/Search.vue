@@ -188,9 +188,7 @@ export default {
         return;
       }
 
-      const url =
-        this.getURLs.prefix +
-        this.getURLs.rel.search;
+      const url = this.getURLs('search');
       let $this = this;
 
       axios

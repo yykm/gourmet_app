@@ -1,4 +1,4 @@
-import { UPDATE_SHOPS, SET_USER } from './mutation-types';
+import { APP, ERR } from './const';
 
 /**
  * モジュールストア:App
@@ -8,6 +8,7 @@ export default {
   namespaced: true,
   state: {
     shops: null, // 検索結果
+    apiStatus: null,// API通信結果
     user: null, // 認証済みユーザ
     host: {
       // 基底URL
@@ -27,19 +28,23 @@ export default {
 
   getters: {
     // 検索結果の取得
-    getShops(state) {
+    [APP.GET_SHOPS](state) {
       return state.shops;
     },
+    // API通信結果の取得
+    [APP.GET_API_STATUS](state) {
+      return state.apiStatus;
+    },
     // 認証状態
-    isLogin(state) {
+    [APP.IS_LOGIN](state) {
       return !! state.user;
     },
     // ユーザ名
-    userName(state) {
+    [APP.USER_NAME](state) {
       return state.user ? state.user.name : '';
     },
     // 検索件数の取得
-    shopsCount(state) {
+    [APP.SHOPS_COUNT](state) {
       if (state.shops === null) {
         return null;
       } else {
@@ -47,7 +52,7 @@ export default {
       }
     },
     // ページングごとのページ取得
-    getShopsByPage(state) {
+    [APP.GET_SHOPS_BY_PAGE](state) {
       return (curPage, perPage) => {
         return state.shops === null ? [] : state.shops.slice(
           (curPage - 1) * perPage,
@@ -56,63 +61,92 @@ export default {
       };
     },
     // URLの取得
-    getURLs(state) {
-      return state.host;
+    [APP.GET_URLS](state) {
+      return(key) => {
+        const prefix = state.host.prefix;
+        let url = '';
+
+        switch (key) {
+          case 'search':
+            url = (prefix + state.host.rel.search);
+            break;
+          case APP.REGISTER:
+            url = (prefix + state.host.rel.register);
+            break;
+          case APP.LOGIN:
+            url = (prefix + state.host.rel.login);
+            break;
+          case APP.LOGOUT:
+            url = (prefix + state.host.rel.logout);
+            break;
+          case APP.CURRET_USER:
+            url = (prefix + state.host.rel.user);
+            break;
+          default:
+            url = ''
+        }
+        return url;
+      }
     }
   },
 
   mutations: {
     // 検索結果(shops)の更新
-    [UPDATE_SHOPS](state, payload) {
-      state.shops = payload;
+    [APP.UPDATE_SHOPS](state, shops) {
+      state.shops = shops;
     },
     // 認証済みユーザ更新
-    [SET_USER] (state, user) {
+    [APP.SET_USER] (state, user) {
       state.user = user;
+    },
+    [APP.SET_API_STATUS] (state, status) {
+      state.apiStatus = status;
     }
   },
 
   actions: {
     // 検索処理
-    [UPDATE_SHOPS](context, payload) {
-      context.commit(UPDATE_SHOPS, payload);
+    [APP.UPDATE_SHOPS]({commit}, payload) {
+      commit(APP.UPDATE_SHOPS, payload);
     },
     // 新規登録API
-    async [SET_USER](context, data) {
-      const response = await axios.post(
-        context.getters.getURLs.prefix +
-        context.getters.getURLs.rel.register,
-        data
-      );
-      context.commit(SET_USER, response.data);
+    async [APP.REGISTER]({getters, commit}, data) {
+      const url = getters[APP.GET_URLS](APP.REGISTER);
+      const response = await axios.post(url,data);
+      commit(APP.SET_USER, response.data);
     },
     // ログインAPI
-    async login(context, data) {
-      const response = await axios.post(
-        context.getters.getURLs.prefix +
-        context.getters.getURLs.rel.login,
-        data
-      );
-      context.commit(SET_USER, response.data);
+    async [APP.LOGIN]({getters, commit, dispatch}, data) {
+      commit(APP.SET_API_STATUS, null);
+      // URI取得
+      const url = getters[APP.GET_URLS](APP.LOGIN);
+
+      // リクエスト発行
+      const response = await axios.post(url, data)
+      .catch(err => err.response || err);
+
+      // API通信成功時
+      if (response.status === ERR.OK) {
+        commit(APP.SET_API_STATUS, true);
+        commit(APP.SET_USER, response.data);
+        return;
+      }
+      // API通信失敗時
+      commit(APP.SET_API_STATUS, false)
+      dispatch(ERR.STORE + '/' + ERR.SET_CODE, response.status, { root: true })
     },
     // ログアウトAPI
-    async logout(context) {
-      const response = await axios.post(
-        context.getters.getURLs.prefix +
-        context.getters.getURLs.rel.logout
-      );
-      context.commit(SET_USER, null);
+    async [APP.LOGOUT]({getters, commit}) {
+      const url = getters[APP.GET_URLS](APP.LOGOUT);
+      const response = await axios.post(url);
+      commit(APP.SET_USER, null);
     },
     // ログインユーザ取得API
-    async currentUser (context) {
-
-      const response = await axios.get(
-        context.getters.getURLs.prefix +
-        context.getters.getURLs.rel.user
-      );
+    async [APP.CURRET_USER] ({getters, commit}) {
+      const url = getters[APP.GET_URLS](APP.CURRET_USER);
+      const response = await axios.get(url);
       const user = (response.data === '' ? null : response.data);
-      console.log(response.data);
-      context.commit(SET_USER, user);
+      commit(APP.SET_USER, user);
     }
   },
 }

@@ -63,8 +63,9 @@
 
 <script>
 import Header from './../components/Header.vue';
-import { createNamespacedHelpers } from 'vuex'
-const { mapActions } = createNamespacedHelpers('App');
+import { APP } from './../store/const.js';
+import { createNamespacedHelpers } from 'vuex';
+const { mapActions, mapGetters } = createNamespacedHelpers(APP.STORE);
 
 export default {
   name: 'Login',
@@ -80,15 +81,21 @@ export default {
       show: true
     };
   },
+  computed:{
+    ...mapGetters([APP.GET_API_STATUS]),
+  },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions([APP.LOGIN]),
 
     async onSubmit() {
       // ストアのloginアクションを呼び出す
-      await this.login(this.form)
+      await this[APP.LOGIN](this.form);
 
-      // トップページに移動する
-      this.$router.push('/')
+      // API通信成功時
+      if (this[APP.GET_API_STATUS]) {
+        // トップページに移動する
+        this.$router.push('/');
+      }
     },
     onReset() {
       // Reset our form values

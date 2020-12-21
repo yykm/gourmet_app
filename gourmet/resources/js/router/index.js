@@ -5,6 +5,7 @@ import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Reset from '../views/Reset.vue';
+import SystemError from '../views/Err/SystemError.vue';
 
 Vue.use(VueRouter);
 
@@ -20,6 +21,7 @@ const authGuard = function (to, from, next) {
 }
 
 const routes = [
+  // top
   {
     path: '/',
     name: 'Home',
@@ -29,23 +31,31 @@ const routes = [
       next();
     }
   },
+  // ログイン
   {
     path: '/login',
     name: 'Login',
     component: Login,
     beforeEnter: authGuard
   },
+  // 新規登録
   {
     path: '/register',
     name: 'Register',
     component: Register,
     beforeEnter: authGuard
   },
+  // パスワードリセット
   {
     path: '/reset',
     name: 'Reset',
     component: Reset,
     beforeEnter: authGuard
+  },
+  // 500エラー
+  {
+    path: '/500',
+    component: SystemError
   }
 ];
 

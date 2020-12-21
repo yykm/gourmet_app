@@ -94,12 +94,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['setUser']),
+    ...mapActions(['regist']),
 
     // ユーザ登録
     async onSubmit() {
       // ストアのsetUserアクションを呼び出す
-      await this.setUser(this.form);
+      await this.regist(this.form);
 
       // トップページに移動する
       this.$router.push('/')
