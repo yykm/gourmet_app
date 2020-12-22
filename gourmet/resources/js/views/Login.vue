@@ -11,53 +11,73 @@
               <b-nav-item to="register">新規登録</b-nav-item>
             </b-nav>
           </template>
-          <b-form
-            @submit.prevent="onSubmit"
-            @reset.prevent="onReset"
-            v-if="show"
-          >
-            <b-form-group label="Eメールアドレス：" label-for="email">
-              <b-form-input
-                id="email"
-                v-model="form.email"
-                type="email"
-                required
-                placeholder="hoge@example.com"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-group label="パスワード：" label-for="password">
-              <b-form-input
-                id="password"
-                v-model="form.password"
-                type="password"
-                required
-                placeholder="パスワード（8から20文字の英数字）"
-              ></b-form-input>
-            </b-form-group>
-
-            <div
-              v-if="loginErrors"
-              class="errors text-danger text-center"
+          <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
+            <b-form
+              @submit.prevent="handleSubmit(onSubmit)"
+              @reset.prevent="onReset"
             >
-              {{ loginErrors }}
-            </div>
+              <validation-provider
+                :rules="{ required: true, email: true }"
+                v-slot="validationContext"
+              >
+                <b-form-group label="Eメールアドレス：" label-for="email">
+                  <b-form-input
+                    id="email"
+                    v-model="form.email"
+                    type="email"
+                    :state="getValidationState(validationContext)"
+                    placeholder="hoge@example.com"
+                  ></b-form-input>
+                  <b-form-invalid-feedback>
+                    無効なメールアドレスです。
+                  </b-form-invalid-feedback>
+                  <b-form-valid-feedback
+                    >有効なメールアドレスです。</b-form-valid-feedback
+                  >
+                </b-form-group>
+              </validation-provider>
 
-            <div class="text-center mb-2  mt-4 mt-md-5 ">
-              <b-button
-                type="submit"
-                variant="primary"
-                class="px-3 px-md-4 mr-4"
-                >ログイン</b-button
+              <validation-provider
+                :rules="{ required: true, alpha_num: true, min: 8,max: 20}"
+                v-slot="validationContext"
               >
-              <b-button type="reset" variant="danger" class="px-3 px-md-4"
-                >リセット</b-button
-              >
-            </div>
-            <div class="text-center mt-3">
-              <b-link to="reset">パスワードをお忘れですか？</b-link>
-            </div>
-          </b-form>
+                <b-form-group label="パスワード：" label-for="password">
+                  <b-form-input
+                    id="password"
+                    v-model="form.password"
+                    type="password"
+                    :state="getValidationState(validationContext)"
+                    placeholder="パスワード（8から20文字の英数字）"
+                  ></b-form-input>
+                   <b-form-invalid-feedback>
+                    無効なパスワードです。英数字8～20文字でご入力下さい。
+                  </b-form-invalid-feedback>
+                  <b-form-valid-feedback
+                    >有効なパスワードです。</b-form-valid-feedback
+                  >
+                </b-form-group>
+              </validation-provider>
+
+              <div v-if="loginErrors" class="errors text-danger text-center">
+                {{ loginErrors }}
+              </div>
+
+              <div class="text-center mb-2 mt-4 mt-md-5">
+                <b-button
+                  type="submit"
+                  variant="primary"
+                  class="px-3 px-md-4 mr-4"
+                  >ログイン</b-button
+                >
+                <b-button type="reset" variant="danger" class="px-3 px-md-4"
+                  >リセット</b-button
+                >
+              </div>
+              <div class="text-center mt-3">
+                <b-link to="reset">パスワードをお忘れですか？</b-link>
+              </div>
+            </b-form>
+          </ValidationObserver>
         </b-card>
       </b-container>
     </main>
@@ -80,7 +100,6 @@ export default {
         email: "",
         password: "",
       },
-      show: true,
     };
   },
   computed: {
@@ -94,6 +113,10 @@ export default {
       login: APP.getAppURI(APP.LOGIN),
       setErrorMessage: ERR.getErrURI(ERR.SET_ERROR_MESSAGE),
     }),
+
+    getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null;
+    },
 
     async onSubmit() {
       // ストアのloginアクションを呼び出す
@@ -111,9 +134,8 @@ export default {
       this.form.password = "";
       // Trick to reset/clear native browser form validation state
       this["setErrorMessage"](null);
-      this.show = false;
       this.$nextTick(() => {
-        this.show = true;
+        this.$refs.observer.reset();
       });
     },
   },
