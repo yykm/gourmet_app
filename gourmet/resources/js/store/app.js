@@ -131,9 +131,16 @@ export default {
         commit(APP.SET_USER, response.data);
         return;
       }
+
       // API通信失敗時
-      commit(APP.SET_API_STATUS, false)
-      dispatch(ERR.STORE + '/' + ERR.SET_CODE, response.status, { root: true })
+      commit(APP.SET_API_STATUS, false);
+      // 認証失敗エラー
+      if (response.status === ERR.UNPROCESSABLE_ENTITY){
+        dispatch(ERR.getErrURI(ERR.SET_ERROR_MESSAGE), ERR.MSG_UNPROCESSABLE_ENTITY, { root: true });
+      } else {
+      // 内部エラー
+        dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, { root: true });
+      }
     },
     // ログアウトAPI
     async [APP.LOGOUT]({getters, commit}) {

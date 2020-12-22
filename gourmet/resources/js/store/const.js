@@ -25,6 +25,10 @@ export const APP = {
   LOGIN: 'login',
   LOGOUT: 'logout',
   CURRET_USER: 'currentUser',
+
+  getAppURI: function(value){
+    return (this.STORE + '/' + value);
+  }
 };
 
 /**
@@ -36,9 +40,11 @@ export const ERR = {
 
   // Getters
   GET_CODE: 'getCode',
+  GET_ERROR_MESSAGE: 'getErrorMessage',
 
   // Mutations
   SET_CODE: 'setCode',
+  SET_ERROR_MESSAGE: 'setErrorMessage',
 
   // Actions
   SET_CODE: 'setCode',
@@ -46,5 +52,13 @@ export const ERR = {
   // Status code
   OK: 200,
   CREATED: 201,
+  UNPROCESSABLE_ENTITY: 422,
   INTERNAL_SERVER_ERROR: 500,
+
+  // Error Message
+  MSG_UNPROCESSABLE_ENTITY: "ログインID、またはパスワードが間違っています。",
+
+  getErrURI: function(value){
+    return (this.STORE + '/' + value);
+  }
 };

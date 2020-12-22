@@ -26,11 +26,7 @@
               ></b-form-input>
             </b-form-group>
 
-            <b-form-group
-              label="パスワード："
-              label-for="password"
-              class="mb-4 mb-md-5"
-            >
+            <b-form-group label="パスワード：" label-for="password">
               <b-form-input
                 id="password"
                 v-model="form.password"
@@ -40,7 +36,14 @@
               ></b-form-input>
             </b-form-group>
 
-            <div class="text-center mb-2">
+            <div
+              v-if="loginErrors"
+              class="errors text-danger text-center"
+            >
+              {{ loginErrors }}
+            </div>
+
+            <div class="text-center mb-2  mt-4 mt-md-5 ">
               <b-button
                 type="submit"
                 variant="primary"
@@ -62,52 +65,61 @@
 </template>
 
 <script>
-import Header from './../components/Header.vue';
-import { APP } from './../store/const.js';
-import { createNamespacedHelpers } from 'vuex';
-const { mapActions, mapGetters } = createNamespacedHelpers(APP.STORE);
+import Header from "./../components/Header.vue";
+import { APP, ERR } from "./../store/const.js";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: 'Login',
+  name: "Login",
   components: {
-    Header
+    Header,
   },
   data() {
     return {
       form: {
-        email: '',
-        password: ''
+        email: "",
+        password: "",
       },
-      show: true
+      show: true,
     };
   },
-  computed:{
-    ...mapGetters([APP.GET_API_STATUS]),
+  computed: {
+    ...mapGetters({
+      apiStatus: APP.getAppURI(APP.GET_API_STATUS),
+      loginErrors: ERR.getErrURI(ERR.GET_ERROR_MESSAGE),
+    }),
   },
   methods: {
-    ...mapActions([APP.LOGIN]),
+    ...mapActions({
+      login: APP.getAppURI(APP.LOGIN),
+      setErrorMessage: ERR.getErrURI(ERR.SET_ERROR_MESSAGE),
+    }),
 
     async onSubmit() {
       // ストアのloginアクションを呼び出す
-      await this[APP.LOGIN](this.form);
+      await this["login"](this.form);
 
       // API通信成功時
-      if (this[APP.GET_API_STATUS]) {
+      if (this["apiStatus"]) {
         // トップページに移動する
-        this.$router.push('/');
+        this.$router.push("/");
       }
     },
     onReset() {
       // Reset our form values
-      this.form.email = '';
-      this.form.password = '';
+      this.form.email = "";
+      this.form.password = "";
       // Trick to reset/clear native browser form validation state
+      this["setErrorMessage"](null);
       this.show = false;
       this.$nextTick(() => {
         this.show = true;
       });
-    }
-  }
+    },
+  },
+  created() {
+    this["setErrorMessage"](null);
+  },
 };
 </script>
 

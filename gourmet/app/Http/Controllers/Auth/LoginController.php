@@ -38,7 +38,7 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-    
+
     /**
      * ログイン完了後の処理メソッドをオーバライド
      *
@@ -51,8 +51,8 @@ class LoginController extends Controller
         // ログインしたユーザを返す
         return $user;
     }
-    
-    
+
+
     /**
      * ログアウト完了後の処理メソッドをオーバライド
      *
@@ -63,5 +63,21 @@ class LoginController extends Controller
     {
         // ステータス200を返す
         return response()->json();
+    }
+
+    /**
+     * バリデーションをオーバーライド
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            $this->username() => 'required|string|email:rfc,dns',
+            'password' => 'required|string|alpha_num|between:8,20',
+        ]);
     }
 }
