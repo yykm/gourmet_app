@@ -109,12 +109,36 @@ export default {
     [APP.UPDATE_SHOPS]({commit}, payload) {
       commit(APP.UPDATE_SHOPS, payload);
     },
+
     // 新規登録API
-    async [APP.REGISTER]({getters, commit}, data) {
+    async [APP.REGISTER]({getters, commit, dispatch}, data) {
+      // URI取得
       const url = getters[APP.GET_URLS](APP.REGISTER);
-      const response = await axios.post(url,data);
-      commit(APP.SET_USER, response.data);
+
+      // リクエスト発行
+      const response = await axios.post(url, data)
+      .catch(err => err.response || err);
+
+      console.log(response);
+      // 通信成功（ユーザが作成された）場合
+      if (response.status === ERR.CREATED) {
+        commit(APP.SET_API_STATUS, true);
+        commit(APP.SET_USER, response.data);
+        return;
+      }
+
+      // 通信失敗（ユーザが作成された）場合
+      commit(APP.SET_API_STATUS, false);
+      // バリデーション
+      if (response.status === ERR.UNPROCESSABLE_ENTITY) {
+        console.log('toottayo');
+        dispatch(ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE), response.data.errors, { root: true } );
+      } else {
+      // 内部エラー
+        dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, { root: true });
+      }
     },
+
     // ログインAPI
     async [APP.LOGIN]({getters, commit, dispatch}, data) {
       commit(APP.SET_API_STATUS, null);
@@ -136,12 +160,13 @@ export default {
       commit(APP.SET_API_STATUS, false);
       // 認証失敗エラー
       if (response.status === ERR.UNPROCESSABLE_ENTITY){
-        dispatch(ERR.getErrURI(ERR.SET_ERROR_MESSAGE), ERR.MSG_UNPROCESSABLE_ENTITY, { root: true });
+        dispatch(ERR.getErrURI(ERR.SET_LOGIN_ERROR_MESSAGE), response.data.errors, { root: true });
       } else {
       // 内部エラー
         dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, { root: true });
       }
     },
+
     // ログアウトAPI
     async [APP.LOGOUT]({getters, commit}) {
       const url = getters[APP.GET_URLS](APP.LOGOUT);

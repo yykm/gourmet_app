@@ -16,9 +16,12 @@
               @submit.prevent="handleSubmit(onSubmit)"
               @reset.prevent="onReset"
             >
+
+            <!-- メールアドレス -->
               <validation-provider
                 :rules="{ required: true, email: true }"
                 v-slot="validationContext"
+                name="Eメールアドレス"
               >
                 <b-form-group label="Eメールアドレス：" label-for="email">
                   <b-form-input
@@ -29,7 +32,7 @@
                     placeholder="hoge@example.com"
                   ></b-form-input>
                   <b-form-invalid-feedback>
-                    無効なメールアドレスです。
+                     有効なメールアドレスではありません。
                   </b-form-invalid-feedback>
                   <b-form-valid-feedback
                     >有効なメールアドレスです。</b-form-valid-feedback
@@ -37,9 +40,11 @@
                 </b-form-group>
               </validation-provider>
 
+              <!-- パスワード -->
               <validation-provider
                 :rules="{ required: true, alpha_num: true, min: 8,max: 20}"
                 v-slot="validationContext"
+                name='パスワード'
               >
                 <b-form-group label="パスワード：" label-for="password">
                   <b-form-input
@@ -50,7 +55,7 @@
                     placeholder="パスワード（8から20文字の英数字）"
                   ></b-form-input>
                    <b-form-invalid-feedback>
-                    無効なパスワードです。英数字8～20文字でご入力下さい。
+                     {{ validationContext.errors[0] }}
                   </b-form-invalid-feedback>
                   <b-form-valid-feedback
                     >有効なパスワードです。</b-form-valid-feedback
@@ -59,7 +64,7 @@
               </validation-provider>
 
               <div v-if="loginErrors" class="errors text-danger text-center">
-                {{ loginErrors }}
+                  {{ loginErrors }}
               </div>
 
               <div class="text-center mb-2 mt-4 mt-md-5">
@@ -88,11 +93,14 @@
 import Header from "./../components/Header.vue";
 import { APP, ERR } from "./../store/const.js";
 import { mapActions, mapGetters } from "vuex";
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 
 export default {
   name: "Login",
   components: {
     Header,
+    ValidationObserver,
+    ValidationProvider
   },
   data() {
     return {
@@ -105,13 +113,13 @@ export default {
   computed: {
     ...mapGetters({
       apiStatus: APP.getAppURI(APP.GET_API_STATUS),
-      loginErrors: ERR.getErrURI(ERR.GET_ERROR_MESSAGE),
+      loginErrors: ERR.getErrURI(ERR.GET_LOGIN_ERROR_MESSAGE),
     }),
   },
   methods: {
     ...mapActions({
       login: APP.getAppURI(APP.LOGIN),
-      setErrorMessage: ERR.getErrURI(ERR.SET_ERROR_MESSAGE),
+      setLoginErrorMessage: ERR.getErrURI(ERR.SET_LOGIN_ERROR_MESSAGE),
     }),
 
     getValidationState({ dirty, validated, valid = null }) {
@@ -133,14 +141,14 @@ export default {
       this.form.email = "";
       this.form.password = "";
       // Trick to reset/clear native browser form validation state
-      this["setErrorMessage"](null);
+      this["setLoginErrorMessage"](null);
       this.$nextTick(() => {
         this.$refs.observer.reset();
       });
     },
   },
   created() {
-    this["setErrorMessage"](null);
+    this["setLoginErrorMessage"](null);
   },
 };
 </script>

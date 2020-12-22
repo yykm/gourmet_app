@@ -7,65 +7,129 @@
         <b-card class="mx-auto" tag="main">
           <template #header>
             <b-nav tabs>
-            <b-nav-item to="login">ログイン</b-nav-item>
+              <b-nav-item to="login">ログイン</b-nav-item>
               <b-nav-item active>新規登録</b-nav-item>
             </b-nav>
           </template>
-          <b-form
-            @submit.prevent="onSubmit"
-            @reset.prevent="onReset"
-            v-if="show"
-          >
-            <b-form-group label="名前：" label-for="name">
-              <b-form-input
-                id="name"
-                v-model="form.name"
-                required
-                placeholder="山田太郎"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-group label="Eメールアドレス：" label-for="email">
-              <b-form-input
-                id="email"
-                v-model="form.email"
-                type="email"
-                required
-                placeholder="hoge@example.com"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-group label="パスワード：" label-for="password">
-              <b-form-input
-                id="password"
-                v-model="form.password"
-                type="password"
-                required
-                placeholder="パスワード（8から20文字の英数字）"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-input
-              id="password"
-              v-model="form.password_confirmation"
-              type="password"
-              class="mb-4 mb-md-5"
-              required
-              placeholder="パスワード（確認用）"
-            ></b-form-input>
-
-            <div class="text-center mb-2">
-              <b-button
-                type="submit"
-                variant="primary"
-                class="px-3 px-md-4 mr-4"
-                >新規登録</b-button
+          <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
+            <b-form
+              @submit.prevent="handleSubmit(onSubmit)"
+              @reset.prevent="onReset"
+            >
+              <!-- 名前 -->
+              <validation-provider
+                :rules="{ required: true, max: 20 }"
+                v-slot="validationContext"
+                name="名前"
               >
-              <b-button type="reset" variant="danger" class="px-3 px-md-4"
-                >リセット</b-button
+                <b-form-group label="名前：" label-for="name">
+                  <b-form-input
+                    id="name"
+                    type="text"
+                    :state="getValidationState(validationContext)"
+                    v-model="form.name"
+                    placeholder="お名前（20文字以内）"
+                  ></b-form-input>
+                  <b-form-invalid-feedback>
+                    {{ validationContext.errors[0] }}
+                  </b-form-invalid-feedback>
+                  <b-form-valid-feedback
+                    >有効な名前です。</b-form-valid-feedback
+                  >
+                </b-form-group>
+              </validation-provider>
+
+              <!-- メールアドレス -->
+              <validation-provider
+                :rules="{ required: true, email: true }"
+                v-slot="validationContext"
+                name="Eメールアドレス"
               >
-            </div>
-          </b-form>
+                <b-form-group label="Eメールアドレス：" label-for="email">
+                  <b-form-input
+                    id="email"
+                    v-model="form.email"
+                    type="email"
+                    :state="getValidationState(validationContext)"
+                    placeholder="hoge@example.com"
+                  ></b-form-input>
+                  <b-form-invalid-feedback>
+                    有効なメールアドレスではありません。
+                  </b-form-invalid-feedback>
+                  <b-form-valid-feedback
+                    >有効なメールアドレスです。</b-form-valid-feedback
+                  >
+                </b-form-group>
+              </validation-provider>
+
+              <!-- パスワード  -->
+              <validation-provider
+                :rules="{ required: true, alpha_num: true, min: 8, max: 20 }"
+                v-slot="validationContext"
+                vid="form.password"
+                name="パスワード"
+              >
+                <b-form-group label="パスワード：" label-for="password">
+                  <b-form-input
+                    id="password"
+                    v-model="form.password"
+                    type="password"
+                    :state="getValidationState(validationContext)"
+                    placeholder="パスワード（8から20文字の英数字）"
+                  ></b-form-input>
+                  <b-form-invalid-feedback>
+                    {{ validationContext.errors[0] }}
+                  </b-form-invalid-feedback>
+                  <b-form-valid-feedback
+                    >有効なパスワードです。</b-form-valid-feedback
+                  >
+                </b-form-group>
+              </validation-provider>
+
+              <!-- パスワード確認用 -->
+              <validation-provider
+                :rules="{
+                  required: true,
+                  alpha_num: true,
+                  min: 8,
+                  max: 20,
+                  confirmed: 'form.password',
+                }"
+                name="パスワード（確認用）"
+                v-slot="validationContext"
+              >
+                <b-form-group>
+                  <b-form-input
+                    id="password_confirmation"
+                    v-model="form.password_confirmation"
+                    type="password"
+                    :state="getValidationState(validationContext)"
+                    placeholder="パスワード（確認用）"
+                  ></b-form-input>
+                  <b-form-invalid-feedback>
+                    {{ validationContext.errors[0] }}
+                  </b-form-invalid-feedback>
+                  <b-form-valid-feedback>一致しました</b-form-valid-feedback>
+                </b-form-group>
+              </validation-provider>
+
+              <div v-if="registerErrors" class="errors text-danger text-center">
+                {{ registerErrors }}
+              </div>
+
+              <div class="text-center mb-2 mt-4 mb-md-5">
+                <b-button
+                  type="submit"
+                  variant="primary"
+                  class="px-3 px-md-4 mr-4"
+                  >新規登録</b-button
+                >
+                <b-button type="reset" variant="danger" class="px-3 px-md-4"
+                  >リセット</b-button
+                >
+              </div>
+            </b-form>
+          </ValidationObserver>
         </b-card>
       </b-container>
     </main>
@@ -73,50 +137,72 @@
 </template>
 
 <script>
-import Header from './../components/Header.vue';
-import { createNamespacedHelpers } from 'vuex'
-const { mapActions } = createNamespacedHelpers('App');
+import Header from "./../components/Header.vue";
+import { APP, ERR } from "./../store/const.js";
+import { mapActions, mapGetters } from "vuex";
+import { ValidationObserver, ValidationProvider } from "vee-validate";
 
 export default {
-  name: 'Register',
+  name: "Register",
   components: {
-    Header
+    Header,
+    ValidationObserver,
+    ValidationProvider,
   },
   data() {
     return {
       form: {
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: ''
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
       },
-      show: true
+      password: "",
     };
   },
+  computed: {
+    ...mapGetters({
+      apiStatus: APP.getAppURI(APP.GET_API_STATUS),
+      registerErrors: ERR.getErrURI(ERR.GET_REGISTER_ERROR_MESSAGE),
+    }),
+  },
   methods: {
-    ...mapActions(['regist']),
+    ...mapActions({
+      regist: APP.getAppURI(APP.REGISTER),
+      setRegisterErrorMessage: ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE),
+    }),
+
+    getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null;
+    },
 
     // ユーザ登録
     async onSubmit() {
       // ストアのsetUserアクションを呼び出す
-      await this.regist(this.form);
+      await this["regist"](this.form);
 
-      // トップページに移動する
-      this.$router.push('/')
+      // API通信成功時
+      if (this["apiStatus"]) {
+        // トップページに移動する
+        this.$router.push("/");
+      }
     },
     onReset() {
       // Reset our form values
-      this.form.name = '';
-      this.form.email = '';
-      this.form.password = '';
-      this.form.password_confirmation = '';
+      this.form.name = "";
+      this.form.email = "";
+      this.form.password = "";
+      this.form.password_confirmation = "";
       // Trick to reset/clear native browser form validation state
-      this.show = false;
+      this["setRegisterErrorMessage"](null);
       this.$nextTick(() => {
-        this.show = true;
+        this.$refs.observer.reset();
       });
-    }
-  }
+    },
+  },
+  created() {
+    this["setRegisterErrorMessage"](null);
+  },
 };
 </script>
 
