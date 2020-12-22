@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex'
-const { mapGetters, mapActions } = createNamespacedHelpers('App');
+import { APP, ERR } from "./../store/const.js";
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Jumbotron',
@@ -32,15 +32,27 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isLogin', 'userName']),
+    ...mapGetters({
+      isLogin: APP.getAppURI(APP.IS_LOGIN),
+      userName:APP.getAppURI(APP.USER_NAME),
+      apiStatus: APP.getAppURI(APP.GET_API_STATUS)
+    }),
   },
   methods: {
-    ...mapActions(['logout']),
+    ...mapActions({
+      logout: APP.getAppURI(APP.LOGOUT)
+    }),
 
     // ログアウト
     async onClick(){
-      await this.logout();
-      this.$router.push('/login');
+      // ストアのlogoutアクションを呼び出す
+      await this['logout']();
+
+      // API通信成功時
+      if(this['apiStatus']){
+        // トップページに移動する
+        this.$router.push('/login');
+      }
     }
   }
 };

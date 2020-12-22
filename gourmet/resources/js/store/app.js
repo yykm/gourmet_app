@@ -119,7 +119,6 @@ export default {
       const response = await axios.post(url, data)
       .catch(err => err.response || err);
 
-      console.log(response);
       // 通信成功（ユーザが作成された）場合
       if (response.status === ERR.CREATED) {
         commit(APP.SET_API_STATUS, true);
@@ -168,17 +167,47 @@ export default {
     },
 
     // ログアウトAPI
-    async [APP.LOGOUT]({getters, commit}) {
+    async [APP.LOGOUT]({getters, commit, dispatch}) {
+      commit(APP.SET_API_STATUS, null);
+      // URI取得
       const url = getters[APP.GET_URLS](APP.LOGOUT);
-      const response = await axios.post(url);
-      commit(APP.SET_USER, null);
+
+      // リクエスト発行
+      const response = await axios.post(url)
+      .catch(err => err.response || err);
+
+      // API通信成功時
+      if (response.status === ERR.OK) {
+        commit(APP.SET_API_STATUS, true);
+        commit(APP.SET_USER, null);
+        return;
+      }
+
+      // 内部エラー
+      commit(APP.SET_API_STATUS, false);
+      dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, { root: true });
     },
     // ログインユーザ取得API
-    async [APP.CURRET_USER] ({getters, commit}) {
+    async [APP.CURRET_USER] ({getters, commit, dispatch}) {
+      commit(APP.SET_API_STATUS, null);
+
+      // URI取得
       const url = getters[APP.GET_URLS](APP.CURRET_USER);
-      const response = await axios.get(url);
-      const user = (response.data === '' ? null : response.data);
-      commit(APP.SET_USER, user);
+
+      // リクエスト発行
+      const response = await axios.get(url)
+      .catch(err => err.response || err);
+
+      // API通信成功時
+      if (response.status === ERR.OK) {
+        const user = (response.data === '' ? null : response.data);
+        commit(APP.SET_USER, user);
+        return;
+      }
+
+      // 内部エラー
+      commit(APP.SET_API_STATUS, false);
+      dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, { root: true });
     }
   },
 }
