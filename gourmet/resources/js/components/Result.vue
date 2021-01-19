@@ -37,7 +37,7 @@
                       rel="noopener noreferrer"
                     >
                       <img :src="shop.photo" :alt="shop.name" /><br />
-                      <span class="mt-2 m-blank">店舗ページを見る</span>
+                      <span class="mt-2 m-blank">口コミを見る</span>
                     </a>
                   </p>
                 </div>
@@ -94,18 +94,6 @@
                   <tr v-if="shop.memo">
                     <th>料金備考</th>
                     <td>{{ shop.memo }}</td>
-                  </tr>
-                  <tr>
-                    <th>クーポン</th>
-                    <td>
-                      <a
-                        :href="shop.coupon"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="m-blank m-txt-hover"
-                        >クーポンを見る</a
-                      >
-                    </td>
                   </tr>
                 </table>
               </b-col>

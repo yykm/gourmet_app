@@ -69,7 +69,7 @@ export default {
 }
 @media (min-width: 768px) {
   .jumbotron-extend {
-    height: 100vh;
+    height: 320px;
   }
 }
 

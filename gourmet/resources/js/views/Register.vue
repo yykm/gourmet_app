@@ -93,7 +93,7 @@
                   alpha_num: true,
                   min: 8,
                   max: 20,
-                  confirmed: 'form.password',
+                  confirmed: 'form.password'
                 }"
                 name="パスワード（確認用）"
                 v-slot="validationContext"
@@ -117,7 +117,7 @@
                 {{ registerErrors }}
               </div>
 
-              <div class="text-center mb-2 mt-4 mb-md-5">
+              <div class="text-center mb-2 mt-4 mt-md-5 mb-md-4">
                 <b-button
                   type="submit"
                   variant="primary"
@@ -147,7 +147,7 @@ export default {
   components: {
     Header,
     ValidationObserver,
-    ValidationProvider,
+    ValidationProvider
   },
   data() {
     return {
@@ -155,21 +155,21 @@ export default {
         name: "",
         email: "",
         password: "",
-        password_confirmation: "",
+        password_confirmation: ""
       },
-      password: "",
+      password: ""
     };
   },
   computed: {
     ...mapGetters({
       apiStatus: APP.getAppURI(APP.GET_API_STATUS),
-      registerErrors: ERR.getErrURI(ERR.GET_REGISTER_ERROR_MESSAGE),
-    }),
+      registerErrors: ERR.getErrURI(ERR.GET_REGISTER_ERROR_MESSAGE)
+    })
   },
   methods: {
     ...mapActions({
       regist: APP.getAppURI(APP.REGISTER),
-      setRegisterErrorMessage: ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE),
+      setRegisterErrorMessage: ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE)
     }),
 
     getValidationState({ dirty, validated, valid = null }) {
@@ -198,11 +198,11 @@ export default {
       this.$nextTick(() => {
         this.$refs.observer.reset();
       });
-    },
+    }
   },
   created() {
     this["setRegisterErrorMessage"](null);
-  },
+  }
 };
 </script>
 
