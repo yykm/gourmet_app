@@ -6,6 +6,10 @@ import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Reset from '../views/Reset.vue';
 import SystemError from '../views/Err/SystemError.vue';
+import Detail from '../views/Detail.vue';
+import Info from '../views/Info.vue';
+import PhotoList from '../views/PhotoList.vue';
+import Review from '../views/Review.vue';
 
 Vue.use(VueRouter);
 
@@ -26,7 +30,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    beforeEnter(to, from, next){
+    beforeEnter(to, from, next) {
       store.dispatch('App/updateShops', null);
       next();
     }
@@ -51,6 +55,38 @@ const routes = [
     name: 'Reset',
     component: Reset,
     beforeEnter: authGuard
+  },
+  // 店舗詳細
+  {
+    path: '/detail/:id/:tab',
+    name: 'Detail',
+    component: Detail,
+    props: (route) => ({
+      tab: Number(route.params.tab),
+      id: String(route.params.id)
+    }),
+    children: [{
+        path: 'info',
+        name: 'info',
+        components: {
+          content: Info
+        }
+      },
+      {
+        path: 'photoList',
+        name: 'photoList',
+        components: {
+          content: PhotoList
+        }
+      },
+      {
+        path: 'review',
+        name: 'review',
+        components: {
+          content: Review
+        }
+      },
+    ]
   },
   // 500エラー
   {

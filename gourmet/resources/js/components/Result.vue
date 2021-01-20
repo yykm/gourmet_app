@@ -20,7 +20,14 @@
                 <div class="p-name-content ml-4">
                   <p class="p-category mr-3 text-center">{{ shop.category }}</p>
                   <p class="p-catch">{{ shop.catch }}</p>
-                  <p class="p-name">{{ shop.name }}</p>
+                  <p class="p-name">
+                    <router-link
+                      :to="{ id: shop.id, tab: 'info' } | detailURL"
+                      rel="noopener noreferrer"
+                    >
+                      <span>{{ shop.name }}</span>
+                    </router-link>
+                  </p>
                 </div>
               </div>
             </div>
@@ -31,14 +38,13 @@
                 <!-- お店の画像  -->
                 <div class="p-main-img">
                   <p>
-                    <a
-                      :href="shop.url"
-                      target="_blank"
+                    <b-link
+                      :to="{ id: shop.id, tab: 'review' } | detailURL"
                       rel="noopener noreferrer"
                     >
                       <img :src="shop.photo" :alt="shop.name" /><br />
                       <span class="mt-2 m-blank">口コミを見る</span>
-                    </a>
+                    </b-link>
                   </p>
                 </div>
               </b-col>
@@ -119,40 +125,73 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex'
-const { mapGetters } = createNamespacedHelpers('App');
+import { createNamespacedHelpers } from "vuex";
+const { mapGetters } = createNamespacedHelpers("App");
 
 export default {
   name: "Result",
   computed: {
-    ...mapGetters(["shopsCount", "getShopsByPage", "getShops"]),
+    ...mapGetters(["shopsCount", "getShopsByPage", "getShops"])
   },
   data() {
     return {
       shops: [],
       perPage: 5, // ページ毎に表示する店舗数
-      curPage: 1, // 現在のページ番号
+      curPage: 1 // 現在のページ番号
     };
   },
   watch: {
-    getShops: function () {
+    getShops: function() {
       this.curPage = 1;
       this.shops = this.getShopsByPage(this.curPage, this.perPage);
     },
-    shops: function () {
+    shops: function() {
       this.$nextTick(() => {
         // 検索結果更新のたび上部までスクロール
         const scrollY = document.getElementsByTagName("header")[0].clientHeight;
         window.scrollTo(0, scrollY);
       });
-    },
+    }
   },
   methods: {
     onChange(page) {
       this.curPage = page;
       this.shops = this.getShopsByPage(this.curPage, this.perPage);
-    },
+    }
   },
+  // 店舗詳細ページへのURLを返却
+  filters: {
+    detailURL: function({ id, tab }) {
+
+      if (typeof id !== "string") {
+        return "/";
+      }
+      // タブ番号
+      var tabNo = 0;
+
+      switch (tab) {
+        case "info":
+          tabNo = 0;
+          break;
+        case "menu":
+          tabNo = 1;
+          break;
+        case "photoList":
+          tabNo = 2;
+          break;
+        case "review":
+          tabNo = 3;
+          break;
+        case "map":
+          tabNo = 4;
+          break;
+        default:
+          tabNo = 0;
+      }
+      // /detail/店舗id/タブ番号
+      return "/detail/" + id + "/" + tabNo + '/' + tab;
+    }
+  }
 };
 </script>
 

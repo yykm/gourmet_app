@@ -130,7 +130,6 @@ export default {
       commit(APP.SET_API_STATUS, false);
       // バリデーション
       if (response.status === ERR.UNPROCESSABLE_ENTITY) {
-        console.log('toottayo');
         dispatch(ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE), response.data.errors, { root: true } );
       } else {
       // 内部エラー
