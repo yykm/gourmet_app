@@ -188,8 +188,9 @@ export default {
         default:
           tabNo = 0;
       }
+
       // /detail/店舗id/タブ番号
-      return "/detail/" + id + "/" + tabNo + '/' + tab;
+      return ["", "detail", id ,tabNo, tab].join("/");
     }
   }
 };

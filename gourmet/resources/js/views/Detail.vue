@@ -1,18 +1,61 @@
 <template>
   <div id="detail">
     <Header :site_name="'Gourmet'"></Header>
-    <b-container>
-      <!-- 店舗概要表示部分 -->
-      <b-row class="text-center bg-light mt-4 info">
-        <b-col>店舗概要</b-col>
-      </b-row>
+    <b-container v-if="shop" class="">
+      <!-- 店舗トップ写真 -->
+      <b-card no-body class="overflow-hidden mt-4 w-100">
+        <b-row no-gutters align-h="between">
+          <b-col sm="12" md="6" lg="4" class="p-3 pr-0">
+            <div class="background" :style="{ background }"></div>
+          </b-col>
+
+          <!-- 店舗概要 -->
+          <b-col sm="12" md="6" lg="8">
+            <b-card-body :title="shop.name">
+              <small class="mb-2">{{ shop.kana }}</small>
+
+              <b-card-text class="mt-2">
+                <!-- アクセス -->
+                <span>アクセス：{{ shop.access }}</span
+                ><br />
+                <!-- 平均予算 -->
+                <span>平均予算：{{ shop.average }}</span>
+              </b-card-text>
+
+              <!-- 利用可能サービス -->
+              <ul class="tag-list px-0">
+                <li
+                  v-for="(message, i) in services"
+                  :key="i"
+                  class="tag-list__item"
+                >
+                  <span class="tag-list__item-inner">{{ message }}</span>
+                </li>
+              </ul>
+
+              <b-card-footer class="clear-float reservation mt-2 py-2">
+                <span>営業時間：{{ shop.open }}</span
+                ><br />
+                <span>定休日：{{ shop.close }}</span
+                ><br />
+                <div class="text-center">
+                  <b-button variant="warning" class="mt-3 mb-1 px-4"
+                    >空室確認・予約</b-button
+                  >
+                </div>
+              </b-card-footer>
+            </b-card-body>
+          </b-col>
+        </b-row>
+      </b-card>
 
       <!-- タブ -->
       <b-tabs
         v-model="tabIndex"
         @activate-tab="onChange"
+        nav-class="flex-nowrap"
         :fill="true"
-        class="nav-row"
+        class="nav-row mt-0"
       >
         <b-tab title="店舗詳細"></b-tab>
         <b-tab title="メニュー" disabled></b-tab>
@@ -20,25 +63,86 @@
         <b-tab title="口コミ"></b-tab>
         <b-tab title="地図" disabled></b-tab>
       </b-tabs>
-{{ this.tabIndex }}
+
       <!-- コンテンツ -->
       <router-view name="content"></router-view>
     </b-container>
+    <div v-else class="text-center mt-4 text-danger">
+      <span>該当のお店は存在しません。</span>
+    </div>
   </div>
 </template>
 
 <script>
 import Header from "./../components/Header.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Detail",
-  data(){
+  data() {
     return {
-      tabIndex: Number(this.tab)
+      tabIndex: Number(this.tab),
+      shop: null
     };
   },
   components: {
     Header
+  },
+  computed: {
+    ...mapGetters("App", ["getShop"]),
+
+    // 各種サービスの有無
+    services() {
+      // 使用可能なサービスのメッセージ配列
+      var messages = [];
+      let message = {
+        wifi: "WiFi",
+        course: "コース",
+        free_drink: "飲み放題",
+        free_food: "食べ放題",
+        private_room: "個室",
+        card: "カード",
+        non_smoking: "禁煙席",
+        parking: "駐車場",
+        pet: "ペット",
+        lunch: "ランチ"
+      };
+
+      Object.keys(this.shop).forEach(key => {
+        switch (key) {
+          // "あり"が表現に含まれるサービス
+          case "wifi":
+          case "course":
+          case "free_drink":
+          case "free_food":
+          case "private_room":
+          case "parking":
+          case "lunch":
+          case "non_smoking":
+            if (this.shop[key].indexOf("あり") !== -1) {
+              messages.push(message[key] + "あり");
+            }
+            break;
+          // "可"が表現に含まれるサービス
+          case "card":
+          case "pet":
+            if (this.shop[key].indexOf("可") !== -1) {
+              messages.push(message[key] + "可");
+            }
+            break;
+          // 利用可能なサービスではない場合何もしない
+          default:
+            break;
+        }
+      });
+
+      return messages;
+    },
+
+    // 背景画像読み込み
+    background() {
+      return "url(" + this.shop.image_l + ") no-repeat center center";
+    }
   },
   props: {
     // 店舗ID
@@ -46,6 +150,7 @@ export default {
       type: String,
       required: true
     },
+    // タブ番号
     tab: {
       type: Number,
       required: true
@@ -55,7 +160,7 @@ export default {
   methods: {
     onChange(newTabIndex, prevTabIndex, bvEvent) {
       // 移動先
-      var prefix = "/detail/" + this.id + '/' + this.tab;
+      var prefix = ["", "detail", this.id, newTabIndex].join("/");
 
       switch (newTabIndex) {
         case 0:
@@ -79,17 +184,84 @@ export default {
 
       this.$router.push(prefix);
     }
+  },
+  created() {
+    this.shop = this.getShop(this.id) ? this.getShop(this.id) : null;
   }
 };
 </script>
 
 <style scoped>
-.info {
-  height: 300px;
+.tabs ul {
+  flex-wrap: nowrap;
 }
 
-.nav-row {
-  margin-right: -15px;
-  margin-left: -15px;
+.card-title {
+  margin-bottom: 0.15rem;
+}
+
+.card-body small {
+  color: #9b9b9b;
+}
+
+.card-text > span {
+  font-size: smaller;
+  margin-bottom: 0.2rem;
+}
+
+.tag-list {
+  list-style: none;
+}
+
+.tag-list__item {
+  float: left;
+  margin: 0 5px 5px 0;
+}
+
+.tag-list__item-inner {
+  display: block;
+  padding: 0 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 22px;
+  height: 24px;
+  font-size: 12px;
+  line-height: 20px;
+  background-color: #fff;
+  color: #333;
+  text-decoration: none;
+}
+
+@media (max-width: 767.98px) {
+  .card-img {
+    max-width: 65%;
+  }
+}
+@media (min-width: 768px) {
+  .card-img {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.background {
+  min-height: 280px;
+  height: 100%;
+  background-size: contain !important;
+  border-radius: 0%;
+}
+
+.clear-float {
+  clear: both;
+}
+
+.card-footer span {
+  font-size: smaller;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 }
 </style>

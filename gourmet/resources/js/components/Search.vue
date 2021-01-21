@@ -206,23 +206,37 @@ export default {
           const shops = result.shop.map(getted_shop => ({
             id: getted_shop.id, // お店ID
             name: getted_shop.name, // 掲載店名
+            kana: getted_shop.name_kana, // 店名かな
             url: getted_shop.urls.pc, // 店舗url
             logo: getted_shop.logo_image, // 	ロゴ画像
+            image_l: getted_shop.photo.pc.l, // 	店舗トップ写真(小）画像URL
             category: getted_shop.genre.name, // お店ジャンル名
             catch: getted_shop.genre.catch, // お店ジャンルキャッチ
+            feat: getted_shop.catch, // お店キャッチ
             photo: getted_shop.photo.pc.l, // メイン画像
             address: getted_shop.address, // 住所
+            station: getted_shop.station_name, // 最寄り駅
             map:
               "https://maps.google.co.jp/maps?q=" + encodeURI(getted_shop.name), // マップ
             access: getted_shop.mobile_access, // アクセス
             open: getted_shop.open, // 営業時間
-            lunch: getted_shop.lunch, // ランチ
+            close: getted_shop.close,
             card: getted_shop.card, // クレジットカード利用可能か不可か
             smoking: getted_shop.non_smoking, // 喫煙・禁煙
-            wifi: getted_shop.wifi, // wifi
             parking: getted_shop.parking, // 駐車場
             average: getted_shop.budget.average, // 平均予算
             memo: getted_shop.budget_memo, // 料金備考
+            // サービス有無
+            wifi: getted_shop.wifi, // wifi
+            cource: getted_shop.cource, // コース有無
+            free_drink:getted_shop.free_drink, // 飲み放題
+            free_food:getted_shop.free_food, // 食べ放題
+            private_room:getted_shop.private_room, // 個室
+            card:getted_shop.card, // カード利用
+            non_smoking:getted_shop.non_smoking, // 禁煙席
+            parking:getted_shop.parking, // 駐車場
+            pet:getted_shop.pet, // ペット連れ込み
+            lunch: getted_shop.lunch, // ランチ
           }));
 
           // ストアへ更新

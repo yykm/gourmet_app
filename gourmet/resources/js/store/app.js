@@ -1,14 +1,17 @@
-import { APP, ERR } from './const';
+import {
+  APP,
+  ERR
+} from './const';
 
 /**
  * モジュールストア:App
  * アプリに関するデータ及び操作を定義
-*/
+ */
 export default {
   namespaced: true,
   state: {
     shops: null, // 検索結果
-    apiStatus: null,// API通信結果
+    apiStatus: null, // API通信結果
     user: null, // 認証済みユーザ
     host: {
       // 基底URL
@@ -31,17 +34,11 @@ export default {
     [APP.GET_SHOPS](state) {
       return state.shops;
     },
-    // API通信結果の取得
-    [APP.GET_API_STATUS](state) {
-      return state.apiStatus;
-    },
-    // 認証状態
-    [APP.IS_LOGIN](state) {
-      return !! state.user;
-    },
-    // ユーザ名
-    [APP.USER_NAME](state) {
-      return state.user ? state.user.name : '';
+    // 特定の店舗情報の取得
+    getShop(state) {
+      return (shopId) => {
+        return  state.shops ? state.shops.find(shop => shop.id === shopId) : null;
+      };
     },
     // 検索件数の取得
     [APP.SHOPS_COUNT](state) {
@@ -51,6 +48,19 @@ export default {
         return state.shops.length;
       }
     },
+    // API通信結果の取得
+    [APP.GET_API_STATUS](state) {
+      return state.apiStatus;
+    },
+    // 認証状態
+    [APP.IS_LOGIN](state) {
+      return !!state.user;
+    },
+    // ユーザ名
+    [APP.USER_NAME](state) {
+      return state.user ? state.user.name : '';
+    },
+
     // ページングごとのページ取得
     [APP.GET_SHOPS_BY_PAGE](state) {
       return (curPage, perPage) => {
@@ -62,7 +72,7 @@ export default {
     },
     // URLの取得
     [APP.GET_URLS](state) {
-      return(key) => {
+      return (key) => {
         const prefix = state.host.prefix;
         let url = '';
 
@@ -96,28 +106,34 @@ export default {
       state.shops = shops;
     },
     // 認証済みユーザ更新
-    [APP.SET_USER] (state, user) {
+    [APP.SET_USER](state, user) {
       state.user = user;
     },
-    [APP.SET_API_STATUS] (state, status) {
+    [APP.SET_API_STATUS](state, status) {
       state.apiStatus = status;
     }
   },
 
   actions: {
     // 検索処理
-    [APP.UPDATE_SHOPS]({commit}, payload) {
+    [APP.UPDATE_SHOPS]({
+      commit
+    }, payload) {
       commit(APP.UPDATE_SHOPS, payload);
     },
 
     // 新規登録API
-    async [APP.REGISTER]({getters, commit, dispatch}, data) {
+    async [APP.REGISTER]({
+      getters,
+      commit,
+      dispatch
+    }, data) {
       // URI取得
       const url = getters[APP.GET_URLS](APP.REGISTER);
 
       // リクエスト発行
       const response = await axios.post(url, data)
-      .catch(err => err.response || err);
+        .catch(err => err.response || err);
 
       // 通信成功（ユーザが作成された）場合
       if (response.status === ERR.CREATED) {
@@ -130,22 +146,30 @@ export default {
       commit(APP.SET_API_STATUS, false);
       // バリデーション
       if (response.status === ERR.UNPROCESSABLE_ENTITY) {
-        dispatch(ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE), response.data.errors, { root: true } );
+        dispatch(ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE), response.data.errors, {
+          root: true
+        });
       } else {
-      // 内部エラー
-        dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, { root: true });
+        // 内部エラー
+        dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, {
+          root: true
+        });
       }
     },
 
     // ログインAPI
-    async [APP.LOGIN]({getters, commit, dispatch}, data) {
+    async [APP.LOGIN]({
+      getters,
+      commit,
+      dispatch
+    }, data) {
       commit(APP.SET_API_STATUS, null);
       // URI取得
       const url = getters[APP.GET_URLS](APP.LOGIN);
 
       // リクエスト発行
       const response = await axios.post(url, data)
-      .catch(err => err.response || err);
+        .catch(err => err.response || err);
 
       // API通信成功時
       if (response.status === ERR.OK) {
@@ -157,23 +181,31 @@ export default {
       // API通信失敗時
       commit(APP.SET_API_STATUS, false);
       // 認証失敗エラー
-      if (response.status === ERR.UNPROCESSABLE_ENTITY){
-        dispatch(ERR.getErrURI(ERR.SET_LOGIN_ERROR_MESSAGE), response.data.errors, { root: true });
+      if (response.status === ERR.UNPROCESSABLE_ENTITY) {
+        dispatch(ERR.getErrURI(ERR.SET_LOGIN_ERROR_MESSAGE), response.data.errors, {
+          root: true
+        });
       } else {
-      // 内部エラー
-        dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, { root: true });
+        // 内部エラー
+        dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, {
+          root: true
+        });
       }
     },
 
     // ログアウトAPI
-    async [APP.LOGOUT]({getters, commit, dispatch}) {
+    async [APP.LOGOUT]({
+      getters,
+      commit,
+      dispatch
+    }) {
       commit(APP.SET_API_STATUS, null);
       // URI取得
       const url = getters[APP.GET_URLS](APP.LOGOUT);
 
       // リクエスト発行
       const response = await axios.post(url)
-      .catch(err => err.response || err);
+        .catch(err => err.response || err);
 
       // API通信成功時
       if (response.status === ERR.OK) {
@@ -184,10 +216,17 @@ export default {
 
       // 内部エラー
       commit(APP.SET_API_STATUS, false);
-      dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, { root: true });
+      dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, {
+        root: true
+      });
     },
+
     // ログインユーザ取得API
-    async [APP.CURRET_USER] ({getters, commit, dispatch}) {
+    async [APP.CURRET_USER]({
+      getters,
+      commit,
+      dispatch
+    }) {
       commit(APP.SET_API_STATUS, null);
 
       // URI取得
@@ -195,7 +234,7 @@ export default {
 
       // リクエスト発行
       const response = await axios.get(url)
-      .catch(err => err.response || err);
+        .catch(err => err.response || err);
 
       // API通信成功時
       if (response.status === ERR.OK) {
@@ -206,7 +245,9 @@ export default {
 
       // 内部エラー
       commit(APP.SET_API_STATUS, false);
-      dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, { root: true });
+      dispatch(ERR.getErrURI(ERR.SET_CODE), response.status, {
+        root: true
+      });
     }
   },
 }

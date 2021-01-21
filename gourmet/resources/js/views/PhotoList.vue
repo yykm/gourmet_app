@@ -1,6 +1,6 @@
 <template>
   <div id="photoList">
-    {{ this.shopId }}
+    {{ this.shopId }}c
   </div>
 </template>
 
@@ -11,7 +11,7 @@ export default {
     return {
       shopId: this.$route.params.id
     };
-  },
+  }
 };
 </script>
 
