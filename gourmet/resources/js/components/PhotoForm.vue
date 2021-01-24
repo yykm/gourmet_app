@@ -5,6 +5,7 @@
     </div>
     <b-modal
       ref="my-modal"
+      :centered="true"
       hide-header-close
       header-class="justify-content-center"
       hide-footer

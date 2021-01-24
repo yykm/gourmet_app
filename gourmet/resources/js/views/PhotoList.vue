@@ -1,8 +1,15 @@
 <template>
   <div id="photoList">
-    <PhotoForm :shopId="shopId" />
-
-    <Photo :photoId="'aaa'" />
+    <b-container fluid>
+      <b-row>
+        <b-col><PhotoForm :shopId="shopId"/></b-col>
+      </b-row>
+      <b-row align-h="start">
+        <b-col sm="6" md="4" lg="3" class="flex-grow-0 my-2" v-for="photoId in photoIds" :key="photoId"
+          ><Photo :photoId="photoId"
+        /></b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -19,10 +26,9 @@ export default {
   data() {
     return {
       shopId: this.$route.params.id, // 店舗ID
-      photoId: null // 写真ID
+      photoIds: ["a", "b", "c", "d","e","f","g",] // 写真ID
     };
-  },
-
+  }
 };
 </script>
 
