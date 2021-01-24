@@ -59,7 +59,7 @@ const routes = [
   // 店舗詳細
   {
     path: '/detail/:id/:tab',
-    name: 'Detail',
+    name: 'detail',
     component: Detail,
     props: (route) => ({
       tab: Number(route.params.tab),
@@ -77,7 +77,7 @@ const routes = [
         name: 'photoList',
         components: {
           content: PhotoList
-        }
+        },
       },
       {
         path: 'review',

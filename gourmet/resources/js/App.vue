@@ -1,10 +1,12 @@
 <template>
   <div id="app">
+    <Message />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import Message from './components/Message.vue'
 import { ERR } from './store/const.js';
 import { createNamespacedHelpers } from 'vuex';
 const { mapGetters, mapActions } = createNamespacedHelpers(ERR.STORE);
@@ -12,6 +14,9 @@ const { mapGetters, mapActions } = createNamespacedHelpers(ERR.STORE);
 
 export default {
   name: 'App',
+  components: {
+    Message,
+  },
   computed: {
     ...mapGetters([ERR.GET_CODE]),
   },

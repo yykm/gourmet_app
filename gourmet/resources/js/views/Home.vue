@@ -8,7 +8,7 @@
 <script>
 // @ is an alias to /src
 import Jumbotron from './../components/Jumbotron.vue';
-import Main from './..//components/Main.vue';
+import Main from './../components/Main.vue';
 
 export default {
   name: 'Home',

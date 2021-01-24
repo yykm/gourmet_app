@@ -5,8 +5,18 @@
       <!-- 店舗トップ写真 -->
       <b-card no-body class="overflow-hidden mt-4 w-100">
         <b-row no-gutters align-h="between">
-          <b-col sm="12" md="6" lg="4" class="p-3 pr-0">
-            <div class="background" :style="{ background }"></div>
+          <b-col
+            sm="12"
+            md="6"
+            lg="4"
+            class="d-flex align-items-center bg-wrapper"
+          >
+            <b-img
+              :src="shop.image_l"
+              center
+              fluid-grow
+              class="background"
+            ></b-img>
           </b-col>
 
           <!-- 店舗概要 -->
@@ -126,7 +136,10 @@ export default {
           // "可"が表現に含まれるサービス
           case "card":
           case "pet":
-            if (this.shop[key].indexOf("可") !== -1) {
+            if (
+              this.shop[key].indexOf("可") !== -1 &&
+              !(this.shop[key].indexOf("不可") >= 0)
+            ) {
               messages.push(message[key] + "可");
             }
             break;
@@ -137,11 +150,6 @@ export default {
       });
 
       return messages;
-    },
-
-    // 背景画像読み込み
-    background() {
-      return "url(" + this.shop.image_l + ") no-repeat center center";
     }
   },
   props: {
@@ -243,13 +251,6 @@ export default {
   }
 }
 
-.background {
-  min-height: 280px;
-  height: 100%;
-  background-size: contain !important;
-  border-radius: 0%;
-}
-
 .clear-float {
   clear: both;
 }
@@ -263,5 +264,14 @@ export default {
     padding-left: 0px;
     padding-right: 0px;
   }
+}
+
+.background {
+  max-height: 300px;
+  max-width: 300px;
+}
+
+.bg-wrapper {
+  padding: 1.25rem;
 }
 </style>

@@ -10,9 +10,9 @@
             <b-form-input
               class="keyword"
               placeholder="フリーワード検索（店名 地名、駅名など）"
-              @input="onInput"
+              v-model="keyword"
             ></b-form-input>
-            <!-- v-model="form.keyword" -->
+            <!-- v-model="keyword" -->
 
             <b-button
               variant="light"
@@ -22,7 +22,7 @@
             >
             <div class="selects ml-md-4" v-show="geoActive">
               <b-form-select
-                v-model="form.range"
+                v-model="range"
                 :options="options"
                 required
                 @change="changeGeo"
@@ -35,33 +35,27 @@
           <div
             class="d-flex align-items-center justify-content-center flex-column flex-md-row"
           >
-            <p
-              class="search-conditions mb-0 mx-2 px-1 mt-3"
-              v-if="form.keyword"
-            >
-              キーワード：『{{ form.keyword }}』
+            <p class="search-conditions mb-0 mx-2 px-1 mt-3" v-if="keyword">
+              キーワード：『{{ keyword }}』
             </p>
-            <p
-              class="search-conditions mb-0 mx-2 px-1 mt-3"
-              v-if="form.range == 1"
-            >
+            <p class="search-conditions mb-0 mx-2 px-1 mt-3" v-if="range == 1">
               現在地から300m圏内
             </p>
             <p
               class="search-conditions mb-0 mx-2 px-1 mt-3"
-              v-else-if="form.range == 2"
+              v-else-if="range == 2"
             >
               現在地から500m圏内
             </p>
             <p
               class="search-conditions mb-0 mx-2 px-1 mt-3"
-              v-else-if="form.range == 4"
+              v-else-if="range == 4"
             >
               現在地から2000m圏内
             </p>
             <p
               class="search-conditions mb-0 mx-2 px-1 mt-3"
-              v-else-if="form.range == 5"
+              v-else-if="range == 5"
             >
               現在地から3000m圏内
             </p>
@@ -77,7 +71,7 @@
       </b-container>
     </div>
     <!-- 検索結果表示領域 -->
-    <Result></Result>
+    <Result :loading="loading"></Result>
   </div>
 </template>
 
@@ -85,6 +79,7 @@
 import { createNamespacedHelpers } from "vuex";
 const { mapGetters, mapActions } = createNamespacedHelpers("App");
 import Result from "./../components/Result.vue";
+import _ from "lodash";
 
 export default {
   name: "Search",
@@ -93,10 +88,9 @@ export default {
   },
   data() {
     return {
-      form: {
-        keyword: "", // キーワード
-        range: 3 //範囲
-      },
+      keyword: "", // キーワード
+      range: 3, //範囲
+      loading: false,
       options: [
         { value: "0", text: "範囲を指定しない" },
         { value: "1", text: "300m圏内" },
@@ -115,12 +109,26 @@ export default {
     };
   },
 
+  watch: {
+    keyword: function(keyWord) {
+      this.loading = true;
+      this.delayFunc(keyWord);
+    },
+    range: function() {
+      this.loading = true;
+    }
+  },
+
   mounted: function() {
     // イベント登録
     window.addEventListener("scroll", this.onScroll);
     window.addEventListener("resize", this.onResize);
     // 検索フォームの初期位置を取得
     this.setIniPosition();
+  },
+
+  created() {
+    this.delayFunc = _.debounce(this.onInput, 800);
   },
 
   beforeDestroy: function() {
@@ -164,40 +172,33 @@ export default {
     },
     // 検索処理
     onInput: function(value) {
-      clearTimeout(this.timer);
-
-      this.timer = setTimeout(
-        function() {
-          // 遅れて表示に反映させたい為、v-modelは使わない
-          this.form.keyword = value;
-          this.geoActive
-            ? this.getGourmet(this.keyword, this.lat, this.lon, this.form.range)
-            : this.getGourmet(this.keyword);
-        }.bind(this),
-        500
-      );
+      this.geoActive
+        ? this.getGourmet(this.keyword, this.lat, this.lon, this.range)
+        : this.getGourmet(this.keyword);
     },
 
-    getGourmet: function() {
+    getGourmet: async function() {
       const params = new URLSearchParams();
-      if (this.form.keyword !== "") {
-        params.append("keyword", this.form.keyword);
+      if (this.keyword !== "") {
+        params.append("keyword", this.keyword);
       }
       if (this.geoActive === true) {
         params.append("lat", this.lat);
         params.append("lon", this.lon);
-        params.append("range", this.form.range);
+        params.append("range", this.range);
       }
       // 検索条件が無い場合は問い合わせを実行しない
       if (params.toString() === "") {
         this.updateShops(null);
+        // ローダ非表示
+        this.loading = false;
         return;
       }
 
       const url = this.getURLs("search");
       let $this = this;
 
-      axios
+      await axios
         .post(url, params)
         .then(function(response) {
           // 成功時
@@ -229,14 +230,14 @@ export default {
             // サービス有無
             wifi: getted_shop.wifi, // wifi
             cource: getted_shop.cource, // コース有無
-            free_drink:getted_shop.free_drink, // 飲み放題
-            free_food:getted_shop.free_food, // 食べ放題
-            private_room:getted_shop.private_room, // 個室
-            card:getted_shop.card, // カード利用
-            non_smoking:getted_shop.non_smoking, // 禁煙席
-            parking:getted_shop.parking, // 駐車場
-            pet:getted_shop.pet, // ペット連れ込み
-            lunch: getted_shop.lunch, // ランチ
+            free_drink: getted_shop.free_drink, // 飲み放題
+            free_food: getted_shop.free_food, // 食べ放題
+            private_room: getted_shop.private_room, // 個室
+            card: getted_shop.card, // カード利用
+            non_smoking: getted_shop.non_smoking, // 禁煙席
+            parking: getted_shop.parking, // 駐車場
+            pet: getted_shop.pet, // ペット連れ込み
+            lunch: getted_shop.lunch // ランチ
           }));
 
           // ストアへ更新
@@ -244,22 +245,24 @@ export default {
         })
         .catch(function(error) {
           // 失敗時
-          $this.getting = true;
           $this.message = error;
         });
+
+      // ローダ非表示
+      this.loading = false;
     },
     // 現在位置の取得
     getGeo: function() {
       // 成功時の処理
       const successCallback = position => {
         // 範囲を初期化
-        this.form.range = 3;
+        this.range = 3;
         this.geoActive = true;
 
         (this.lat = position.coords.latitude), // 緯度
           (this.lon = position.coords.longitude); // 経度
 
-        this.getGourmet(this.keyword, this.lat, this.lon, this.form.range);
+        this.getGourmet(this.keyword, this.lat, this.lon, this.range);
       };
       // 失敗時の処理
       const errorCallback = error => {
@@ -293,7 +296,7 @@ export default {
         this.getGourmet(this.keyword);
       } else {
         this.geoActive = true;
-        this.getGourmet(this.keyword, this.lat, this.lon, this.form.range);
+        this.getGourmet(this.keyword, this.lat, this.lon, this.range);
       }
     }
   }

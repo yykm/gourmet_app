@@ -3,7 +3,7 @@
   <div class="search-result" v-if="shopsCount !== null">
     <div class="container mt-3">
       <!-- 検索件数表示部 -->
-      <div v-if="shopsCount > 0">
+      <div v-if="shopsCount > 0 && !loading">
         <p class="result-count text-right">{{ shopsCount }}件表示中</p>
 
         <!-- 店舗情報表示部   -->
@@ -115,11 +115,12 @@
           @change="onChange"
         ></b-pagination>
       </div>
-      <div v-else>
+      <div v-else-if="!loading">
         <p class="result-count text-center text-danger">
           検索結果に該当するお店はありません。別のキーワードでお試しください。
         </p>
       </div>
+      <Loader v-else>Searching...</Loader>
     </div>
   </div>
 </template>
@@ -127,9 +128,13 @@
 <script>
 import { createNamespacedHelpers } from "vuex";
 const { mapGetters } = createNamespacedHelpers("App");
+import Loader from "./../components/Loader.vue";
 
 export default {
   name: "Result",
+  components: {
+    Loader
+  },
   computed: {
     ...mapGetters(["shopsCount", "getShopsByPage", "getShops"])
   },
@@ -139,6 +144,12 @@ export default {
       perPage: 5, // ページ毎に表示する店舗数
       curPage: 1 // 現在のページ番号
     };
+  },
+  props:{
+    loading:{
+      type: Boolean,
+      required: true,
+    }
   },
   watch: {
     getShops: function() {
@@ -190,7 +201,7 @@ export default {
       }
 
       // /detail/店舗id/タブ番号
-      return ["", "detail", id ,tabNo, tab].join("/");
+      return ["", "detail", id , tabNo, tab].join("/");
     }
   }
 };
