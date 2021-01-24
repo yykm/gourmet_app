@@ -8,13 +8,52 @@ use App\Shop;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class PhotoController extends Controller
 {
     public function __construct()
     {
-        // 認証されていない場合リダイレクト（ユーザ情報返却）
-        $this->middleware('auth');
+        // 認証されていない場合リダイレクト
+        // 写真一覧取得, ダウンロードリンク取得に関しては認証不要とする
+        $this->middleware('auth')->except(['index', 'download']);
+    }
+
+
+    /**
+     * 写真ダウンロード
+     * @param Photo $photo
+     * @return \Illuminate\Http\Response
+     */
+    public function download(Photo $photo)
+    {
+        // 写真の存在チェック
+        if (! Storage::cloud()->exists($photo->filename)) {
+            abort(404);
+        }
+
+        // Content-Dispositionヘッダを指定することによって、
+        // ブラウザにダウンロードさせるために保存ダイアログを開くよう指示
+        $disposition = 'attachment; filename="' . $photo->filename . '"';
+        $headers = [
+        'Content-Type' => 'application/octet-stream',
+        'Content-Disposition' => $disposition,
+    ];
+
+        return response(Storage::cloud()->get($photo->filename), 200, $headers);
+    }
+
+    /**
+     * 写真一覧
+     */
+    public function index(Request $request)
+    {
+        // ある店舗に関する写真と、その写真を投稿したユーザ情報を取得
+        $photos = Photo::with(['user'])
+        ->where('shop_id', '=', $request->shop_id)
+        ->orderBy(Photo::CREATED_AT, 'desc')->paginate();
+
+        return $photos;
     }
 
     /**

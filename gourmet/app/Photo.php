@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class Photo extends Model
 {
@@ -12,6 +13,19 @@ class Photo extends Model
 
     /** IDの桁数 */
     const ID_LENGTH = 12;
+
+    /** 返却されるJSON表現に含める属性 */
+    protected $visible = [
+        'id', // 写真ID
+        'user', // ユーザ情報
+        'url', // 公開URL
+        self::CREATED_AT // 写真投稿日
+    ];
+
+    /** 返却されるJSON表現にgetUrlAttributeアクセサを含める */
+    protected $appends = [
+        'url',
+    ];
 
     public function __construct(array $attributes = [])
     {
@@ -55,5 +69,33 @@ class Photo extends Model
         }
 
         return $id;
+    }
+
+    /**
+     * リレーションシップ - usersテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
+    /**
+     * リレーションシップ - shopsテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo('App\Shop');
+    }
+
+    /**
+     * アクセサ - url
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        // S3上のオブジェクトURL（公開URL）を返却する
+        return Storage::cloud()->url($this->attributes['filename']);
     }
 }
