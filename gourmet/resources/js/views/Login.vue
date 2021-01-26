@@ -1,7 +1,6 @@
 <template>
   <div class="login">
-    <Header :site_name="'Gourmet'"></Header>
-
+    <Header />
     <main class="py-4">
       <b-container>
         <b-card class="mx-auto" tag="main">
@@ -90,17 +89,17 @@
 </template>
 
 <script>
-import Header from "./../components/Header.vue";
 import { APP, ERR } from "./../store/const.js";
 import { mapActions, mapGetters } from "vuex";
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
+import Header from './../components/Header.vue'
 
 export default {
   name: "Login",
   components: {
-    Header,
     ValidationObserver,
-    ValidationProvider
+    ValidationProvider,
+    Header
   },
   data() {
     return {

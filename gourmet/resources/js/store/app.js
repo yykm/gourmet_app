@@ -37,7 +37,7 @@ export default {
     // 特定の店舗情報の取得
     getShop(state) {
       return (shopId) => {
-        return  state.shops ? state.shops.find(shop => shop.id === shopId) : null;
+        return state.shops ? state.shops.find(shop => shop.id === shopId) : null;
       };
     },
     // 検索件数の取得

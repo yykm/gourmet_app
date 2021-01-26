@@ -1,7 +1,7 @@
 <template> </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   computed: {
@@ -12,11 +12,17 @@ export default {
     })
   },
   watch: {
-    message() {
-      this.toast("b-toaster-top-center");
+    message(newMsg) {
+      if (newMsg) {
+        this.toast("b-toaster-top-center");
+        // 初期化
+        this.setContent({ success: null, content: "", timeout: 3000 });
+      }
     }
   },
   methods: {
+    ...mapMutations("Message", ["setContent"]),
+
     toast(toaster, append = false) {
       this.$bvToast.toast(this.message, {
         title: this.success ? "成功" : "失敗",

@@ -10,6 +10,7 @@ import Detail from '../views/Detail.vue';
 import Info from '../views/Info.vue';
 import PhotoList from '../views/PhotoList.vue';
 import Review from '../views/Review.vue';
+import Result from '../views/Result.vue';
 
 Vue.use(VueRouter);
 
@@ -34,6 +35,11 @@ const routes = [
       store.dispatch('App/updateShops', null);
       next();
     }
+  },
+  {
+    path: '/result',
+    name: 'Result',
+    component: Result,
   },
   // ログイン
   {
@@ -78,6 +84,15 @@ const routes = [
         components: {
           content: PhotoList
         },
+        // ページ番号のクエリパラメータ
+        // props: route => {
+        //   const page = route.query.page;
+        //   console.log(route.query.page)
+        //   // 整数のみ受け付ける
+        //   return {
+        //     page: Number(/^[1-9][0-9]*$/.test(page) ? page * 1 : 1)
+        //   }
+        // }
       },
       {
         path: 'review',
@@ -98,6 +113,9 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
+  scrollBehavior () {
+    return { x: 0, y: 0 }
+  },
   routes
 });
 

@@ -1,6 +1,6 @@
 <template>
   <div id="photoList">
-    <div class="text-center my-3">
+    <div class="text-center mt-5 mb-4">
       <b-button id="toggle-btn" @click="toggleModal">写真を投稿する</b-button>
     </div>
     <b-modal
@@ -181,6 +181,8 @@ export default {
         });
         return;
       }
+
+      this.$emit('photoPost');
 
       // 成功メッセージ表示
       this.setContent({

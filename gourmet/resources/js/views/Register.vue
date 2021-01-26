@@ -1,7 +1,5 @@
 <template>
   <div class="register">
-    <Header :site_name="'Gourmet'"></Header>
-
     <main class="py-4">
       <b-container>
         <b-card class="mx-auto" tag="main">
@@ -145,7 +143,6 @@ import { ValidationObserver, ValidationProvider } from "vee-validate";
 export default {
   name: "Register",
   components: {
-    Header,
     ValidationObserver,
     ValidationProvider
   },

@@ -11,6 +11,8 @@ class Photo extends Model
     /** 主キーの型 */
     protected $keyType = 'string';
 
+    protected $perPage = 12; // ペジネーション１ページあたりのデータ数
+
     /** IDの桁数 */
     const ID_LENGTH = 12;
 

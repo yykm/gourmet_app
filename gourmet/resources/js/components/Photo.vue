@@ -1,17 +1,24 @@
 <template>
   <div class="photo">
-      <b-img class="photo-img" alt="aiu" v-b-modal="photoId">Show Modal</b-img>
+    <figure class="photo__wrapper" v-b-modal="photo.id">
+      <b-img :src="photo.url" class="photo__img">Show Modal</b-img>
+    </figure>
+
+    <!-- モーダル表示部 -->
     <b-modal
-      :id="photoId"
+      size="xl"
+      :hide-header-close="true"
+      :id="photo.id"
       :centered="true"
       :ok-only="true"
       ok-title="閉じる"
       ok-variant="secondary"
       content-class="text-center"
       footer-class="justify-content-center"
-      :hide-header="true"
+      :title="photo.user.name + 'さんの投稿'"
+      title-class="mx-auto"
     >
-      {{ photoId }}の写真ページ
+      <b-img :src="photo.url">Show Modal</b-img>
     </b-modal>
   </div>
 </template>
@@ -20,9 +27,9 @@
 export default {
   name: "Photo",
   props: {
-    // 店舗ID
-    photoId: {
-      type: String,
+    // 写真オブジェクト
+    photo: {
+      type: Object,
       required: true
     }
   }
@@ -30,14 +37,15 @@ export default {
 </script>
 
 <style scoped>
-.photo {
-  height: 300px;
+.photo,
+.photo__wrapper,
+.photo__img {
+  height: 100%;
   width: 100%;
-  background-color:aliceblue;
 }
 
-.photo-img {
-  min-width: 100%;
-  min-height:100%
+.modal-body img {
+  max-width: 90%;
+  max-height: 90%;
 }
 </style>
