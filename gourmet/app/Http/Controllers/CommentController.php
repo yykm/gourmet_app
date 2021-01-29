@@ -56,6 +56,8 @@ class CommentController extends Controller
             // コメント付属の写真がある場合は対応する写真IDも併せて保存
             if (Photo::find($request->photo_id) !== null) {
                 $comment = Photo::with(['comment'])->find($request->photo_id)->comment()->create($data);
+                // 対応する写真データのコメントidも更新
+                Photo::find($request->photo_id)->update(['comment_id'=> $comment->comment_id]);
             } else {
                 $comment = Comment::create($data);
             }
