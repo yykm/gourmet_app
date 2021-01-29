@@ -6,6 +6,7 @@
     <b-modal
       ref="my-modal"
       :centered="true"
+      body-class="text-center"
       hide-header-close
       header-class="justify-content-center"
       hide-footer
@@ -73,7 +74,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from "vuex";
+import { mapMutations } from "vuex";
 import { ERR } from "./../store/const.js";
 import Loader from "./../components/Loader.vue";
 

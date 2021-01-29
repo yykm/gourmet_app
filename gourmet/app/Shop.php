@@ -14,6 +14,11 @@ class Shop extends Model
         'id', //店舗ID
     ];
 
+    /** ユーザ入力値を受け付ける属性 */
+    protected $fillable = [
+        'id',
+    ];
+
     /**
      * リレーションシップ - photosテーブル
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -23,8 +28,12 @@ class Shop extends Model
         return $this->hasMany('App\Photo');
     }
 
-    /** ユーザ入力値を受け付ける属性 */
-    protected $fillable = [
-        'id',
-    ];
+    /**
+     * リレーションシップ - commentsテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
 }

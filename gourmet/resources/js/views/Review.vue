@@ -1,12 +1,17 @@
 <template>
   <div id="review">
-    {{ this.shopId }}b
+    <ReviewForm :shopId="shopId" />
   </div>
 </template>
 
 <script>
+import ReviewForm from "./../components/ReviewForm.vue";
+
 export default {
   name: "Review",
+  components: {
+    ReviewForm
+  },
   data() {
     return {
       shopId: this.$route.params.id

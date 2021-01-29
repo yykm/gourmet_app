@@ -16,6 +16,12 @@ class Photo extends Model
     /** IDの桁数 */
     const ID_LENGTH = 12;
 
+    /**
+     * モデルの主キーを自動増分させるか否か
+     * save()時にモデルインスタンスのidが0として更新されてしまうため
+     */
+    public $incrementing = false;
+
     /** 返却されるJSON表現に含める属性 */
     protected $visible = [
         'id', // 写真ID
@@ -27,6 +33,11 @@ class Photo extends Model
     /** 返却されるJSON表現にgetUrlAttributeアクセサを含める */
     protected $appends = [
         'url',
+    ];
+
+    // マスアサインメント用
+    protected $fillable = [
+        'comment_id',
     ];
 
     public function __construct(array $attributes = [])
@@ -89,6 +100,15 @@ class Photo extends Model
     public function shop()
     {
         return $this->belongsTo('App\Shop');
+    }
+
+    /**
+     * リレーションシップ - commentsテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function comment()
+    {
+        return $this->belongsTo('App\Comment');
     }
 
     /**

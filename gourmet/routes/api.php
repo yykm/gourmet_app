@@ -50,3 +50,9 @@ Route::post('/photos', 'PhotoController@create')->name('photo.create');
 
 // 写真一覧
 Route::get('/photos', 'PhotoController@index')->name('photo.index');
+
+// コメント投稿
+Route::post('/comments', 'CommentController@create')->name('comment.create');
+
+// コメント一覧
+Route::get('/comments', 'CommentController@index')->name('comment.index');

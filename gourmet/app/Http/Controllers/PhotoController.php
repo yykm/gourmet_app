@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePhoto;
 use App\Photo;
 use App\Shop;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use App\Http\Requests\StorePhoto;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class PhotoController extends Controller
 {
@@ -71,21 +71,20 @@ class PhotoController extends Controller
 
         // "インスタンス生成時に割り振られたランダムなID値　+ 拡張子"のファイル名とする
         $photo->filename = $photo->id . '.' . $extension;
+
         // 店舗IDを設定
         $photo->shop_id = $request->shop_id;
 
-
         // S3に写真を保存する
-        // 第三引数の'public'はファイルを公開状態で保存するため
+        // 第4引数の'public'はファイルを公開状態で保存するため
         Storage::cloud()
             ->putFileAs('', $request->photo, $photo->filename, 'public');
 
         // データベースエラー時にファイル削除を行うため
         // トランザクションを利用する
         DB::beginTransaction();
-
         try {
-            // 外部キーより先に親テーブルの主キーが登録されていなければ登録
+            // 親テーブルの主キーが登録されていなければ登録
             Shop::firstOrCreate(['id' => $request->shop_id]);
             Auth::user()->photos()->save($photo);
             DB::commit();

@@ -20,6 +20,7 @@ class CreatePhotosTable extends Migration
             // 外部キー
             $table->unsignedInteger('user_id');
             $table->string('shop_id');
+            $table->unsignedInteger('comment_id')->nullable()->unique();
 
             // その他
             $table->string('filename');

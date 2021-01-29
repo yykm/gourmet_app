@@ -20,6 +20,7 @@ class CreateCommentsTable extends Migration
             // 外部キー
             $table->string('shop_id');
             $table->unsignedInteger('user_id');
+            $table->string('photo_id')->nullable()->unique();
 
             // その他
             $table->text('content');
@@ -28,6 +29,7 @@ class CreateCommentsTable extends Migration
             // 関連
             $table->foreign('shop_id')->references('id')->on('shops');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('photo_id')->references('id')->on('photos');
         });
     }
 
