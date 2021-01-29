@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreComment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Log;
 
 class CommentController extends Controller
 {
