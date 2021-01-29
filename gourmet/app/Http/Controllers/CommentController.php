@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreComment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Log;
 
 class CommentController extends Controller
 {
@@ -53,11 +54,11 @@ class CommentController extends Controller
             Shop::firstOrCreate(['id' => $request->shop_id]);
 
             // コメント保存
-            $comment = Comment::create($data);
-
-            // コメントと一緒に写真が登録されていればコメントモデルに写真IDを設定
+            // コメント付属の写真がある場合は対応する写真IDも併せて保存
             if (Photo::find($request->photo_id) !== null) {
-                Photo::find($request->photo_id)->update(['comment_id' => $comment->id]);
+                $comment = Photo::with(['comment'])->find($request->photo_id)->comment()->create($data);
+            } else {
+                $comment = Comment::create($data);
             }
 
             DB::commit();
