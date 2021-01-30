@@ -63,4 +63,7 @@ export default {
 </script>
 
 <style scoped>
+.bg-light {
+  background-color: #fff !important;
+}
 </style>

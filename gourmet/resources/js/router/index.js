@@ -9,7 +9,7 @@ import SystemError from '../views/Err/SystemError.vue';
 import Detail from '../views/Detail.vue';
 import Info from '../views/Info.vue';
 import PhotoList from '../views/PhotoList.vue';
-import Review from '../views/Review.vue';
+import ReviewList from '../views/ReviewList.vue';
 import Result from '../views/Result.vue';
 
 Vue.use(VueRouter);
@@ -98,7 +98,7 @@ const routes = [
         path: 'review',
         name: 'review',
         components: {
-          content: Review
+          content: ReviewList
         }
       },
     ]

@@ -1,7 +1,7 @@
 <template>
   <div id="detail">
     <Header :site_name="'Gourmet'"></Header>
-    <b-container v-if="shop" class="">
+    <b-container v-if="shop" class="shadow-sm py-1 mt-4">
       <!-- 店舗トップ写真 -->
       <b-card no-body class="overflow-hidden mt-4 w-100 border-0">
         <b-row no-gutters align-h="between">
@@ -219,6 +219,11 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  background-color: #fff;
+  min-height: 90vh;
+}
+
 .tabs ul {
   flex-wrap: nowrap;
 }

@@ -6,40 +6,43 @@
 </template>
 
 <script>
-import Message from './components/Message.vue'
-import { ERR } from './store/const.js';
-import { createNamespacedHelpers } from 'vuex';
+import Message from "./components/Message.vue";
+import { ERR } from "./store/const.js";
+import { createNamespacedHelpers } from "vuex";
 const { mapGetters, mapActions } = createNamespacedHelpers(ERR.STORE);
 
-
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    Message,
+    Message
   },
   computed: {
-    ...mapGetters([ERR.GET_CODE]),
+    ...mapGetters([ERR.GET_CODE])
   },
-  methods:{
+  methods: {
     ...mapActions([ERR.SET_CODE])
   },
   watch: {
     [ERR.GET_CODE]: {
-      handler (code) {
+      handler(code) {
         switch (code) {
-            // 500エラー
-            case ERR.INTERNAL_SERVER_ERROR:
-              this.$router.push('/500');
-              break;
+          // 500エラー
+          case ERR.INTERNAL_SERVER_ERROR:
+            this.$router.push("/500");
+            break;
         }
       },
       immediate: true
     },
-    $route () {
+    $route() {
       this[ERR.SET_CODE](null);
     }
   }
 };
 </script>
 
-<style></style>
+<style>
+body {
+  background-color: #f8f9fa !important;
+}
+</style>

@@ -1,8 +1,8 @@
 <template>
-  <div id="photoList">
-    <div class="text-center mt-5 mb-4">
-      <b-button id="toggle-btn" @click="toggleModal">写真を投稿する</b-button>
-    </div>
+  <div v-if="isLogin" id="photoList">
+      <b-button id="toggle-btn" pill @click="toggleModal" class="px-3 py-2"
+        >写真を投稿する</b-button
+      >
     <b-modal
       ref="my-modal"
       :centered="true"
@@ -101,6 +101,11 @@ export default {
     // 選択された画像、さもなければ初期画像
     rePreview() {
       return this.preview ?? "/img/l_e_others_500.png";
+    },
+
+    // 認証状態
+    isLogin() {
+      return this.$store.getters["App/isLogin"];
     }
   },
   methods: {
@@ -183,7 +188,7 @@ export default {
         return;
       }
 
-      this.$emit('photoPost');
+      this.$emit("photoPost");
 
       // 成功メッセージ表示
       this.setContent({

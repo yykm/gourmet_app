@@ -2,7 +2,11 @@
   <div id="photoList">
     <b-container fluid>
       <b-row>
-        <b-col><PhotoForm @photoPost="onPost" :shopId="shopId"/></b-col>
+        <b-col>
+          <div class="photo__form text-center mt-5 mb-4">
+            <PhotoForm @photoPost="onPost" :shopId="shopId" />
+          </div></b-col
+        >
       </b-row>
       <div v-if="loading" class="loader text-center mt-5">
         <Loader height="5rem" width="5rem" />

@@ -1,7 +1,7 @@
 <!-- props:shops/shopsCount -->
 <template>
   <div class="search-result" v-if="shopsCount !== null">
-    <div class="container mt-3">
+    <div class="container shadow-sm mt-3 p-4">
       <!-- 検索件数表示部 -->
       <div v-if="shopsCount > 0 && !loading">
         <p class="result-count text-right">
@@ -216,6 +216,11 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  background-color: #fff;
+  min-height: 90vh;
+}
+
 /* pタグのマージンをリセット */
 p {
   margin-bottom: 0px;

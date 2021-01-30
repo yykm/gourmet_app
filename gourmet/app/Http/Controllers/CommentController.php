@@ -12,6 +12,12 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
+    public function __construct()
+    {
+        // 認証されていない場合422エラー
+        // コメント取得に関しては認証不要とする
+        $this->middleware('auth')->except(['index']);
+    }
 
     /**
      * コメント一覧
@@ -20,11 +26,9 @@ class CommentController extends Controller
     {
         // ある店舗のコメント一覧を投稿日の降順に取得
         $comments = Comment::with(['photo','user'])
-        ->join('photos', 'comments.photo_id', '=', 'photos.id')
-        ->where('comments.shop_id', $request->shop_id)
-        ->whereNotNull('photos.comment_id')
-        ->orderBy('comments.id', 'desc')
-        ->get();
+        ->where('shop_id', $request->shop_id)
+        ->orderBy('id', 'desc')
+        ->paginate();
 
         return $comments;
     }
@@ -55,9 +59,13 @@ class CommentController extends Controller
             // コメント保存
             // コメント付属の写真がある場合は対応する写真IDも併せて保存
             if (Photo::find($request->photo_id) !== null) {
-                $comment = Photo::with(['comment'])->find($request->photo_id)->comment()->create($data);
+                $comment = Photo::with(['comment'])
+                ->find($request->photo_id)
+                ->comment()
+                ->create($data);
+
                 // 対応する写真データのコメントidも更新
-                Photo::find($request->photo_id)->update(['comment_id'=> $comment->comment_id]);
+                Photo::find($request->photo_id)->update(['comment_id'=> $comment->id]);
             } else {
                 $comment = Comment::create($data);
             }
@@ -65,10 +73,6 @@ class CommentController extends Controller
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
-            // コメント投稿が失敗したら対応する画像も写真
-            if (Photo::find($request->photo_id) !== null) {
-                Photo::destroy($request->photo_id);
-            }
             throw $exception;
         }
 

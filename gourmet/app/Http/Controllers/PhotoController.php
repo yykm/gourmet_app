@@ -14,7 +14,7 @@ class PhotoController extends Controller
 {
     public function __construct()
     {
-        // 認証されていない場合リダイレクト
+        // 認証されていない場合422エラー
         // 写真一覧取得, ダウンロードリンク取得に関しては認証不要とする
         $this->middleware('auth')->except(['index', 'download']);
     }

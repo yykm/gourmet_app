@@ -11,6 +11,8 @@ class Comment extends Model
         'id', 'user', 'content', self::CREATED_AT, 'photo'
     ];
 
+    protected $perPage = 10; // ペジネーション１ページあたりのデータ数
+
     // マスアサインメント用
     protected $guarded = [
         'id',
