@@ -90,6 +90,7 @@ export default {
 
 .card-img-left {
   padding: 0.25rem;
+  border: 1px solid #dee2e6 !important;
 }
 
 @media (max-width: 767.98px) {
