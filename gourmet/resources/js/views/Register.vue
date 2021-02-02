@@ -1,5 +1,6 @@
 <template>
   <div class="register">
+        <Header />
     <main class="py-4">
       <b-container>
         <b-card class="mx-auto" tag="main">
@@ -144,7 +145,8 @@ export default {
   name: "Register",
   components: {
     ValidationObserver,
-    ValidationProvider
+    ValidationProvider,
+    Header
   },
   data() {
     return {

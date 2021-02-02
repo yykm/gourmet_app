@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLogin" class="review__form">
+  <div class="review__form">
     <div class="review__title text-left">
       <p>口コミを投稿する</p>
     </div>
@@ -55,11 +55,6 @@ export default {
     shopId: {
       type: String,
       required: true
-    }
-  },
-  computed: {
-    isLogin() {
-      return this.$store.getters["App/isLogin"];
     }
   },
   methods: {

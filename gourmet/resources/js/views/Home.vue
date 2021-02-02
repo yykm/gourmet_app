@@ -8,6 +8,18 @@
         </p>
       </div>
     </div>
+    <div v-if="!isLogin" class="access__area text-center">
+      <b-link to="/login">ログイン</b-link>
+      <span>｜</span>
+      <b-link to="/register">新規登録</b-link>
+    </div>
+    <div v-else class="access__area text-center">
+      <b-link to="/reserve">予約確認</b-link>
+      <span>｜</span>
+      <b-link to="/favorite">お気に入りのお店</b-link>
+      <span>｜</span>
+      <b-link to="/logout">ログアウト</b-link>
+    </div>
     <!-- 検索フォーム -->
     <Search></Search>
   </b-jumbotron>
@@ -21,12 +33,18 @@ export default {
   components: {
     Search
   },
+  computed: {
+    // 認証状態
+    isLogin() {
+      return this.$store.getters["App/isLogin"];
+    }
+  },
   props: {
     site_name: {
-      default: 'Gourmet',
-      type: String,
-    },
-  },
+      default: "Gourmet",
+      type: String
+    }
+  }
 };
 </script>
 

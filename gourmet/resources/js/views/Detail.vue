@@ -21,25 +21,7 @@
 
           <!-- 店舗概要 -->
           <b-col sm="12" md="6" lg="8">
-            <div class="favorite__wrapper">
-              <!-- いいねボタン -->
-              <b-button variant="light" class="favorite__btn px-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="17"
-                  height="17"
-                  fill="currentColor"
-                  class="bi bi-heart-fill mr-1"
-                  viewBox="0 0 16 16"
-                  style="color: #f16d6d;"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
-                  /></svg
-                >12
-              </b-button>
-            </div>
+              <FavoriteBtn :id="id" />
             <b-card-body :title="shop.name">
               <small class="mb-2">{{ shop.kana }}</small>
 
@@ -104,6 +86,7 @@
 
 <script>
 import Header from "./../components/Header.vue";
+import FavoriteBtn from "./../components/FavoriteBtn.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -115,7 +98,8 @@ export default {
     };
   },
   components: {
-    Header
+    Header,
+    FavoriteBtn
   },
   computed: {
     ...mapGetters("App", ["getShop"]),
@@ -297,16 +281,5 @@ export default {
 
 .bg-wrapper {
   padding: 1.25rem;
-}
-
-.favorite__wrapper {
-  position: relative;
-}
-
-.favorite__btn {
-  position: absolute;
-  top: 1.5em;
-  right: 1.5em;
-  border-color: #ccd3da70;
 }
 </style>

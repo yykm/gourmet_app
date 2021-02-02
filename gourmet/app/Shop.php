@@ -3,15 +3,22 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Shop extends Model
 {
     /** 主キーの型 */
     protected $keyType = 'string';
 
-    /** 返却されるJSON表現に含める属性 */
+
+    /** JSONに含めるアクセサ */
+    protected $appends = [
+        'likes_count', 'liked_by_user'
+    ];
+
+    /** JSONに含める属性 */
     protected $visible = [
-        'id', //店舗ID
+        'id', 'likes_count', 'liked_by_user'
     ];
 
     /** ユーザ入力値を受け付ける属性 */
@@ -20,12 +27,18 @@ class Shop extends Model
     ];
 
     /**
-     * リレーションシップ - photosテーブル
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * モデルの主キーを自動増分させるか否か
+     * save()時にモデルインスタンスのidが0として更新されてしまうため
      */
-    public function photos()
+    public $incrementing = false;
+
+    /**
+     * リレーションシップ - usersテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function favorites()
     {
-        return $this->hasMany('App\Photo');
+        return $this->belongsToMany('App\User', 'favorites')->withTimestamps();
     }
 
     /**
@@ -35,5 +48,31 @@ class Shop extends Model
     public function comments()
     {
         return $this->hasMany('App\Comment')->orderBy('id', 'desc');
+    }
+
+    /**
+     * アクセサ - likes_count
+     * @return int
+     */
+    public function getLikesCountAttribute()
+    {
+        return $this->favorites->count();
+    }
+
+    /**
+     * アクセサ - liked_by_user
+     * @return boolean
+     */
+    public function getLikedByUserAttribute()
+    {
+        // ログインしていなければfalseを返す
+        if (Auth::guest()) {
+            return false;
+        }
+
+        // ログイン中のユーザがこの(this)店舗に関して既にいいねをしているか
+        return $this->favorites->contains(function ($user) {
+            return $user->id === Auth::user()->id;
+        });
     }
 }

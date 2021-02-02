@@ -1,6 +1,6 @@
 <template>
   <div id="reviews">
-    <div class="review__header mt-5 mb-4">
+    <div v-if="isLogin" class="review__header mt-5 mb-4">
       <div class="text-center">
         <b-button @click="scrollToForm" variant="primary" class="px-3 py-2" pill
           ><svg
@@ -18,7 +18,7 @@
         >
       </div>
     </div>
-    <div class="review__body p-4">
+    <div v-if="reviews" class="review__body p-4">
       <div class="paginate__area mb-4">
         <Pagination :lastPage="lastPage" />
       </div>
@@ -33,7 +33,10 @@
         <Pagination :lastPage="lastPage" />
       </div>
     </div>
-    <div class="form__area mt-4">
+    <div v-else class="text-center">
+      <p >まだ投稿された口コミがありません。</p>
+    </div>
+    <div v-if="isLogin" class="form__area mt-4">
       <ReviewForm @reviewPost="onPost" :shopId="shopId" />
     </div>
   </div>
@@ -61,6 +64,11 @@ export default {
       loading: null, // ローディング表示フラグ
       lastPage: 1 // ページングの最終ページ番号
     };
+  },
+  computed: {
+    isLogin() {
+      return this.$store.getters["App/isLogin"];
+    }
   },
   methods: {
     // フォームへスクロール

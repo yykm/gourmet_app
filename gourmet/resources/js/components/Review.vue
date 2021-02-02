@@ -22,36 +22,6 @@
         </p>
       </b-card-text>
     </b-card>
-
-    <!-- <b-card>
-      <b-card-img :src="url" img-alt="Card image" left height="300" width="300"></b-card-img>
-
-      <b-card-text>
-        <h6 class="mt-0 mb-1">
-          {{ review.id + "." }}
-          &thinsp;
-          {{ review.user.name }}
-          &thinsp;
-          {{ review.created_at }}
-        </h6>
-        <p class="mb-0">
-          {{ review.content }}
-        </p>
-      </b-card-text>
-    </b-card> -->
-
-    <!-- <div class="review__content mx-auto d-flex">
-      <div class="review__image">{{ review.photo.url }}</div>
-      <div class="review__text">
-        <p class="review__info">
-          {{ review.user.name }}
-          {{ review.created_at }}
-        </p>
-        <div class="review__content mb-4 mx-auto">
-          {{ review.content }}
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 

@@ -28,7 +28,7 @@
               ></b-form-select>
             </div>
             <div>
-              <b-button type="submit" class="px-4 py-2 mt-md-5 mt-4">検索する</b-button>
+              <b-button type="submit" class="px-4 py-2 mt-md-4 mt-4">検索する</b-button>
             </div>
           </b-form>
         </div>
