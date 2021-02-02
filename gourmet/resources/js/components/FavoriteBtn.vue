@@ -7,6 +7,7 @@
       class="favorite__btn shadow-sm py-1 px-3"
       :class="{ 'btn__action--liked': favorite.liked_by_user }"
     >
+    <span>お気に入り</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="17"

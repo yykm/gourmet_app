@@ -1,6 +1,6 @@
 <template>
   <div id="reviews">
-    <div v-if="isLogin" class="review__header mt-5 mb-4">
+    <div v-if="isLogin && reviews" class="review__header mt-5 mb-4">
       <div class="text-center">
         <b-button @click="scrollToForm" variant="primary" class="px-3 py-2" pill
           ><svg

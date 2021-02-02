@@ -1,22 +1,29 @@
 <template>
   <div class="header">
-    <b-navbar toggleable="lg" type="light" variant="light" class="shadow-sm">
-      <b-navbar-brand to="/">Gourmet</b-navbar-brand>
+    <b-navbar toggleable="lg" type="light" variant="light" class="nav__wrapper shadow-sm">
+      <b-navbar-brand to="/" class="site_title">Gourmet</b-navbar-brand>
+
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
       <b-collapse id="nav-collapse" is-nav>
-        <!-- ログイン / ログアウト表示領域 -->
-        <b-navbar-nav class="ml-auto">
-          <b-nav-item v-if="!isLogin" to="/login">ログイン</b-nav-item>
+        <!--  ログイン時 -->
+        <b-navbar-nav v-if="isLogin" class="ml-auto">
+          <b-nav-item to="/reserve">予約確認</b-nav-item>
+          <b-nav-item to="/favorite">お気に入り</b-nav-item>
 
-          <b-nav-item-dropdown v-else right>
+          <b-nav-item-dropdown right class="mx-0">
             <!-- Using 'button-content' slot -->
             <template #button-content>
-              <em>{{ userName }}</em>
+              <em class="mr-1">{{ userName }}</em>
             </template>
-            <b-dropdown-item to="#">プロフィール</b-dropdown-item>
-            <b-dropdown-item @click.prevent="onClick">ログアウト</b-dropdown-item>
+            <b-dropdown-item @click.prevent="onClick"
+              >ログアウト</b-dropdown-item
+            >
           </b-nav-item-dropdown>
+        </b-navbar-nav>
+        <!-- ログアウト時 -->
+        <b-navbar-nav v-else class="ml-auto">
+          <b-nav-item to="/login">ログイン</b-nav-item>
+          <b-nav-item to="/register">新規登録</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -29,12 +36,6 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Header",
-  props: {
-    site_name: {
-      type: String,
-      default: "site_name"
-    }
-  },
   computed: {
     ...mapGetters({
       isLogin: APP.getAppURI(APP.IS_LOGIN),
@@ -65,5 +66,20 @@ export default {
 <style scoped>
 .bg-light {
   background-color: #fff !important;
+}
+
+.nav__wrapper {
+  position: relative;
+}
+
+.site_title {
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  font-size: 1.5rem;
+}
+
+li.nav-item {
+  margin-right: 0.8rem;
 }
 </style>

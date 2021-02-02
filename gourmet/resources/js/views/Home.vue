@@ -16,9 +16,9 @@
     <div v-else class="access__area text-center">
       <b-link to="/reserve">予約確認</b-link>
       <span>｜</span>
-      <b-link to="/favorite">お気に入りのお店</b-link>
+      <b-link to="/favorite">お気に入り</b-link>
       <span>｜</span>
-      <b-link to="/logout">ログアウト</b-link>
+      <b-link @click.prevent="logout">ログアウト</b-link>
     </div>
     <!-- 検索フォーム -->
     <Search></Search>
@@ -27,6 +27,7 @@
 
 <script>
 import Search from "./../components/Search.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Home",
@@ -34,9 +35,21 @@ export default {
     Search
   },
   computed: {
+    ...mapGetters('App',['getApiStatus']),
+
     // 認証状態
     isLogin() {
       return this.$store.getters["App/isLogin"];
+    }
+  },
+  methods: {
+    // ログアウト処理
+    async logout() {
+      await this.$store.dispatch("App/logout");
+
+      if (this.getApiStatus) {
+        this.$router.push("/login");
+      }
     }
   },
   props: {
