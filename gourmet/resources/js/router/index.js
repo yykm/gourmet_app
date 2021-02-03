@@ -11,6 +11,7 @@ import Info from '../views/Info.vue';
 import PhotoList from '../views/PhotoList.vue';
 import ReviewList from '../views/ReviewList.vue';
 import Result from '../views/Result.vue';
+import Reserved from '../views/Reserved.vue';
 
 Vue.use(VueRouter);
 
@@ -61,6 +62,15 @@ const routes = [
     name: 'Reset',
     component: Reset,
     beforeEnter: authGuard
+  },
+  // 予約完了ページ
+  {
+    path: '/reserved',
+    name: 'Reserved',
+    component: Reserved,
+    props: (route) => ({
+      reservation : Object(route.query.reservation)
+    }),
   },
   // 店舗詳細
   {
@@ -113,8 +123,11 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  scrollBehavior () {
-    return { x: 0, y: 0 }
+  scrollBehavior() {
+    return {
+      x: 0,
+      y: 0
+    }
   },
   routes
 });

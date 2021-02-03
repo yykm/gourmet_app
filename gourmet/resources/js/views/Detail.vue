@@ -69,7 +69,6 @@
         class="nav-row mt-0"
       >
         <b-tab title="店舗詳細"></b-tab>
-        <b-tab title="メニュー" disabled></b-tab>
         <b-tab title="写真"></b-tab>
         <b-tab title="口コミ"></b-tab>
         <b-tab title="地図" disabled></b-tab>
@@ -178,15 +177,12 @@ export default {
           prefix += "/info";
           break;
         case 1:
-          prefix += "/menu";
-          break;
-        case 2:
           prefix += "/photoList";
           break;
-        case 3:
+        case 2:
           prefix += "/review";
           break;
-        case 4:
+        case 3:
           prefix += "/map";
           break;
         default:

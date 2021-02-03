@@ -50,6 +50,9 @@
                     </b-link>
                   </p>
                 </div>
+                <div class="p-reserve text-center mt-4">
+                  <Reserve :shop="shop" />
+                </div>
               </b-col>
 
               <b-col cols="12" md="9">
@@ -134,11 +137,13 @@
 import { createNamespacedHelpers } from "vuex";
 const { mapGetters } = createNamespacedHelpers("App");
 import Loader from "./../components/Loader.vue";
+import Reserve from "./../components/Reserve.vue";
 
 export default {
   name: "Result",
   components: {
-    Loader
+    Loader,
+    Reserve
   },
   computed: {
     ...mapGetters(["shopsCount", "getShopsByPage", "getShops"])
@@ -192,17 +197,14 @@ export default {
         case "info":
           tabNo = 0;
           break;
-        case "menu":
+        case "photoList":
           tabNo = 1;
           break;
-        case "photoList":
+        case "review":
           tabNo = 2;
           break;
-        case "review":
-          tabNo = 3;
-          break;
         case "map":
-          tabNo = 4;
+          tabNo = 3;
           break;
         default:
           tabNo = 0;

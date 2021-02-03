@@ -58,10 +58,13 @@ Route::post('/comments', 'CommentController@create')->name('comment.create');
 Route::get('/comments', 'CommentController@index')->name('comment.index');
 
 // いいねに関する情報取得
-Route::get('/favorites/{shop_id}', 'FavoriteController@index')->name('favorite.like');
+Route::get('/favorites/{shop_id}', 'FavoriteController@index')->name('favorite.index');
 
 // いいね
 Route::put('/favorites/{shop_id}', 'FavoriteController@like')->name('favorite.like');
 
 // いいね解除
 Route::delete('/favorites/{shop_id}', 'FavoriteController@unlike');
+
+// 予約機能
+Route::post('/reserve', 'ReserveController@reserve')->name('reserve.reserve');

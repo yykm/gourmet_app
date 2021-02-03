@@ -7,7 +7,7 @@
       class="favorite__btn shadow-sm py-1 px-3"
       :class="{ 'btn__action--liked': favorite.liked_by_user }"
     >
-    <span>お気に入り</span>
+      <span>お気に入り</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="17"
@@ -88,6 +88,11 @@ export default {
         return;
       }
 
+      this.setContent({
+        success: true,
+        content: "お気に入りに登録しました",
+        timeout: 3000
+      });
       this.favorite.likes_count = this.favorite.likes_count + 1;
       this.favorite.liked_by_user = true;
     },
@@ -101,13 +106,18 @@ export default {
         return;
       }
 
+      this.setContent({
+        success: true,
+        content: "お気に入りから解除しました",
+        timeout: 3000
+      });
       this.favorite.likes_count = this.favorite.likes_count - 1;
       this.favorite.liked_by_user = false;
     }
   },
 
-  async created(){
-    await this.fetchFavorite()
+  async created() {
+    await this.fetchFavorite();
   }
 };
 </script>
