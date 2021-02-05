@@ -51,6 +51,17 @@ class Shop extends Model
     }
 
     /**
+     * 予約に所属する役目を取得
+     */
+    public function subscriber()
+    {
+        return $this->belongsToMany('App\User', 'reservations')
+                    ->as('reservation')
+                    ->withPivot('id', 'shop_id', 'user_id', 'name', 'kana', 'date', 'time', 'number', 'email', 'phone_num', 'purpose', 'request')
+                    ->withTimestamps();
+    }
+
+    /**
      * アクセサ - likes_count
      * @return int
      */

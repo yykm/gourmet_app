@@ -39,12 +39,10 @@ class FavoriteController extends Controller
     public function like(string $shop_id)
     {
         // 店舗がない場合は作成
-        if (!Shop::where('id', $shop_id)) {
-            Shop::firstOrCreate(['id' => $shop_id]);
-        }
+        Shop::firstOrCreate(['id' => $shop_id]);
 
         $shop = Shop::where('id', $shop_id)->with('favorites')->first();
-        Log::debug($shop);
+
         // ある店舗に紐づくいいねのうちログイン中のユーザに関する中間テーブルのデータ行を削除してから追加（いいねを１ユーザ１個に限定するため）
         $shop->favorites()->detach(Auth::user()->id);
         $shop->favorites()->attach(Auth::user()->id);

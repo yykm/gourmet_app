@@ -4,7 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreReserve;
+use Illuminate\Support\Facades\Auth;
+use App\Shop;
+use App\Reservation;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationPosted;
+use Illuminate\Support\Facades\DB;
 use Log;
+
+use function PHPUnit\Framework\isNull;
 
 class ReserveController extends Controller
 {
@@ -22,8 +30,101 @@ class ReserveController extends Controller
      */
     public function reserve(StoreReserve $request)
     {
-        Log::debug(['aa', $request->form['date']]);
+        /** １．予約情報を作成 */
+        $data = array();
+        foreach ($request->form as $key => $value) {
+            $data = array_merge($data, array($key => $value));
+        }
 
-        return response('', 201);
+        // 利用目的
+        if (!is_null($data['purpose'])) {
+            $text = '';
+
+            switch (intval($data['purpose'])) {
+            case 1:
+                $text = "誕生日";
+                break;
+            case 2:
+                $text = "デート";
+                break;
+            case 3:
+                $text = "接待";
+                break;
+            case 4:
+                $text = "歓迎会";
+                break;
+            case 5:
+                $text = "送別会";
+                break;
+            case 6:
+                $text = "同窓会";
+                break;
+            case 7:
+                $text = "忘年会";
+                break;
+            case 8:
+                $text = "結婚式２次会";
+                break;
+            case 9:
+                $text = "法事";
+                break;
+            case 10:
+                $text = "食事";
+                break;
+            case 11:
+                $text = "飲み会";
+                break;
+            case 12:
+                $text = "合コン";
+                break;
+            default:
+                $text = "その他";
+                break;
+            }
+            // 利用目的を代入
+            $data['purpose'] = $text;
+        } else {
+            $data['purpose'] = '無し';
+        }
+
+        // ご要望・ご意見未入力の場合
+        if (is_null($data['request'])) {
+            $data['request'] = '無し';
+        }
+
+        /** ２．予約情報の保存 */
+        DB::beginTransaction();
+        try {
+            // 店舗情報がない場合は店舗情報を格納、取得
+            $shop = Shop::with(['subscriber'])
+            ->firstOrCreate(['id' => $request->shop_id]);
+
+            // ある予約対象の店舗に紐づくあるユーザに関する予約情報を格納
+            // １ユーザは１店舗のみ予約可能
+            $shop->subscriber()->detach(Auth::user()->id);
+            $shop->subscriber()->attach(Auth::user()->id, $data);
+
+            // 予約情報のリロード
+            $reservation = Reservation::where('shop_id', $request->shop_id)
+                ->where('user_id', Auth::user()->id)
+                ->first();
+            // テーブル名がpivotとして参照されるためボツ
+            // $reservation = Shop::with(['subscriber'])
+            //     ->find($request->shop_id)
+            //     ->subscriber
+            //     ->find(Auth::user()->id)
+            //     ->reservation;
+
+            // ３．メール送信
+            Mail::to(Auth::user())->queue(new ReservationPosted($reservation));
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
+
+        // ４．作成した予約情報を返却
+        return response($reservation, 201);
     }
 }

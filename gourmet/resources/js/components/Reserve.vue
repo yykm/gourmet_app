@@ -1,8 +1,9 @@
 <template>
   <div class="reserve">
-    <b-button variant="warning" @click="showDateModal" class="w-100"
+    <div class="reserve__btn-area my-4">
+    <b-button variant="warning" @click="showDateModal" class="reserve__btn w-50"
       >空室確認・予約</b-button
-    >
+    ></div>
     <!-- 日付入力モーダル -->
     <b-modal
       :ref="'date-modal' + shop.id"
@@ -15,31 +16,11 @@
         <h4>ネット予約</h4>
       </div>
       <b-container class="py-2">
-        <!-- 来店日 -->
         <b-form @submit.prevent="showInfoModal">
-          <b-row class="my-2 justify-content-center">
-            <b-col cols="3" class="text-center reserve__items">来店日</b-col>
-            <b-col cols="7"
-              ><b-form-datepicker
-                v-model="form.date"
-                label-no-date-selected="来店される日付"
-                :date-format-options="{
-                  year: 'numeric',
-                  month: 'short',
-                  day: '2-digit',
-                  weekday: 'short'
-                }"
-                :min="new Date()"
-                value-as-date
-                locale="ja"
-                required
-              ></b-form-datepicker
-            ></b-col>
-          </b-row>
           <!-- 人数  -->
           <b-row class="my-2 justify-content-center">
-            <b-col cols="3" class="text-center reserve__items">人数</b-col>
-            <b-col cols="7"
+            <b-col cols="4" class="text-center reserve__items">人数</b-col>
+            <b-col cols="12" md="7"
               ><b-form-select
                 v-model="form.number"
                 plain
@@ -48,18 +29,37 @@
               ></b-form-select
             ></b-col>
           </b-row>
+          <!-- 来店日 -->
+          <b-row class="my-2 justify-content-center">
+            <b-col cols="4" class="text-center reserve__items">来店日</b-col>
+            <b-col cols="12" md="7"
+              ><b-form-datepicker
+                v-model="form.date"
+                label-no-date-selected="来店日"
+                :date-format-options="{
+                  year: 'numeric',
+                  month: 'short',
+                  day: '2-digit',
+                  weekday: 'short'
+                }"
+                :min="new Date()"
+                locale="ja"
+                required
+              ></b-form-datepicker
+            ></b-col>
+          </b-row>
           <!-- 時間 -->
           <b-row class="my-2 justify-content-center">
-            <b-col cols="3" class="text-center reserve__items border-0"
+            <b-col cols="4" class="text-center reserve__items border-0"
               >時間</b-col
             >
-            <b-col cols="7">
+            <b-col cols="12" md="7">
               <b-form-timepicker
                 v-model="form.time"
                 locale="en"
                 minutes-step="15"
                 menu-class="w-100 text-center"
-                label-no-time-selected="来店される時間"
+                label-no-time-selected="来店時間"
                 required
               ></b-form-timepicker>
             </b-col>
@@ -88,7 +88,7 @@
           {{ shop.name }}
         </h4>
         <p>
-          {{ form.date | formatted_date }} {{ form.time | formatted_time }} /
+          {{ form.date }} {{ form.time | formatted_time }} /
           {{ form.number + "名" }}
         </p>
       </div>
@@ -96,10 +96,10 @@
         <b-form @submit.prevent="onSubmit" @reset.prevent="hideInfoModal">
           <!-- 氏名 -->
           <b-row class="justify-content-center">
-            <b-col cols="3" class="text-right">
+            <b-col cols="12" md="5" lg="3" class="text-center text-md-right">
               <label for="input-2" class="items">予約者名：</label>
             </b-col>
-            <b-col cols="7">
+            <b-col cols="10" md="7">
               <b-form-group id="input-group-2">
                 <b-form-input
                   id="input-2"
@@ -113,10 +113,10 @@
           </b-row>
           <!-- ふりがな -->
           <b-row class="justify-content-center">
-            <b-col cols="3" class="text-right">
+            <b-col cols="12" md="5" lg="3" class="text-center text-md-right">
               <label for="input-3" class="items">ふりがな：</label>
             </b-col>
-            <b-col cols="7">
+            <b-col cols="10" md="7">
               <b-form-group id="input-group-3">
                 <b-form-input
                   id="input-3"
@@ -131,10 +131,10 @@
 
           <!-- Eメール -->
           <b-row class="justify-content-center">
-            <b-col cols="3" class="text-right">
+            <b-col cols="12" md="5" lg="3" class="text-center text-md-right">
               <label for="input-1" class="items">メールアドレス：</label>
             </b-col>
-            <b-col cols="7">
+            <b-col cols="10" md="7">
               <b-form-group id="input-group-1">
                 <b-form-input
                   id="input-1"
@@ -149,10 +149,10 @@
 
           <!-- 電話番号 -->
           <b-row class="justify-content-center">
-            <b-col cols="3" class="text-right">
+            <b-col cols="12" md="5" lg="3" class="text-center text-md-right">
               <label for="input-4" class="items">電話番号：</label>
             </b-col>
-            <b-col cols="7">
+            <b-col cols="10" md="7">
               <b-form-group id="input-group-4">
                 <b-form-input
                   id="input-4"
@@ -166,10 +166,10 @@
           </b-row>
           <!-- 利用目的 -->
           <b-row class="justify-content-center">
-            <b-col cols="3" class="text-right">
+            <b-col cols="12" md="5" lg="3" class="text-center text-md-right">
               <label for="input-5" class="items">利用目的：</label>
             </b-col>
-            <b-col cols="7">
+            <b-col cols="10" md="7">
               <b-form-group id="input-group-5">
                 <b-form-select
                   id="input-5"
@@ -183,10 +183,10 @@
 
           <!-- 要望・相談 -->
           <b-row class="justify-content-center">
-            <b-col cols="3" class="text-right">
+            <b-col cols="12" md="5" lg="3" class="text-center text-md-right">
               <label for="input-6" class="items">要望・相談：</label>
             </b-col>
-            <b-col cols="7">
+            <b-col cols="10" md="7">
               <b-form-group id="input-group-6">
                 <b-form-textarea
                   id="input-6"
@@ -267,6 +267,7 @@ export default {
     };
   },
   computed: {
+    // 人数選択項目のオプション
     options() {
       let numbers = [];
       numbers.push({
@@ -302,7 +303,17 @@ export default {
     },
     // 入力値リセット
     onReset() {
-      this.form = {};
+      this.form = {
+        date: null,
+        number: null,
+        time: null,
+        email: null,
+        name: null,
+        kana: null,
+        phone_num: null,
+        purpose: null,
+        request: null
+      };
       this.errors = null;
     },
     // フォーム送信
@@ -337,7 +348,7 @@ export default {
         return;
       }
 
-      // 成功時
+      // 成功時は予約情報を予約完了ページに送信しページ遷移
       console.log("成功の場合", response);
       this.$router.push({
         path: "/reserved",
@@ -352,22 +363,6 @@ export default {
     }
   },
   filters: {
-    // yyyy年mm月dd日(*)
-    formatted_date(date) {
-      if (!date) {
-        return null;
-      }
-
-      const weekday = ["日", "月", "火", "水", "木", "金", "土"];
-      var format = "YYYY/MM/DD(WW)";
-
-      format = format.replace(/YYYY/g, date.getFullYear());
-      format = format.replace(/MM/g, ("0" + (date.getMonth() + 1)).slice(-2));
-      format = format.replace(/DD/g, ("0" + date.getDate()).slice(-2));
-      format = format.replace(/WW/g, weekday[date.getDay()]);
-
-      return format;
-    },
     // hh:mm
     formatted_time(time) {
       if (!time) {
@@ -399,4 +394,10 @@ export default {
 .reserve__info-header p {
   color: #656fb5;
 }
+
+@media (min-width: 768px) {
+  .reserve__btn {
+    width: 85% !important;
+  }
+ }
 </style>
