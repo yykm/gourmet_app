@@ -12,6 +12,7 @@ import PhotoList from '../views/PhotoList.vue';
 import ReviewList from '../views/ReviewList.vue';
 import Result from '../views/Result.vue';
 import Reserved from '../views/Reserved.vue';
+import Mypage from '../views/Mypage.vue';
 
 Vue.use(VueRouter);
 
@@ -71,6 +72,12 @@ const routes = [
     props: (route) => ({
       reservation : Object(route.query.reservation)
     }),
+  },
+  // マイページ
+  {
+    path: '/mypage',
+    name: 'Mypage',
+    component: Mypage,
   },
   // 店舗詳細
   {

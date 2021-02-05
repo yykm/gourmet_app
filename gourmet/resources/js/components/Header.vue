@@ -1,20 +1,23 @@
 <template>
   <div class="header">
-    <b-navbar toggleable="lg" type="light" variant="light" class="nav__wrapper shadow-sm">
+    <b-navbar
+      toggleable="lg"
+      type="light"
+      variant="light"
+      class="nav__wrapper shadow-sm"
+    >
       <b-navbar-brand to="/" class="site_title">Gourmet</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <!--  ログイン時 -->
         <b-navbar-nav v-if="isLogin" class="ml-auto">
-          <b-nav-item to="/reserve">予約確認</b-nav-item>
-          <b-nav-item to="/favorite">お気に入り</b-nav-item>
-
           <b-nav-item-dropdown right class="mx-0">
             <!-- Using 'button-content' slot -->
             <template #button-content>
               <em class="mr-1">{{ userName }}</em>
             </template>
+            <b-dropdown-item to="/">マイページ</b-dropdown-item>
             <b-dropdown-item @click.prevent="onClick"
               >ログアウト</b-dropdown-item
             >
@@ -40,12 +43,12 @@ export default {
     ...mapGetters({
       isLogin: APP.getAppURI(APP.IS_LOGIN),
       userName: APP.getAppURI(APP.USER_NAME),
-      apiStatus: APP.getAppURI(APP.GET_API_STATUS)
-    })
+      apiStatus: APP.getAppURI(APP.GET_API_STATUS),
+    }),
   },
   methods: {
     ...mapActions({
-      logout: APP.getAppURI(APP.LOGOUT)
+      logout: APP.getAppURI(APP.LOGOUT),
     }),
 
     // ログアウト
@@ -58,8 +61,8 @@ export default {
         // トップページに移動する
         this.$router.push("/");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -74,8 +77,12 @@ export default {
 
 .site_title {
   position: absolute;
+  top: 50%;
   left: 50%;
-  right: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  color: rgb(0 0 0 / 67%) !important;
   font-size: 1.5rem;
 }
 

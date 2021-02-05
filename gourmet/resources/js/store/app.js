@@ -60,6 +60,10 @@ export default {
     [APP.USER_NAME](state) {
       return state.user ? state.user.name : '';
     },
+    // ユーザ情報
+    getUser(state){
+      return state.user ? state.user : '';
+    },
 
     // ページングごとのページ取得
     [APP.GET_SHOPS_BY_PAGE](state) {

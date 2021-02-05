@@ -1,7 +1,7 @@
 <!-- props:shops/shopsCount -->
 <template>
   <div class="search-result" v-if="shopsCount !== null">
-    <div class="container shadow-sm mt-3 p-4">
+    <div class="container shadow-sm mt-4 p-4">
       <!-- 検索件数表示部 -->
       <div v-if="shopsCount > 0 && !loading">
         <p class="result-count text-right">
@@ -143,36 +143,36 @@ export default {
   name: "Result",
   components: {
     Loader,
-    Reserve
+    Reserve,
   },
   computed: {
-    ...mapGetters(["shopsCount", "getShopsByPage", "getShops"])
+    ...mapGetters(["shopsCount", "getShopsByPage", "getShops"]),
   },
   data() {
     return {
       shops: [],
       perPage: 5, // ページ毎に表示する店舗数
-      curPage: 1 // 現在のページ番号
+      curPage: 1, // 現在のページ番号
     };
   },
   props: {
     loading: {
       type: Boolean,
       default: false,
-      required: false
-    }
+      required: false,
+    },
   },
   watch: {
     // 検索しなおしの都度、１ページ目の店舗情報取得
-    getShops: function() {
+    getShops: function () {
       this.onChange(1);
     },
 
-    shops: function() {
+    shops: function () {
       this.$nextTick(() => {
         window.scrollTo(0, 0);
       });
-    }
+    },
   },
   created() {
     this.onChange(1);
@@ -182,11 +182,11 @@ export default {
     onChange(page) {
       this.curPage = page;
       this.shops = this.getShopsByPage(this.curPage, this.perPage);
-    }
+    },
   },
   // 店舗詳細ページへのURLを返却
   filters: {
-    detailURL: function({ id, tab }) {
+    detailURL: function ({ id, tab }) {
       if (typeof id !== "string") {
         return "/";
       }
@@ -212,8 +212,8 @@ export default {
 
       // /detail/店舗id/タブ番号
       return ["", "detail", id, tabNo, tab].join("/");
-    }
-  }
+    },
+  },
 };
 </script>
 

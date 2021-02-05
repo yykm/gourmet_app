@@ -14,9 +14,7 @@
       <b-link to="/register">新規登録</b-link>
     </div>
     <div v-else class="access__area text-center">
-      <b-link to="/reserve">予約確認</b-link>
-      <span>｜</span>
-      <b-link to="/favorite">お気に入り</b-link>
+      <b-link to="/mypage">マイページ</b-link>
       <span>｜</span>
       <b-link @click.prevent="logout">ログアウト</b-link>
     </div>
@@ -32,15 +30,15 @@ import { mapGetters } from "vuex";
 export default {
   name: "Home",
   components: {
-    Search
+    Search,
   },
   computed: {
-    ...mapGetters('App',['getApiStatus']),
+    ...mapGetters("App", ["getApiStatus"]),
 
     // 認証状態
     isLogin() {
       return this.$store.getters["App/isLogin"];
-    }
+    },
   },
   methods: {
     // ログアウト処理
@@ -50,14 +48,14 @@ export default {
       if (this.getApiStatus) {
         this.$router.push("/login");
       }
-    }
+    },
   },
   props: {
     site_name: {
       default: "Gourmet",
-      type: String
-    }
-  }
+      type: String,
+    },
+  },
 };
 </script>
 
@@ -101,5 +99,9 @@ export default {
   .jumbotron .heading p {
     font-size: 1.25rem;
   }
+}
+
+.access__area a {
+  color: #37383bb5 !important;
 }
 </style>
