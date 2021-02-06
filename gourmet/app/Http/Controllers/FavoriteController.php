@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Shop;
+use App\User;
 use Illuminate\Support\Facades\Auth;
-use Log;
 
 class FavoriteController extends Controller
 {
@@ -69,5 +69,25 @@ class FavoriteController extends Controller
         $shop->favorites()->detach(Auth::user()->id);
 
         return ["shop_id" => $shop_id];
+    }
+
+    /**
+     * ユーザことのお気に入り情報取得
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getByUser(Request $request)
+    {
+        if (is_null($request->user_id)) {
+            abort(404);
+        }
+
+        $favorites = User::with(['favorites'])
+            ->find($request->user_id)
+            ->favorites()
+            ->get();
+            
+
+        return $favorites;
     }
 }

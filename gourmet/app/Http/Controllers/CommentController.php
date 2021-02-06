@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Comment;
 use App\Shop;
+use App\User;
 use App\Photo;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreComment;
@@ -25,10 +26,10 @@ class CommentController extends Controller
     public function index(Request $request)
     {
         // ある店舗のコメント一覧を投稿日の降順に取得
-        $comments = Comment::with(['photo','user'])
-        ->where('shop_id', $request->shop_id)
-        ->orderBy('id', 'desc')
-        ->paginate();
+        $comments = Comment::with(['photo', 'user'])
+            ->where('shop_id', $request->shop_id)
+            ->orderBy('id', 'desc')
+            ->paginate();
 
         return $comments;
     }
@@ -42,7 +43,7 @@ class CommentController extends Controller
     {
         // カラムに設定する値
         $data = [
-            'user_id'=> Auth::user()->id,
+            'user_id' => Auth::user()->id,
             'shop_id' => $request->shop_id,
             'photo_id' => $request->photo_id,
             'content' => $request->content,
@@ -60,12 +61,12 @@ class CommentController extends Controller
             // コメント付属の写真がある場合は対応する写真IDも併せて保存
             if (Photo::find($request->photo_id) !== null) {
                 $comment = Photo::with(['comment'])
-                ->find($request->photo_id)
-                ->comment()
-                ->create($data);
+                    ->find($request->photo_id)
+                    ->comment()
+                    ->create($data);
 
                 // 対応する写真データのコメントidも更新
-                Photo::find($request->photo_id)->update(['comment_id'=> $comment->id]);
+                Photo::find($request->photo_id)->update(['comment_id' => $comment->id]);
             } else {
                 $comment = Comment::create($data);
             }
@@ -84,5 +85,24 @@ class CommentController extends Controller
         }
 
         return response($new_comment, 201);
+    }
+
+    /**
+     * ユーザことのレビュー情報取得
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getByUser(Request $request)
+    {
+        if (is_null($request->user_id)) {
+            abort(404);
+        }
+
+        $comments = User::with(['comments'])
+            ->find($request->user_id)
+            ->comments()
+            ->get();
+
+        return $comments;
     }
 }

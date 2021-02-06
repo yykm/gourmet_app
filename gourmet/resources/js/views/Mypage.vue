@@ -10,7 +10,9 @@
           lg="4"
           xl="3"
           class="bg__white shadow-sm mb-5 mb-lg-0 mb-ml-0"
-          ><aside class="account__info">アカウント情報<br>{{ user }}</aside></b-col
+          ><aside class="account__info">
+            アカウント情報<br />{{ user }}
+          </aside></b-col
         >
         <b-col
           cols="10"
@@ -20,17 +22,22 @@
         >
           <b-row>
             <b-col cols="12" class="reserve__info bg__white shadow-sm mb-5"
-              >予約</b-col
+              >予約<br />{{ reservations }}</b-col
             >
           </b-row>
           <b-row>
             <b-col cols="12" class="favorite__info bg__white shadow-sm mb-5"
-              >お気に入り</b-col
+              >お気に入り<br />{{ favorites }}</b-col
             >
           </b-row>
           <b-row>
-            <b-col cols="12" class="review__info bg__white shadow-sm"
-              >過去の口コミ投稿</b-col
+            <b-col cols="12" class="photo__info bg__white shadow-sm mb-5"
+              >過去の写真投稿<br />{{ photos }}</b-col
+            >
+          </b-row>
+          <b-row>
+            <b-col cols="12" class="review__info bg__white shadow-sm mb-5"
+              >過去の口コミ投稿<br />{{ comments }}</b-col
             >
           </b-row>
         </b-col>
@@ -41,6 +48,8 @@
 
 <script>
 import Header from "./../components/Header.vue";
+import { mapMutations } from "vuex";
+import { ERR } from "./../store/const.js";
 
 export default {
   name: "Mypage",
@@ -50,13 +59,65 @@ export default {
   data() {
     return {
       user: null,
+      reservations: null,
+      favorites: null,
+      comments: null,
+      photos: null,
     };
   },
-  methods(){
-    
+  methods: {
+    ...mapMutations("Err", ["setCode"]),
+
+    async fetchInfo(path) {
+      // 問い合わせのURL作成
+      let url = ["", "api", path, "byUser"].join("/");
+      // 店舗idをクエリパラメータに
+      const response = await axios
+        .get(url, {
+          params: {
+            user_id: this.user.id,
+          },
+        })
+        .catch((err) => err.response || err);
+
+      // ステ－タスコード200以外エラー
+      if (response.status !== ERR.OK) {
+        this.setCode("setCode", response.status);
+        return;
+      }
+
+      console.log(response);
+      // 取得結果がfalsyな値であればnullを返却
+      return response.data ?? null;
+    },
+    // 予約情報
+    async fetchReseveInfo() {
+      this.reservations = await this.fetchInfo("reserve");
+    },
+    // お気に入り情報
+    async fetchFavoriteInfo() {
+      this.favorites = await this.fetchInfo("favorites");
+    },
+    // レビュー情報
+    async fetchReviewInfo() {
+      this.comments = await this.fetchInfo("comments");
+    },
+    // 写真情報
+    async fetchPhotoInfo() {
+      this.photos = await this.fetchInfo("photos");
+    },
   },
   created() {
-    this.user = this.$store.getters['App/getUser'];
+    // ユーザ情報
+    this.user = this.$store.getters["App/getUser"];
+    // 予約情報
+    this.fetchReseveInfo();
+    // お気に入り情報
+    this.fetchFavoriteInfo();
+    // 口コミ情報
+    this.fetchReviewInfo();
+    // 写真
+    this.fetchPhotoInfo();
   },
 };
 </script>
@@ -76,8 +137,9 @@ export default {
 
 .reserve__info,
 .favorite__info,
-.review__info {
-  height: 20vh;
+.review__info,
+.photo__info {
+  height: 50vh;
 }
 
 @media (max-width: 991.98px) {

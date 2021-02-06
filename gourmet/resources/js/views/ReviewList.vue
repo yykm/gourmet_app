@@ -71,6 +71,8 @@ export default {
     }
   },
   methods: {
+    ...mapMutations("Err", ["setCode"]),
+    
     // フォームへスクロール
     scrollToForm() {
       document

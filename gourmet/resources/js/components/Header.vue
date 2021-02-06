@@ -17,7 +17,7 @@
             <template #button-content>
               <em class="mr-1">{{ userName }}</em>
             </template>
-            <b-dropdown-item to="/">マイページ</b-dropdown-item>
+            <b-dropdown-item to="/mypage">マイページ</b-dropdown-item>
             <b-dropdown-item @click.prevent="onClick"
               >ログアウト</b-dropdown-item
             >

@@ -38,12 +38,22 @@ class User extends Authenticatable
     ];
 
     /**
+     * リレーションシップ - reservationsテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function reservations()
+    {
+        return $this->hasMany('App\Reservation')
+            ->orderBy('id', 'desc');
+    }
+
+    /**
      * リレーションシップ - photosテーブル
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function photos()
     {
-        return $this->hasMany('App\Photo');
+        return $this->hasMany('App\Photo')->orderBy('id', 'desc');
     }
 
     /**
@@ -52,7 +62,7 @@ class User extends Authenticatable
      */
     public function comments()
     {
-        return $this->hasMany('App\Comment');
+        return $this->hasMany('App\Comment')->orderBy('id', 'desc');
     }
 
     /**
@@ -61,6 +71,7 @@ class User extends Authenticatable
      */
     public function favorites()
     {
-        return $this->hasMany('App\favorite');
+        return $this->hasMany('App\Favorite')
+            ->orderBy('id', 'desc');
     }
 }

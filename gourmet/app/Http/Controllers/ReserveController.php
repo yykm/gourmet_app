@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreReserve;
 use Illuminate\Support\Facades\Auth;
 use App\Shop;
+use App\User;
 use App\Reservation;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReservationPosted;
 use Illuminate\Support\Facades\DB;
-use Log;
 
 use function PHPUnit\Framework\isNull;
 
@@ -41,45 +41,45 @@ class ReserveController extends Controller
             $text = '';
 
             switch (intval($data['purpose'])) {
-            case 1:
-                $text = "誕生日";
-                break;
-            case 2:
-                $text = "デート";
-                break;
-            case 3:
-                $text = "接待";
-                break;
-            case 4:
-                $text = "歓迎会";
-                break;
-            case 5:
-                $text = "送別会";
-                break;
-            case 6:
-                $text = "同窓会";
-                break;
-            case 7:
-                $text = "忘年会";
-                break;
-            case 8:
-                $text = "結婚式２次会";
-                break;
-            case 9:
-                $text = "法事";
-                break;
-            case 10:
-                $text = "食事";
-                break;
-            case 11:
-                $text = "飲み会";
-                break;
-            case 12:
-                $text = "合コン";
-                break;
-            default:
-                $text = "その他";
-                break;
+                case 1:
+                    $text = "誕生日";
+                    break;
+                case 2:
+                    $text = "デート";
+                    break;
+                case 3:
+                    $text = "接待";
+                    break;
+                case 4:
+                    $text = "歓迎会";
+                    break;
+                case 5:
+                    $text = "送別会";
+                    break;
+                case 6:
+                    $text = "同窓会";
+                    break;
+                case 7:
+                    $text = "忘年会";
+                    break;
+                case 8:
+                    $text = "結婚式２次会";
+                    break;
+                case 9:
+                    $text = "法事";
+                    break;
+                case 10:
+                    $text = "食事";
+                    break;
+                case 11:
+                    $text = "飲み会";
+                    break;
+                case 12:
+                    $text = "合コン";
+                    break;
+                default:
+                    $text = "その他";
+                    break;
             }
             // 利用目的を代入
             $data['purpose'] = $text;
@@ -97,7 +97,7 @@ class ReserveController extends Controller
         try {
             // 店舗情報がない場合は店舗情報を格納、取得
             $shop = Shop::with(['subscriber'])
-            ->firstOrCreate(['id' => $request->shop_id]);
+                ->firstOrCreate(['id' => $request->shop_id]);
 
             // ある予約対象の店舗に紐づくあるユーザに関する予約情報を格納
             // １ユーザは１店舗のみ予約可能
@@ -126,5 +126,24 @@ class ReserveController extends Controller
 
         // ４．作成した予約情報を返却
         return response($reservation, 201);
+    }
+
+    /**
+     * ユーザことの予約情報取得
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getByUser(Request $request)
+    {
+        if (is_null($request->user_id)) {
+            abort(404);
+        }
+
+        $reservations = User::with(['reservations'])
+            ->find($request->user_id)
+            ->reservations()
+            ->get();
+                    
+        return $reservations;
     }
 }

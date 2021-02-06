@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Photo;
 use App\Shop;
+use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePhoto;
@@ -28,7 +29,7 @@ class PhotoController extends Controller
     public function download(Photo $photo)
     {
         // 写真の存在チェック
-        if (! Storage::cloud()->exists($photo->filename)) {
+        if (!Storage::cloud()->exists($photo->filename)) {
             abort(404);
         }
 
@@ -36,9 +37,9 @@ class PhotoController extends Controller
         // ブラウザにダウンロードさせるために保存ダイアログを開くよう指示
         $disposition = 'attachment; filename="' . $photo->filename . '"';
         $headers = [
-        'Content-Type' => 'application/octet-stream',
-        'Content-Disposition' => $disposition,
-    ];
+            'Content-Type' => 'application/octet-stream',
+            'Content-Disposition' => $disposition,
+        ];
 
         return response(Storage::cloud()->get($photo->filename), 200, $headers);
     }
@@ -50,8 +51,8 @@ class PhotoController extends Controller
     {
         // ある店舗に関する写真と、その写真を投稿したユーザ情報を取得
         $photos = Photo::with(['user'])
-        ->where('shop_id', '=', $request->shop_id)
-        ->orderBy(Photo::CREATED_AT, 'desc')->paginate();
+            ->where('shop_id', '=', $request->shop_id)
+            ->orderBy(Photo::CREATED_AT, 'desc')->paginate();
 
         return $photos;
     }
@@ -98,5 +99,24 @@ class PhotoController extends Controller
         // リソースの新規作成なので
         // レスポンスコードは201(CREATED)を返却する
         return response($photo, 201);
+    }
+
+    /**
+     * ユーザことの投稿写真情報取得
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getByUser(Request $request)
+    {
+        if (is_null($request->user_id)) {
+            abort(404);
+        }
+
+        $photos = User::with(['photos'])
+            ->find($request->user_id)
+            ->photos()
+            ->get();
+
+        return $photos;
     }
 }

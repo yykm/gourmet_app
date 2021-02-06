@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+
 // グルメサーチAPI取得
 Route::post('/search', 'SearchController@search')->name('search');
 
@@ -58,6 +59,8 @@ Route::post('/comments', 'CommentController@create')->name('comment.create');
 Route::get('/comments', 'CommentController@index')->name('comment.index');
 
 // いいねに関する情報取得
+Route::get('/favorites/byUser', 'FavoriteController@getByUser')->name('favorite.getByUser');
+
 Route::get('/favorites/{shop_id}', 'FavoriteController@index')->name('favorite.index');
 
 // いいね
@@ -68,3 +71,8 @@ Route::delete('/favorites/{shop_id}', 'FavoriteController@unlike');
 
 // 予約機能
 Route::post('/reserve', 'ReserveController@reserve')->name('reserve.reserve');
+
+// ユーザごとの予約機能情報取得
+Route::get('/reserve/byUser', 'ReserveController@getByUser')->name('reserve.getByUser');
+Route::get('/comments/byUser', 'CommentController@getByUser')->name('comment.getByUser');
+Route::get('/photos/byUser', 'PhotoController@getByUser')->name('photo.getByUser');
