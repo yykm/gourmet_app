@@ -19,7 +19,7 @@ mix
 //       "public/**/*.*"     // 公開フォルダを指定しないとリロードが効きません。注意
 //   ],
 //   proxy: {
-//       target: "http://ec2-54-64-127-184.ap-northeast-1.compute.amazonaws.com",
+//       target: "ip-10-0-1-10.ap-northeast-1.compute.internal",
 //   }
 // })
   .js('resources/js/app.js', 'public/js')

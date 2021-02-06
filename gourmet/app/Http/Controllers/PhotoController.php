@@ -115,6 +115,7 @@ class PhotoController extends Controller
         $photos = User::with(['photos'])
             ->find($request->user_id)
             ->photos()
+            ->with(['shop'])
             ->get();
 
         return $photos;

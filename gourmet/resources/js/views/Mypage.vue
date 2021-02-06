@@ -3,39 +3,35 @@
     <Header />
     <b-container fluid id="wrapper" class="mt-4">
       <b-row
+        no-gutters
         class="content__wrapper justify-content-around flex-column flex-lg-row"
       >
-        <b-col
-          cols="10"
-          lg="4"
-          xl="3"
-          class="bg__white shadow-sm mb-5 mb-lg-0 mb-ml-0"
+        <b-col cols="10" lg="4" xl="3" class="bg__white shadow-sm mb-5 mb-ml-0"
           ><aside class="account__info">
-            アカウント情報<br />{{ user }}
-          </aside></b-col
-        >
+            <MypageAccount :user="user" /></aside
+        ></b-col>
         <b-col
           cols="10"
           lg="7"
           xl="8"
           class="d-flex flex-column justify-content-between"
         >
-          <b-row>
+          <b-row no-gutters>
             <b-col cols="12" class="reserve__info bg__white shadow-sm mb-5"
               >予約<br />{{ reservations }}</b-col
             >
           </b-row>
-          <b-row>
+          <b-row no-gutters>
             <b-col cols="12" class="favorite__info bg__white shadow-sm mb-5"
               >お気に入り<br />{{ favorites }}</b-col
             >
           </b-row>
-          <b-row>
-            <b-col cols="12" class="photo__info bg__white shadow-sm mb-5"
-              >過去の写真投稿<br />{{ photos }}</b-col
-            >
+          <b-row no-gutters>
+            <b-col cols="12" class="photo__info bg__white shadow-sm mb-5">
+              <MypagePhoto :photos="photos" />
+            </b-col>
           </b-row>
-          <b-row>
+          <b-row no-gutters>
             <b-col cols="12" class="review__info bg__white shadow-sm mb-5"
               >過去の口コミ投稿<br />{{ comments }}</b-col
             >
@@ -48,6 +44,8 @@
 
 <script>
 import Header from "./../components/Header.vue";
+import MypageAccount from "./../components/MypageAccount.vue";
+import MypagePhoto from "./../components/MypagePhoto.vue";
 import { mapMutations } from "vuex";
 import { ERR } from "./../store/const.js";
 
@@ -55,6 +53,8 @@ export default {
   name: "Mypage",
   components: {
     Header,
+    MypageAccount,
+    MypagePhoto,
   },
   data() {
     return {
@@ -123,22 +123,13 @@ export default {
 </script>
 
 <style scoped>
-#wrapper {
-  max-width: 90vw;
-}
-
 .bg__white {
   background-color: #fff;
 }
 
-.account__info {
-  height: 40vh;
-}
-
 .reserve__info,
 .favorite__info,
-.review__info,
-.photo__info {
+.review__info {
   height: 50vh;
 }
 

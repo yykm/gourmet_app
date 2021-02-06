@@ -26,6 +26,7 @@ class Photo extends Model
     protected $visible = [
         'id', // 写真ID
         'user', // ユーザ情報
+        'shop', // 店舗情報
         'url', // 公開URL
         self::CREATED_AT // 写真投稿日
     ];
@@ -45,7 +46,7 @@ class Photo extends Model
         parent::__construct($attributes);
 
         // id値が設定されていないモデル生成（新規生成）の場合
-        if (! Arr::get($this->attributes, 'id')) {
+        if (!Arr::get($this->attributes, 'id')) {
             $this->setId();
         }
     }
