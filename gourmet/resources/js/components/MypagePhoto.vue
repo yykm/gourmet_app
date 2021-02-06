@@ -1,39 +1,28 @@
 <template>
   <div id="mypagePhoto">
     <h2 class="p-3 title">過去の投稿写真</h2>
-    <div class="wrapper pb-2">
-    <carousel :per-page="3" :navigation-enabled="true">
-      <slide v-for="(photo, i) in photos" :key="i">
-        <div class="items px-2">
-          <b-card
-            :title="'店舗ID:' + photo.shop.id"
-            :img-src="photo.url"
-            img-alt="Image"
-            img-top
-            img-height="300"
-            tag="article"
-            body-class="text-center"
-          >
-            <b-card-text>
-                <p>投稿日：{{ photo.created_at }}</p> 
-            </b-card-text>
-          </b-card>
-        </div>
-      </slide>
-    </carousel>
-    </div>
+    <b-carousel
+      :interval="0"
+      controls
+      indicators
+      background="#ababab"
+      style="text-shadow: 1px 1px 2px #333"
+    >
+      <!-- Text slides with image -->
+      <b-carousel-slide
+        v-for="(photo, i) in photos"
+        :key="i"
+        :caption="'店舗ID：' + photo.shop.id"
+        :text="'投稿日：' + photo.created_at"
+        :img-src="photo.url"
+      ></b-carousel-slide>
+    </b-carousel>
   </div>
 </template>
 
 <script>
-import { Carousel, Slide } from "vue-carousel";
-
 export default {
   name: "MypagePhoto",
-  components: {
-    Carousel,
-    Slide,
-  },
   props: {
     photos: {
       type: Array,
@@ -44,7 +33,14 @@ export default {
 </script>
 
 <style scoped>
-.title{
+.title {
   font-size: 1.5rem;
+}
+</style>
+<style>
+#mypagePhoto .carousel-inner {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
