@@ -101,6 +101,7 @@ class CommentController extends Controller
         $comments = User::with(['comments'])
             ->find($request->user_id)
             ->comments()
+            ->with(['photo'])
             ->get();
 
         return $comments;

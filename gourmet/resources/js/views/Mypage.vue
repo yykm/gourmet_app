@@ -33,7 +33,7 @@
           </b-row>
           <b-row no-gutters>
             <b-col cols="12" class="review__info bg__white shadow-sm mb-5"
-              >過去の口コミ投稿<br />{{ comments }}</b-col
+              ><MypageComment :comments="comments" /></b-col
             >
           </b-row>
         </b-col>
@@ -46,6 +46,7 @@
 import Header from "./../components/Header.vue";
 import MypageAccount from "./../components/MypageAccount.vue";
 import MypagePhoto from "./../components/MypagePhoto.vue";
+import MypageComment from "./../components/MypageComment.vue";
 import { mapMutations } from "vuex";
 import { ERR } from "./../store/const.js";
 
@@ -55,6 +56,7 @@ export default {
     Header,
     MypageAccount,
     MypagePhoto,
+    MypageComment
   },
   data() {
     return {
@@ -128,8 +130,7 @@ export default {
 }
 
 .reserve__info,
-.favorite__info,
-.review__info {
+.favorite__info{
   height: 50vh;
 }
 
