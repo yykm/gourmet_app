@@ -17,10 +17,21 @@
       </b-card-body>
 
       <b-list-group flush>
-        <b-list-group-item>会員情報変更（未実装）</b-list-group-item>
-        <b-list-group-item>友達を紹介する（未実装）</b-list-group-item>
-        <b-list-group-item>退会する（未実装）</b-list-group-item>
-        <b-list-group-item>未実装コンテンツ...</b-list-group-item>
+        <b-link @click.prevent="onClick('reservation')"
+          ><b-list-group-item>予約履歴</b-list-group-item></b-link
+        >
+        <b-link @click.prevent="onClick('favorite')"
+          ><b-list-group-item>お気に入り追加したお店</b-list-group-item></b-link
+        >
+        <b-link @click.prevent="onClick('photo')"
+          ><b-list-group-item>投稿した写真</b-list-group-item></b-link
+        >
+        <b-link @click.prevent="onClick('comment')"
+          ><b-list-group-item>投稿したレビュー</b-list-group-item></b-link
+        >
+        <b-link
+          ><b-list-group-item>未実装コンテンツ..</b-list-group-item></b-link
+        >
       </b-list-group>
 
       <b-card-body>
@@ -66,14 +77,17 @@ export default {
         this.$router.push("/login");
       }
     },
+    onClick(flag) {
+      // コンポーネント切り替えフラグ
+      this.$emit("componentShow", flag);
+    },
   },
 };
 </script>
 
 <style scoped>
 .card-body,
-.card-subtitle,
-.list-group {
+.card-subtitle {
   color: #1625314a !important;
 }
 
@@ -83,5 +97,20 @@ export default {
 
 .list-group-flush > .list-group-item:last-child {
   border-width: 0 0 1px;
+}
+
+.list-group > a {
+  color: #404e5fcc;
+  text-decoration: none;
+}
+.list-group-item:hover {
+  background-color: #4755611a;
+}
+
+.list-group-item {
+  border: none;
+  border-bottom-color: rgba(0, 0, 0, 0.125);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
 }
 </style>

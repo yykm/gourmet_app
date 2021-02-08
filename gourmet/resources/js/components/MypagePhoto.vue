@@ -1,6 +1,6 @@
 <template>
   <div id="mypagePhoto">
-    <h2 class="p-3 title">過去の投稿写真</h2>
+    <h2 class="p-3 title">投稿した写真</h2>
     <b-carousel
       :interval="0"
       controls

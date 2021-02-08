@@ -8,7 +8,7 @@
       >
         <b-col cols="10" lg="4" xl="3" class="bg__white shadow-sm mb-5 mb-ml-0"
           ><aside class="account__info">
-            <MypageAccount :user="user" /></aside
+            <MypageAccount @componentShow="componentShow" :user="user" /></aside
         ></b-col>
         <b-col
           cols="10"
@@ -16,25 +16,25 @@
           xl="8"
           class="d-flex flex-column justify-content-between"
         >
-          <b-row no-gutters>
+          <b-row no-gutters v-if="flag === 'reservation'">
             <b-col cols="12" class="reserve__info bg__white shadow-sm mb-5"
               >予約<br />{{ reservations }}</b-col
             >
           </b-row>
-          <b-row no-gutters>
-            <b-col cols="12" class="favorite__info bg__white shadow-sm mb-5"
-              >お気に入り<br />{{ favorites }}</b-col
-            >
+          <b-row no-gutters v-else-if="flag === 'favorite'">
+            <b-col cols="12" class="favorite__info bg__white shadow-sm mb-5">
+              <MypageFavorite :favorites="favorites" />
+            </b-col>
           </b-row>
-          <b-row no-gutters>
+          <b-row no-gutters v-else-if="flag === 'photo'">
             <b-col cols="12" class="photo__info bg__white shadow-sm mb-5">
               <MypagePhoto :photos="photos" />
             </b-col>
           </b-row>
-          <b-row no-gutters>
+          <b-row no-gutters v-else-if="flag === 'comment'">
             <b-col cols="12" class="review__info bg__white shadow-sm mb-5"
-              ><MypageComment :comments="comments" /></b-col
-            >
+              ><MypageComment :comments="comments"
+            /></b-col>
           </b-row>
         </b-col>
       </b-row>
@@ -47,6 +47,7 @@ import Header from "./../components/Header.vue";
 import MypageAccount from "./../components/MypageAccount.vue";
 import MypagePhoto from "./../components/MypagePhoto.vue";
 import MypageComment from "./../components/MypageComment.vue";
+import MypageFavorite from "./../components/MypageFavorite.vue";
 import { mapMutations } from "vuex";
 import { ERR } from "./../store/const.js";
 
@@ -56,7 +57,8 @@ export default {
     Header,
     MypageAccount,
     MypagePhoto,
-    MypageComment
+    MypageComment,
+    MypageFavorite,
   },
   data() {
     return {
@@ -65,11 +67,16 @@ export default {
       favorites: null,
       comments: null,
       photos: null,
+      flag: null,
     };
   },
   methods: {
     ...mapMutations("Err", ["setCode"]),
 
+    // 表示コンポーネント切り替え
+    componentShow(flag) {
+      this.flag = flag;
+    },
     async fetchInfo(path) {
       // 問い合わせのURL作成
       let url = ["", "api", path, "byUser"].join("/");
@@ -127,11 +134,6 @@ export default {
 <style scoped>
 .bg__white {
   background-color: #fff;
-}
-
-.reserve__info,
-.favorite__info{
-  height: 50vh;
 }
 
 @media (max-width: 991.98px) {
