@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorePhoto;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use Log;
 
 class PhotoController extends Controller
 {

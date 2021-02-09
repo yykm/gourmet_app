@@ -97,7 +97,6 @@ export default {
         return;
       }
 
-      console.log(response);
       // 取得結果がfalsyな値であればnullを返却
       return response.data ?? null;
     },

@@ -104,15 +104,6 @@ const routes = [
         components: {
           content: PhotoList
         },
-        // ページ番号のクエリパラメータ
-        // props: route => {
-        //   const page = route.query.page;
-        //   console.log(route.query.page)
-        //   // 整数のみ受け付ける
-        //   return {
-        //     page: Number(/^[1-9][0-9]*$/.test(page) ? page * 1 : 1)
-        //   }
-        // }
       },
       {
         path: 'review',
