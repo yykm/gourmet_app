@@ -31,7 +31,12 @@
             }}」宛に、予約内容の控えを送信しました。</b-card-sub-title
           >
           <b-card-text>
-            <b-button variant="secondary" class="px-4">ご予約の確認</b-button>
+            <b-button
+              :to="{ path: '/mypage', query: { tab: 'reservation' } }"
+              variant="secondary"
+              class="px-4"
+              >ご予約の確認</b-button
+            >
           </b-card-text>
         </b-card>
       </div>
@@ -69,7 +74,7 @@ export default {
   line-height: 1.5em;
 }
 
-.link__area a{
+.link__area a {
   color: #0000009e;
   font-size: 1.2rem;
   text-decoration: none;

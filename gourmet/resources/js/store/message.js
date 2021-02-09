@@ -22,9 +22,9 @@ export default {
       state.success = Boolean(success);
       state.content = content;
 
-      // 表示時間が未指定か、1秒以下の場合に3秒にデフォルト設定
-      if (!timeout || timeout < 1000) {
-        timeout = 3000;
+      // 表示時間が未指定か、1.5秒以下の場合に1.5秒にデフォルト設定
+      if (!timeout || timeout < 1500) {
+        timeout = 1500;
       }
 
       state.timeout = Number(timeout);

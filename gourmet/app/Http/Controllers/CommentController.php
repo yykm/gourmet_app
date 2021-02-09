@@ -41,13 +41,18 @@ class CommentController extends Controller
      */
     public function create(StoreComment $request)
     {
+        // json文字列からオブジェクトへ変換
+        $shop = json_decode($request->shop);
+
         // カラムに設定する値
         $data = [
             'user_id' => Auth::user()->id,
-            'shop_id' => $request->shop_id,
+            'shop_id' => $shop->id,
             'photo_id' => $request->photo_id,
             'content' => $request->content,
         ];
+
+
 
         // トランザクションを利用する
         // 写真投稿及びコメント保存失敗時にロールバック
@@ -55,7 +60,22 @@ class CommentController extends Controller
 
         try {
             // 店舗データが作られていなければ店舗モデルを新たに作成、保存
-            Shop::firstOrCreate(['id' => $request->shop_id]);
+            Shop::firstOrCreate(
+                [
+                    'id' => $shop->id
+                ],
+                [
+                    'name' => $shop->name,
+                    'kana' => $shop->kana,
+                    'image' => $shop->image_l,
+                    'address' => $shop->address,
+                    'access' => $shop->access,
+                    'catch' => $shop->catch,
+                    'open' => $shop->open,
+                    'category' => $shop->category,
+                    'average' => $shop->average
+                ]
+            );
 
             // コメント保存
             // コメント付属の写真がある場合は対応する写真IDも併せて保存
@@ -101,7 +121,7 @@ class CommentController extends Controller
         $comments = User::with(['comments'])
             ->find($request->user_id)
             ->comments()
-            ->with(['photo'])
+            ->with(['photo','shop'])
             ->get();
 
         return $comments;

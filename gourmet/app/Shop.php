@@ -9,6 +9,9 @@ class Shop extends Model
 {
     /** 主キーの型 */
     protected $keyType = 'string';
+    
+    /** 関連づけるテーブル */
+    protected $table = 'shops';
 
 
     /** JSONに含めるアクセサ */
@@ -18,12 +21,12 @@ class Shop extends Model
 
     /** JSONに含める属性 */
     protected $visible = [
-        'id', 'likes_count', 'liked_by_user'
+        'id', 'likes_count', 'liked_by_user', 'name', 'kana', 'image', 'address', 'access', 'catch', 'open', 'category', 'average'
     ];
 
     /** ユーザ入力値を受け付ける属性 */
     protected $fillable = [
-        'id',
+        'id', 'name', 'kana', 'image', 'address', 'access', 'catch', 'open', 'category', 'average'
     ];
 
     /**

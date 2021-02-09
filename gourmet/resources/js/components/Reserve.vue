@@ -1,9 +1,13 @@
 <template>
   <div class="reserve">
     <div class="reserve__btn-area my-4">
-    <b-button variant="warning" @click="showDateModal" class="reserve__btn w-50"
-      >空室確認・予約</b-button
-    ></div>
+      <b-button
+        variant="warning"
+        @click="showDateModal"
+        class="px-3"
+        >空室確認・予約</b-button
+      >
+    </div>
     <!-- 日付入力モーダル -->
     <b-modal
       :ref="'date-modal' + shop.id"
@@ -40,7 +44,7 @@
                   year: 'numeric',
                   month: 'short',
                   day: '2-digit',
-                  weekday: 'short'
+                  weekday: 'short',
                 }"
                 :min="new Date()"
                 locale="ja"
@@ -217,7 +221,7 @@
           >
           <b-button
             type="reset"
-            class="mt-3  w-50 mx-auto"
+            class="mt-3 w-50 mx-auto"
             variant="outline-danger"
             block
             >キャンセルする</b-button
@@ -245,7 +249,7 @@ export default {
         kana: null,
         phone_num: null,
         purpose: null,
-        request: null
+        request: null,
       },
       purposes: [
         { value: null, text: "お選びください", disabled: true },
@@ -261,9 +265,9 @@ export default {
         { value: "10", text: "食事" },
         { value: "11", text: "飲み会" },
         { value: "12", text: "合コン" },
-        { value: "99", text: "その他" }
+        { value: "99", text: "その他" },
       ],
-      errors: null
+      errors: null,
     };
   },
   computed: {
@@ -273,14 +277,14 @@ export default {
       numbers.push({
         value: null,
         text: "人数をお選びください",
-        disabled: true
+        disabled: true,
       });
 
       for (let i = 1; i < 100; i++) {
         numbers.push({ value: i, text: i + "名" });
       }
       return numbers;
-    }
+    },
   },
   methods: {
     ...mapMutations("Err", ["setCode"]),
@@ -312,7 +316,7 @@ export default {
         kana: null,
         phone_num: null,
         purpose: null,
-        request: null
+        request: null,
       };
       this.errors = null;
     },
@@ -322,9 +326,9 @@ export default {
       const response = await axios
         .post("/api/reserve", {
           form: this.form,
-          shop_id: this.shop.id
+          shop: JSON.stringify(this.shop),
         })
-        .catch(err => err.response || err);
+        .catch((err) => err.response || err);
 
       // バリデーションエラー
       if (response.status === ERR.UNPROCESSABLE_ENTITY) {
@@ -343,24 +347,23 @@ export default {
         this.setContent({
           success: false,
           content: "予約に失敗しました",
-          timeout: 3000
+          timeout: 3000,
         });
         return;
       }
 
       // 成功時は予約情報を予約完了ページに送信しページ遷移
-      console.log("成功の場合", response);
       this.$router.push({
         path: "/reserved",
-        query: { reservation: response.data }
+        query: { reservation: response.data },
       });
-    }
+    },
   },
   props: {
     shop: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   filters: {
     // hh:mm
@@ -370,8 +373,8 @@ export default {
       }
 
       return time.slice(0, 5);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -394,10 +397,4 @@ export default {
 .reserve__info-header p {
   color: #656fb5;
 }
-
-@media (min-width: 768px) {
-  .reserve__btn {
-    width: 85% !important;
-  }
- }
 </style>

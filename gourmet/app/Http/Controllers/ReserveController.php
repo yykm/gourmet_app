@@ -35,6 +35,9 @@ class ReserveController extends Controller
         foreach ($request->form as $key => $value) {
             $data = array_merge($data, array($key => $value));
         }
+        
+        // json文字列からオブジェクトへ変換
+        $shop = json_decode($request->shop);
 
         // 利用目的
         if (!is_null($data['purpose'])) {
@@ -97,7 +100,22 @@ class ReserveController extends Controller
         try {
             // 店舗情報がない場合は店舗情報を格納、取得
             $shop = Shop::with(['subscriber'])
-                ->firstOrCreate(['id' => $request->shop_id]);
+                ->firstOrCreate(
+                    [
+                        'id' => $shop->id
+                    ],
+                    [
+                        'name' => $shop->name,
+                        'kana' => $shop->kana,
+                        'image' => $shop->image_l,
+                        'address' => $shop->address,
+                        'access' => $shop->access,
+                        'catch' => $shop->catch,
+                        'open' => $shop->open,
+                        'category' => $shop->category,
+                        'average' => $shop->average
+                    ]
+                );
 
             // ある予約対象の店舗に紐づくあるユーザに関する予約情報を格納
             // １ユーザは１店舗のみ予約可能
@@ -105,7 +123,7 @@ class ReserveController extends Controller
             $shop->subscriber()->attach(Auth::user()->id, $data);
 
             // 予約情報のリロード
-            $reservation = Reservation::where('shop_id', $request->shop_id)
+            $reservation = Reservation::where('shop_id', $shop->id)
                 ->where('user_id', Auth::user()->id)
                 ->first();
             // テーブル名がpivotとして参照されるためボツ
@@ -142,8 +160,9 @@ class ReserveController extends Controller
         $reservations = User::with(['reservations'])
             ->find($request->user_id)
             ->reservations()
+            ->with(['shop'])
             ->get();
-                    
+
         return $reservations;
     }
 }

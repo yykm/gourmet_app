@@ -8,7 +8,7 @@ class Comment extends Model
 {
     /** JSONに含める属性 */
     protected $visible = [
-        'id', 'user', 'content', self::CREATED_AT, 'photo'
+        'id', 'user', 'content', self::CREATED_AT, 'photo', 'shop'
     ];
 
     protected $perPage = 10; // ペジネーション１ページあたりのデータ数

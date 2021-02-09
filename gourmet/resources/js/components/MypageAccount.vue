@@ -21,7 +21,7 @@
           ><b-list-group-item>予約履歴</b-list-group-item></b-link
         >
         <b-link @click.prevent="onClick('favorite')"
-          ><b-list-group-item>お気に入り追加したお店</b-list-group-item></b-link
+          ><b-list-group-item>お気に入りのお店</b-list-group-item></b-link
         >
         <b-link @click.prevent="onClick('photo')"
           ><b-list-group-item>投稿した写真</b-list-group-item></b-link

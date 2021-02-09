@@ -78,6 +78,9 @@ const routes = [
     path: '/mypage',
     name: 'Mypage',
     component: Mypage,
+    props: (route) => ({
+      tab : String(route.query.tab)
+    }),
   },
   // 店舗詳細
   {

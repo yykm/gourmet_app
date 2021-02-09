@@ -24,7 +24,7 @@ class StoreComment extends FormRequest
     public function rules()
     {
         return [
-            'shop_id' => 'required|alpha_num',
+            'shop' => 'required|json',
             'content' => 'required|max:500',
             'photo_id' => 'sometimes|string',
         ];

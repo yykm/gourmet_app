@@ -64,7 +64,7 @@ Route::get('/favorites/byUser', 'FavoriteController@getByUser')->name('favorite.
 Route::get('/favorites/{shop_id}', 'FavoriteController@index')->name('favorite.index');
 
 // いいね
-Route::put('/favorites/{shop_id}', 'FavoriteController@like')->name('favorite.like');
+Route::post('/favorites', 'FavoriteController@like')->name('favorite.like');
 
 // いいね解除
 Route::delete('/favorites/{shop_id}', 'FavoriteController@unlike');

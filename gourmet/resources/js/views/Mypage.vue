@@ -18,8 +18,8 @@
         >
           <b-row no-gutters v-if="flag === 'reservation'">
             <b-col cols="12" class="reserve__info bg__white shadow-sm mb-5"
-              >予約<br />{{ reservations }}</b-col
-            >
+              ><MypageReservation :reservations="reservations"
+            /></b-col>
           </b-row>
           <b-row no-gutters v-else-if="flag === 'favorite'">
             <b-col cols="12" class="favorite__info bg__white shadow-sm mb-5">
@@ -48,6 +48,7 @@ import MypageAccount from "./../components/MypageAccount.vue";
 import MypagePhoto from "./../components/MypagePhoto.vue";
 import MypageComment from "./../components/MypageComment.vue";
 import MypageFavorite from "./../components/MypageFavorite.vue";
+import MypageReservation from "./../components/MypageReservation.vue";
 import { mapMutations } from "vuex";
 import { ERR } from "./../store/const.js";
 
@@ -59,6 +60,7 @@ export default {
     MypagePhoto,
     MypageComment,
     MypageFavorite,
+    MypageReservation,
   },
   data() {
     return {
@@ -102,6 +104,11 @@ export default {
     // 予約情報
     async fetchReseveInfo() {
       this.reservations = await this.fetchInfo("reserve");
+
+      // 初期表示項目の切り替え
+      if (this.tab === 'reservation') {
+        this.componentShow('reservation');
+      }
     },
     // お気に入り情報
     async fetchFavoriteInfo() {
@@ -127,6 +134,12 @@ export default {
     this.fetchReviewInfo();
     // 写真
     this.fetchPhotoInfo();
+  },
+  props: {
+    tab: {
+      type: String,
+      required: false,
+    },
   },
 };
 </script>

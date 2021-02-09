@@ -48,12 +48,12 @@ export default {
     return {
       photo: null,
       comment: "",
-      errors: null
+      errors: null,
     };
   },
   props: {
-    shopId: {
-      type: String,
+    shop: {
+      type: Object,
       required: true
     }
   },
@@ -65,8 +65,7 @@ export default {
     async addComment() {
       const formData = new FormData();
 
-      formData.append("shop_id", this.shopId);
-
+      formData.append("shop", JSON.stringify(this.shop));
       // 写真が指定されている場合
       if (this.photo) {
         // 写真があれば写真投稿APIを呼び出す
@@ -143,7 +142,7 @@ export default {
         timeout: 3000
       });
     }
-  }
+  },
 };
 </script>
 

@@ -69,7 +69,7 @@
         </label>
 
         <!-- 店舗IDを送信するためhiddenフィールドを用意 -->
-        <input type="hidden" name="shop_Id" :value="shopId" />
+        <input type="hidden" name="shop" :value="shop" />
 
         <!-- 投稿 / 入力内容リセットボタン -->
         <b-button type="submit" class="mt-2" variant="outline-danger" block
@@ -85,30 +85,33 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import { ERR } from "./../store/const.js";
 import Loader from "./../components/Loader.vue";
 
 export default {
   name: "PhotoForm",
   components: {
-    Loader
+    Loader,
   },
   data() {
     return {
       file: null, // 入力されたファイル名
       preview: null, // プレビュー表示フラグ
       errors: null, // エラーメッセージ用
-      loading: null // ローダー表示フラグ
+      loading: null, // ローダー表示フラグ
+      shop: null, // 店舗情報
     };
   },
   props: {
     shopId: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
+    ...mapGetters("App", ["getShop"]),
+
     // 選択された画像、さもなければ初期画像
     rePreview() {
       return this.preview ?? "/img/l_e_others_500.png";
@@ -117,7 +120,7 @@ export default {
     // 認証状態
     isLogin() {
       return this.$store.getters["App/isLogin"];
-    }
+    },
   },
   methods: {
     ...mapMutations("Err", ["setCode"]),
@@ -152,7 +155,7 @@ export default {
       const reader = new FileReader();
 
       // ファイルを読み込み終わったタイミングで実行する処理
-      reader.onload = e => {
+      reader.onload = (e) => {
         // previewに読み込み結果（データURL形式）を代入する
         this.preview = e.target.result;
       };
@@ -167,13 +170,13 @@ export default {
 
       const formData = new FormData();
 
-      // FormDataオブジェクトに写真ファイルと店舗ID追加
+      // FormDataオブジェクトに写真ファイルと店舗オブジェクト追加
       formData.append("photo", this.file);
-      formData.append("shop_id", this.shopId);
+      formData.append("shop", JSON.stringify(this.shop));
       // 送信
       const response = await axios
         .post("/api/photos", formData)
-        .catch(err => err.response || err);
+        .catch((err) => err.response || err);
 
       // ローダ非表示
       this.loading = false;
@@ -194,7 +197,7 @@ export default {
         this.setContent({
           success: false,
           content: "写真の投稿に失敗しました",
-          timeout: 3000
+          timeout: 3000,
         });
         return;
       }
@@ -205,10 +208,14 @@ export default {
       this.setContent({
         success: true,
         content: "写真が投稿されました！",
-        timeout: 3000
+        timeout: 3000,
       });
-    }
-  }
+    },
+  },
+  created() {
+    // 店舗オブジェクトの取得
+    this.shop = this.getShop(this.shopId);
+  },
 };
 </script>
 

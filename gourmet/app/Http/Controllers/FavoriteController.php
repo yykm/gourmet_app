@@ -24,30 +24,50 @@ class FavoriteController extends Controller
      */
     public function index(string $shop_id)
     {
-        Shop::firstOrCreate(['id' => $shop_id]);
-
-        $favorite = Shop::where('id', $shop_id)->with(['favorites'])->first();
-
+        if(!is_null(Shop::find($shop_id))){
+            $favorite = Shop::where('id', $shop_id)->with(['favorites'])->first();
+        } else{
+            $favorite = null;
+        }
+        
         return $favorite;
     }
 
     /**
      * いいね
-     * @param string $shop_id
+     * @param Illuminate\Http\Request; $request
      * @return array
      */
-    public function like(string $shop_id)
+    public function like(Request $request)
     {
-        // 店舗がない場合は作成
-        Shop::firstOrCreate(['id' => $shop_id]);
+        // json文字列からオブジェクトへ変換
+        $shop = json_decode($request->shop);
 
-        $shop = Shop::where('id', $shop_id)->with('favorites')->first();
+        // 店舗がない場合は作成
+        $shop = Shop::firstOrCreate(
+            [
+                'id' => $shop->id
+            ],
+            [
+                'name' => $shop->name,
+                'kana' => $shop->kana,
+                'image' => $shop->image_l,
+                'address' => $shop->address,
+                'access' => $shop->access,
+                'catch' => $shop->catch,
+                'open' => $shop->open,
+                'category' => $shop->category,
+                'average' => $shop->average
+            ]
+        );
+
+        $shop = Shop::where('id', $shop->id)->with('favorites')->first();
 
         // ある店舗に紐づくいいねのうちログイン中のユーザに関する中間テーブルのデータ行を削除してから追加（いいねを１ユーザ１個に限定するため）
         $shop->favorites()->detach(Auth::user()->id);
         $shop->favorites()->attach(Auth::user()->id);
 
-        return ["shop_id" => $shop_id];
+        return ["shop_id" => $shop->id];
     }
 
 
@@ -58,11 +78,6 @@ class FavoriteController extends Controller
      */
     public function unlike(string $shop_id)
     {
-        // 店舗がない場合は作成
-        if (!Shop::where('id', $shop_id)) {
-            Shop::firstOrCreate(['id' => $shop_id]);
-        }
-
         $shop = Shop::where('id', $shop_id)->with('favorites')->first();
 
         // ある店舗に関するログイン中のユーザの中間テーブルの１いいねを削除
@@ -85,6 +100,7 @@ class FavoriteController extends Controller
         $favorites = User::with(['favorites'])
             ->find($request->user_id)
             ->favorites()
+            ->with(['shop'])
             ->get();
             
 

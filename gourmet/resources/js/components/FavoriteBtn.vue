@@ -33,28 +33,37 @@ export default {
   name: "FavoriteBtn",
   data() {
     return {
-      favorite: false
+      favorite: false,
     };
   },
   props: {
     // 店舗ID
-    id: {
-      type: String,
-      required: true
-    }
+    shop: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
-    ...mapGetters("App", ["isLogin"])
+    ...mapGetters("App", ["isLogin", "getShop"]),
   },
   methods: {
     ...mapMutations("Message", ["setContent"]),
 
     // 1店舗に関するお気に入り情報取得
     async fetchFavorite() {
-      const response = await axios.get(`/api/favorites/${this.id}`);
+      const response = await axios.get(`/api/favorites/${this.shop.id}`);
 
       if (response.status !== ERR.OK) {
         this.$store.commit("Err/setCode", response.status);
+        return;
+      }
+      
+      // 紐づく店舗がない場合
+      if (!response.data) {
+        this.favorite = {
+          liked_by_user : false,
+          likes_count : 0
+        }
         return;
       }
 
@@ -67,7 +76,7 @@ export default {
         this.setContent({
           success: false,
           content: "お気に入り機能を使うにはログインしてください",
-          timeout: 3000
+          timeout: 1500,
         });
         return;
       }
@@ -81,8 +90,15 @@ export default {
 
     // いいね
     async like() {
-      const response = await axios.put(`/api/favorites/${this.id}`);
+      const formData = new FormData();
+      formData.append("shop", JSON.stringify(this.shop));
 
+      // 送信
+      const response = await axios
+        .post("/api/favorites", formData)
+        .catch((err) => err.response || err);
+
+      // お気に入り登録失敗
       if (response.status !== ERR.OK) {
         this.$store.commit("Err/setCode", response.status);
         return;
@@ -91,7 +107,7 @@ export default {
       this.setContent({
         success: true,
         content: "お気に入りに登録しました",
-        timeout: 3000
+        timeout: 1500,
       });
       this.favorite.likes_count = this.favorite.likes_count + 1;
       this.favorite.liked_by_user = true;
@@ -99,7 +115,7 @@ export default {
 
     // いいね解除
     async unlike() {
-      const response = await axios.delete(`/api/favorites/${this.id}`);
+      const response = await axios.delete(`/api/favorites/${this.shop.id}`);
 
       if (response.status !== ERR.OK) {
         this.$store.commit("Err/setCode", response.status);
@@ -109,28 +125,21 @@ export default {
       this.setContent({
         success: true,
         content: "お気に入りから解除しました",
-        timeout: 3000
+        timeout: 1500,
       });
       this.favorite.likes_count = this.favorite.likes_count - 1;
       this.favorite.liked_by_user = false;
-    }
+    },
   },
 
   async created() {
     await this.fetchFavorite();
-  }
+  },
 };
 </script>
 
 <style scoped>
-.favorite__wrapper {
-  position: relative;
-}
-
 .favorite__btn {
-  position: absolute;
-  top: 1.5em;
-  right: 1.5em;
   outline: none;
   border-radius: 3px;
   transition: 0.3s;

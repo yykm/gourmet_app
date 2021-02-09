@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorePhoto;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Log;
 
 class PhotoController extends Controller
 {
@@ -67,6 +68,9 @@ class PhotoController extends Controller
         // 投稿写真の拡張子を取得する
         $extension = $request->photo->extension();
 
+        // json文字列からオブジェクトへ変換
+        $shop = json_decode($request->shop);
+
         // 新しく写真インスタンスを生成
         $photo = new Photo();
 
@@ -74,7 +78,7 @@ class PhotoController extends Controller
         $photo->filename = $photo->id . '.' . $extension;
 
         // 店舗IDを設定
-        $photo->shop_id = $request->shop_id;
+        $photo->shop_id = $shop->id;
 
         // S3に写真を保存する
         // 第4引数の'public'はファイルを公開状態で保存するため
@@ -86,7 +90,23 @@ class PhotoController extends Controller
         DB::beginTransaction();
         try {
             // 親テーブルの主キーが登録されていなければ登録
-            Shop::firstOrCreate(['id' => $request->shop_id]);
+            Shop::firstOrCreate(
+                [
+                    'id' => $shop->id
+                ],
+                [
+                    'name' => $shop->name,
+                    'kana' => $shop->kana,
+                    'image' => $shop->image_l,
+                    'address' => $shop->address,
+                    'access' => $shop->access,
+                    'catch' => $shop->catch,
+                    'open' => $shop->open,
+                    'category' => $shop->category,
+                    'average' => $shop->average
+                ]
+            );
+
             Auth::user()->photos()->save($photo);
             DB::commit();
         } catch (\Exception $exception) {

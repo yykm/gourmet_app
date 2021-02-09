@@ -21,10 +21,14 @@
 
           <!-- 店舗概要 -->
           <b-col sm="12" md="6" lg="8">
-              <FavoriteBtn :id="id" />
-            <b-card-body :title="shop.name">
-              <small class="mb-2">{{ shop.kana }}</small>
-
+            <b-card-body>
+              <div class="title__wrapper">
+                <div class="title__inner d-flex flex-column-reverse flex-md-row align-items-center align-items-md-start justify-content-between">
+                  <b-card-title>{{ shop.name }}</b-card-title>
+                  <FavoriteBtn :shop="shop" class="flex-shrink-0 ml-md-2 mb-3 mb-md-0" />
+                </div>
+                <small class="mb-2">{{ shop.kana }}</small>
+              </div>
               <b-card-text class="mt-2">
                 <!-- アクセス -->
                 <span>アクセス：{{ shop.access }}</span
@@ -50,9 +54,7 @@
                 <span>定休日：{{ shop.close }}</span
                 ><br />
                 <div class="text-center">
-                  <b-button variant="warning" class="mt-3 mb-1 px-4"
-                    >空室確認・予約</b-button
-                  >
+                  <Reserve :shop="shop" />
                 </div>
               </b-card-footer>
             </b-card-body>
@@ -86,6 +88,7 @@
 <script>
 import Header from "./../components/Header.vue";
 import FavoriteBtn from "./../components/FavoriteBtn.vue";
+import Reserve from "./../components/Reserve.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -93,12 +96,13 @@ export default {
   data() {
     return {
       tabIndex: Number(this.tab),
-      shop: null
+      shop: null,
     };
   },
   components: {
     Header,
-    FavoriteBtn
+    FavoriteBtn,
+    Reserve,
   },
   computed: {
     ...mapGetters("App", ["getShop"]),
@@ -117,10 +121,10 @@ export default {
         non_smoking: "禁煙席",
         parking: "駐車場",
         pet: "ペット",
-        lunch: "ランチ"
+        lunch: "ランチ",
       };
 
-      Object.keys(this.shop).forEach(key => {
+      Object.keys(this.shop).forEach((key) => {
         switch (key) {
           // "あり"が表現に含まれるサービス
           case "wifi":
@@ -152,19 +156,19 @@ export default {
       });
 
       return messages;
-    }
+    },
   },
   props: {
     // 店舗ID
     id: {
       type: String,
-      required: true
+      required: true,
     },
     // タブ番号
     tab: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   // リンク移動
   methods: {
@@ -190,11 +194,11 @@ export default {
       }
 
       this.$router.push(prefix);
-    }
+    },
   },
   created() {
-    this.shop = this.getShop(this.id) ? this.getShop(this.id) : null;
-  }
+    this.shop = this.getShop(this.id) ?? null;
+  },
 };
 </script>
 
@@ -271,8 +275,8 @@ export default {
 }
 
 .background {
-  max-height: 300px;
-  max-width: 300px;
+  max-height: 280px;
+  max-width: 280px;
 }
 
 .bg-wrapper {

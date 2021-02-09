@@ -37,7 +37,7 @@
       <p >まだ投稿された口コミがありません。</p>
     </div>
     <div v-if="isLogin" class="form__area mt-4">
-      <ReviewForm @reviewPost="onPost" :shopId="shopId" />
+      <ReviewForm @reviewPost="onPost" :shop="shop" />
     </div>
   </div>
 </template>
@@ -60,6 +60,7 @@ export default {
   data() {
     return {
       shopId: this.$route.params.id, // 店舗ID
+      shop: null, // 店舗情報
       reviews: null, // 口コミ一覧オブジェクトの配列
       loading: null, // ローディング表示フラグ
       lastPage: 1 // ページングの最終ページ番号
@@ -68,6 +69,9 @@ export default {
   computed: {
     isLogin() {
       return this.$store.getters["App/isLogin"];
+    },
+    getShop() {
+      return this.$store.getters["App/getShop"];
     }
   },
   methods: {
@@ -136,6 +140,9 @@ export default {
       },
       immediate: true
     }
+  },
+  created(){
+    this.shop = this.getShop(this.shopId);
   }
 };
 </script>

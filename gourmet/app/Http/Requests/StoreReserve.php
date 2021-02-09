@@ -34,7 +34,7 @@ class StoreReserve extends FormRequest
             'form.phone_num' => 'required|regex:/^[0-9]{2,4}[0-9]{2,4}[0-9]{3,4}$/',
             'form.purpose' => 'nullable|integer',
             'form.request' => 'nullable|string',
-            'shop_id' => 'required|alpha_num',
+            'shop' => 'required|json',
         ];
     }
 }
