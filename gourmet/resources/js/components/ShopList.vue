@@ -203,7 +203,7 @@ export default {
         case "review":
           tabNo = 2;
           break;
-        case "map":
+        case "access":
           tabNo = 3;
           break;
         default:

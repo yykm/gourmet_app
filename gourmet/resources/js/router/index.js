@@ -10,6 +10,7 @@ import Detail from '../views/Detail.vue';
 import Info from '../views/Info.vue';
 import PhotoList from '../views/PhotoList.vue';
 import ReviewList from '../views/ReviewList.vue';
+import Access from '../views/Access.vue';
 import Result from '../views/Result.vue';
 import Reserved from '../views/Reserved.vue';
 import Mypage from '../views/Mypage.vue';
@@ -110,6 +111,13 @@ const routes = [
         name: 'review',
         components: {
           content: ReviewList
+        }
+      },
+      {
+        path: 'access',
+        name: 'access',
+        components: {
+          content: Access
         }
       },
     ]

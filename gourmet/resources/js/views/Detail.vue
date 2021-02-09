@@ -73,7 +73,7 @@
         <b-tab title="店舗詳細"></b-tab>
         <b-tab title="写真"></b-tab>
         <b-tab title="口コミ"></b-tab>
-        <b-tab title="地図" disabled></b-tab>
+        <b-tab title="地図"></b-tab>
       </b-tabs>
 
       <!-- コンテンツ -->
@@ -187,7 +187,7 @@ export default {
           prefix += "/review";
           break;
         case 3:
-          prefix += "/map";
+          prefix += "/access";
           break;
         default:
           prefix += "/";
