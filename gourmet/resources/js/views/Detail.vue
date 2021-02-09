@@ -3,7 +3,7 @@
     <Header :site_name="'Gourmet'"></Header>
     <b-container v-if="shop" class="shadow-sm py-1 mt-4">
       <!-- 店舗トップ写真 -->
-      <b-card no-body class="overflow-hidden mt-4 w-100 border-0">
+      <b-card no-body class="overflow-hidden mt-4 w-100 border-0 ">
         <b-row no-gutters align-h="between">
           <b-col
             sm="12"
@@ -15,7 +15,7 @@
               :src="shop.image_l"
               center
               fluid-grow
-              class="background"
+              class="background p-2 border"
             ></b-img>
           </b-col>
 
@@ -48,12 +48,12 @@
                 </li>
               </ul>
 
-              <b-card-footer class="clear-float reservation mt-2 py-2">
+              <b-card-footer class="clear-float reservation py-2">
                 <span>営業時間：{{ shop.open }}</span
                 ><br />
                 <span>定休日：{{ shop.close }}</span
                 ><br />
-                <div class="text-center">
+                <div class="text-center my-2">
                   <Reserve :shop="shop" />
                 </div>
               </b-card-footer>
@@ -261,6 +261,10 @@ export default {
 
 .clear-float {
   clear: both;
+}
+
+.card-footer {
+  margin-top: 3.5rem;
 }
 
 .card-footer span {

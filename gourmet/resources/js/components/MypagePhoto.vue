@@ -39,7 +39,7 @@ export default {
 </style>
 <style>
 #mypagePhoto .carousel-inner {
-  max-width: 800px;
+  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
 }

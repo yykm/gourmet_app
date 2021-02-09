@@ -1,6 +1,6 @@
 <template>
   <div class="reserve">
-    <div class="reserve__btn-area my-4">
+    <div class="reserve__btn-area">
       <b-button
         variant="warning"
         @click="showDateModal"

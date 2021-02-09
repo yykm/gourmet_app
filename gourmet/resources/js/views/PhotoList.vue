@@ -1,35 +1,36 @@
 <template>
   <div id="photoList">
-    <b-container fluid>
-      <b-row>
-        <b-col>
-          <div class="photo__form text-center mt-5 mb-4">
-            <PhotoForm @photoPost="onPost" :shopId="shopId" />
-          </div></b-col
-        >
-      </b-row>
-      <div v-if="loading" class="loader text-center mt-5">
-        <Loader height="5rem" width="5rem" />
-      </div>
-      <div v-else-if="photos" class="photos">
-        <b-row class="mb-5">
-          <b-col
-            col
-            cols="6"
-            md="4"
-            lg="3"
-            class="my-2"
-            v-for="photo in photos"
-            :key="photo.id"
-            ><Photo :photo="photo"
-          /></b-col>
+    <div class="wrapper mt-5 mb-4">
+      <b-container fluid>
+        <b-row>
+          <b-col>
+            <div class="photo__form text-center mb-2">
+              <PhotoForm @photoPost="onPost" :shopId="shopId" /></div
+          ></b-col>
         </b-row>
-        <Pagination :last-page="lastPage" />
-      </div>
-      <div v-else class="text-center">
-        <p>まだ投稿された写真がありません。</p>
-      </div>
-    </b-container>
+        <div v-if="loading" class="loader text-center mt-5">
+          <Loader height="5rem" width="5rem" />
+        </div>
+        <div v-else-if="photos" class="photos py-4">
+          <b-row class="mb-5">
+            <b-col
+              col
+              cols="6"
+              md="4"
+              lg="3"
+              class="my-2"
+              v-for="photo in photos"
+              :key="photo.id"
+              ><Photo :photo="photo"
+            /></b-col>
+          </b-row>
+          <Pagination :last-page="lastPage" />
+        </div>
+        <div v-else class="text-center mt-4">
+          <p>まだ投稿された写真がありません。</p>
+        </div>
+      </b-container>
+    </div>
   </div>
 </template>
 
@@ -47,14 +48,14 @@ export default {
     Photo,
     PhotoForm,
     Loader,
-    Pagination
+    Pagination,
   },
   data() {
     return {
       shopId: this.$route.params.id, // 店舗ID
       photos: null, // 写真一覧オブジェクトの配列
       loading: null, // ローディング表示フラグ
-      lastPage: 1 // ページングの最終ページ番号
+      lastPage: 1, // ページングの最終ページ番号
     };
   },
   methods: {
@@ -75,10 +76,10 @@ export default {
         .get("/api/photos", {
           params: {
             shop_id: this.shopId,
-            page
-          }
+            page,
+          },
         })
-        .catch(err => err.response || err);
+        .catch((err) => err.response || err);
 
       // ステ－タスコード200以外エラー
       if (response.status !== ERR.OK) {
@@ -100,16 +101,16 @@ export default {
       } else {
         await this.fetchPhotos();
       }
-    }
+    },
   },
   watch: {
     $route: {
       async handler() {
         await this.fetchPhotos();
       },
-      immediate: true
-    }
-  }
+      immediate: true,
+    },
+  },
 };
 </script>
 
