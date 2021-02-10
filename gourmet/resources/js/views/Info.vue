@@ -1,6 +1,8 @@
 <template>
-  <div id="info">
-    店舗についての概要を表示
+  <div class="info m-3 mt-5">
+    <div class="info__inner w-100 h-100 bg-secondary text-white-50">
+      <p class="m-auto">店舗詳細の実装は省略</p>
+    </div>
   </div>
 </template>
 
@@ -9,11 +11,28 @@ export default {
   name: "Info",
   data() {
     return {
-      shopId: this.$route.params.id
+      shopId: this.$route.params.id,
     };
-  }
+  },
 };
 </script>
 
 <style scoped>
+.info {
+  height: 500px;
+}
+
+.info__inner {
+  position: relative;
+}
+
+.info__inner p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  font-size: 2rem;
+}
 </style>

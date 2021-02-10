@@ -28,7 +28,9 @@
               ></b-form-select>
             </div>
             <div>
-              <b-button type="submit" class="px-4 py-2 mt-md-4 mt-4">検索する</b-button>
+              <b-button type="submit" class="px-4 py-2 mt-md-4 mt-4"
+                >検索する</b-button
+              >
             </div>
           </b-form>
         </div>
@@ -48,7 +50,7 @@ import Loader from "./../components/Loader.vue";
 export default {
   name: "Search",
   components: {
-    Loader
+    Loader,
   },
   data() {
     return {
@@ -60,26 +62,26 @@ export default {
         { value: "2", text: "500m圏内" },
         { value: "3", text: "1000m圏内" },
         { value: "4", text: "2000m圏内" },
-        { value: "5", text: "3000m圏内" }
+        { value: "5", text: "3000m圏内" },
       ],
       lat: "", // 緯度
       lon: "", // 経度
       geoActive: false, // 範囲表示
-      loading: false
+      loading: false,
     };
   },
 
   computed: {
-    ...mapGetters(["getURLs"])
+    ...mapGetters(["getURLs"]),
   },
 
   methods: {
     ...mapActions(["updateShops"]),
 
     // 現在位置の取得
-    getGeo: function() {
+    getGeo: function () {
       // 成功時の処理
-      const successCallback = position => {
+      const successCallback = (position) => {
         this.geoActive = true;
 
         // 範囲を初期化
@@ -89,7 +91,7 @@ export default {
           (this.lon = position.coords.longitude); // 経度
       };
       // 失敗時の処理
-      const errorCallback = error => {
+      const errorCallback = (error) => {
         this.geoActive = false;
 
         if (error.code == 1) {
@@ -116,7 +118,7 @@ export default {
     },
 
     // 範囲変更
-    changeGeo: function(selected) {
+    changeGeo: function (selected) {
       // 範囲を検索条件に指定しない時
       if (selected === "0") {
         this.geoActive = false;
@@ -126,7 +128,7 @@ export default {
       }
     },
 
-    getGourmet: async function() {
+    getGourmet: async function () {
       // ローダー表示フラグ
       this.loading = true;
 
@@ -150,11 +152,11 @@ export default {
 
       await axios
         .post(url, params)
-        .then(function(response) {
+        .then(function (response) {
           // 成功時
           let result = response.data.results;
 
-          const shops = result.shop.map(getted_shop => ({
+          const shops = result.shop.map((getted_shop) => ({
             id: getted_shop.id, // お店ID
             name: getted_shop.name, // 掲載店名
             kana: getted_shop.name_kana, // 店名かな
@@ -177,6 +179,9 @@ export default {
             parking: getted_shop.parking, // 駐車場
             average: getted_shop.budget.average, // 平均予算
             memo: getted_shop.budget_memo, // 料金備考
+            lat: getted_shop.lat, // 緯度
+            lng: getted_shop.lng, // 軽度
+
             // サービス有無
             wifi: getted_shop.wifi, // wifi
             cource: getted_shop.cource, // コース有無
@@ -187,13 +192,13 @@ export default {
             non_smoking: getted_shop.non_smoking, // 禁煙席
             parking: getted_shop.parking, // 駐車場
             pet: getted_shop.pet, // ペット連れ込み
-            lunch: getted_shop.lunch // ランチ
+            lunch: getted_shop.lunch, // ランチ
           }));
 
           // ストアへ更新
           $this.updateShops(shops);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           // 失敗時
           // ローダ非表示
           this.loading = false;
@@ -203,8 +208,8 @@ export default {
       this.loading = false;
       // 検索結果画面へ
       this.$router.push("/result");
-    }
-  }
+    },
+  },
 };
 </script>
 

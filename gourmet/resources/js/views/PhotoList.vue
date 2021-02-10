@@ -11,7 +11,7 @@
         <div v-if="loading" class="loader text-center mt-5">
           <Loader height="5rem" width="5rem" />
         </div>
-        <div v-else-if="photos" class="photos py-4">
+        <div v-else-if="photos" class="photos py-4 mx-auto">
           <b-row class="mb-5">
             <b-col
               col
@@ -115,4 +115,9 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 768px) {
+  .photos {
+    width: 87%;
+  }
+}
 </style>

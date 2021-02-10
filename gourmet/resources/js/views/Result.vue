@@ -90,7 +90,7 @@ export default {
   name: "Search",
   components: {
     ShopList,
-    Header
+    Header,
   },
   data() {
     return {
@@ -103,28 +103,28 @@ export default {
         { value: "2", text: "500m圏内" },
         { value: "3", text: "1000m圏内" },
         { value: "4", text: "2000m圏内" },
-        { value: "5", text: "3000m圏内" }
+        { value: "5", text: "3000m圏内" },
       ],
       lat: "", // 緯度
       lon: "", // 経度
       geoActive: false, //現在地が有効かどうか
       timer: null, // タイマー
       iniPosition: 0, // 検索フォーム初期位置
-      curPosition: 0 // 検索フォーム現在位置
+      curPosition: 0, // 検索フォーム現在位置
     };
   },
 
   watch: {
-    keyword: function(keyWord) {
+    keyword: function (keyWord) {
       this.loading = true;
       this.delayFunc(keyWord);
     },
-    range: function() {
+    range: function () {
       this.loading = true;
-    }
+    },
   },
 
-  mounted: function() {
+  mounted: function () {
     // イベント登録
     window.addEventListener("scroll", this.onScroll);
     window.addEventListener("resize", this.onResize);
@@ -136,7 +136,7 @@ export default {
     this.delayFunc = _.debounce(this.onInput, 800);
   },
 
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     // イベント解除
     window.removeEventListener("scroll", this.onScroll);
     window.removeEventListener("resize", this.onResize);
@@ -146,10 +146,10 @@ export default {
     ...mapGetters(["getURLs"]),
 
     // 検索フォームがウィンドウ内かを判定して返す
-    isFix: function() {
+    isFix: function () {
       if (this.iniPosition < this.curPosition) return true;
       else return false;
-    }
+    },
   },
 
   methods: {
@@ -161,28 +161,28 @@ export default {
       this.iniPosition = window.pageYOffset + rect.top;
     },
     // 検索フォームの現在位置を取得
-    onScroll: function() {
+    onScroll: function () {
       this.curPosition = window.pageYOffset;
     },
     // ウィンドウのサイズを変える度に検索フォームの初期位置を取得
-    onResize: function() {
+    onResize: function () {
       clearTimeout(this.timer);
 
       this.timer = setTimeout(
-        function() {
+        function () {
           this.setIniPosition();
         }.bind(this),
         50
       );
     },
     // 検索処理
-    onInput: function(value) {
+    onInput: function (value) {
       this.geoActive
         ? this.getGourmet(this.keyword, this.lat, this.lon, this.range)
         : this.getGourmet(this.keyword);
     },
 
-    getGourmet: async function() {
+    getGourmet: async function () {
       const params = new URLSearchParams();
       if (this.keyword !== "") {
         params.append("keyword", this.keyword);
@@ -205,11 +205,11 @@ export default {
 
       await axios
         .post(url, params)
-        .then(function(response) {
+        .then(function (response) {
           // 成功時
           let result = response.data.results;
 
-          const shops = result.shop.map(getted_shop => ({
+          const shops = result.shop.map((getted_shop) => ({
             id: getted_shop.id, // お店ID
             name: getted_shop.name, // 掲載店名
             kana: getted_shop.name_kana, // 店名かな
@@ -232,6 +232,8 @@ export default {
             parking: getted_shop.parking, // 駐車場
             average: getted_shop.budget.average, // 平均予算
             memo: getted_shop.budget_memo, // 料金備考
+            lat: getted_shop.lat, // 緯度
+            lng: getted_shop.lng, // 軽度
             // サービス有無
             wifi: getted_shop.wifi, // wifi
             cource: getted_shop.cource, // コース有無
@@ -242,13 +244,13 @@ export default {
             non_smoking: getted_shop.non_smoking, // 禁煙席
             parking: getted_shop.parking, // 駐車場
             pet: getted_shop.pet, // ペット連れ込み
-            lunch: getted_shop.lunch // ランチ
+            lunch: getted_shop.lunch, // ランチ
           }));
 
           // ストアへ更新
           $this.updateShops(shops);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           // ローダ非表示
           this.loading = false;
           // 失敗時
@@ -258,9 +260,9 @@ export default {
       this.loading = false;
     },
     // 現在位置の取得
-    getGeo: function() {
+    getGeo: function () {
       // 成功時の処理
-      const successCallback = position => {
+      const successCallback = (position) => {
         // 範囲を初期化
         this.range = 3;
         this.geoActive = true;
@@ -271,7 +273,7 @@ export default {
         this.getGourmet(this.keyword, this.lat, this.lon, this.range);
       };
       // 失敗時の処理
-      const errorCallback = error => {
+      const errorCallback = (error) => {
         this.geoActive = false;
 
         if (error.code == 1) {
@@ -296,7 +298,7 @@ export default {
         alert("この端末では位置情報取得ができません。");
       }
     },
-    changeGeo: function(selected) {
+    changeGeo: function (selected) {
       if (selected === "0") {
         this.geoActive = false;
         this.getGourmet(this.keyword);
@@ -304,8 +306,8 @@ export default {
         this.geoActive = true;
         this.getGourmet(this.keyword, this.lat, this.lon, this.range);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

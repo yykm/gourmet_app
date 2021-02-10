@@ -28,7 +28,7 @@
           <Pagination :lastPage="lastPage" />
         </div>
         <div class="review__wraper py-4">
-          <ul class="review__list p-0">
+          <ul class="review__list p-0 mx-md-auto">
             <li v-for="review in reviews" :key="review.id">
               <Review :review="review" />
             </li>
@@ -158,5 +158,11 @@ export default {
 
 .review__list {
   list-style: none;
+}
+
+@media (min-width: 768px) {
+  .review__list {
+    width: 87%;
+  }
 }
 </style>
