@@ -97,7 +97,7 @@ export default {
 
 <style>
 body {
-  background-color: #f8f9fa !important;
+  background-color: rgb(150 174 183 / 4%) !important;
 }
 
 #fixed__btn {

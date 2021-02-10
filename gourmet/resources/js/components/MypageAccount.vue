@@ -36,15 +36,21 @@
         <p class="referrences">
           ** Webサービス制作にあたって参考にさせて頂いたサイト **
         </p>
-        <a href="https://www.gnavi.co.jp/" class="card-link" target="”_blank”"
+        <a
+          href="https://www.gnavi.co.jp/"
+          class="card-link mr-3"
+          target="”_blank”"
           >ぐるなび</a
         >
-        <a
-          href="https://webservice.recruit.co.jp/doc/hotpepper/reference.html"
-          class="card-link"
-          target="”_blank”"
-          >使用API(グルメサーチAPI)</a
-        >
+        <a href="http://webservice.recruit.co.jp/"
+          ><img
+            src="http://webservice.recruit.co.jp/banner/hotpepper-m.gif"
+            alt="ホットペッパー Webサービス"
+            width="88"
+            height="35"
+            border="0"
+            title="ホットペッパー Webサービス"
+        /></a>
       </b-card-body>
 
       <!-- <b-card-footer>This is a footer</b-card-footer> -->
@@ -54,12 +60,12 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Withdrawal  from "./../components/Withdrawal.vue";
+import Withdrawal from "./../components/Withdrawal.vue";
 
 export default {
   name: "MypageAccount",
   components: {
-    Withdrawal
+    Withdrawal,
   },
   props: {
     user: {

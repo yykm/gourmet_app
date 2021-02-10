@@ -1,6 +1,6 @@
 <template>
   <div class="info m-3 mt-5">
-    <div class="info__inner w-100 h-100 bg-secondary text-white-50">
+    <div class="info__inner w-100 h-75 bg-secondary text-white-50">
       <p class="m-auto">店舗詳細の実装は省略</p>
     </div>
   </div>

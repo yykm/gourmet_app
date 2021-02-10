@@ -20,8 +20,30 @@ import NotFound from '../views/Err/NotFound.vue';
 Vue.use(VueRouter);
 
 // 認証状態で認証済ページへ遷移時にガード
-const authGuard = function (to, from, next) {
+const Authorized = function (to, from, next) {
   if (store.getters['App/isLogin']) {
+    // 認証済みならホームへ
+    next('/');
+  } else {
+    // そうでなければ遷移先へ
+    next();
+  }
+}
+
+// 認証されていない状態で要認証ページへ遷移時にガード
+const notAuthorized = function (to, from, next) {
+  if (!store.getters['App/isLogin']) {
+    // 認証済みならホームへ
+    next('/');
+  } else {
+    // そうでなければ遷移先へ
+    next();
+  }
+}
+
+// 検索してストアに店舗情報がない状態で店舗詳細ページへ遷移した場合にガード
+const notSearched = function (to, from, next) {
+  if (!store.getters['App/getShops']) {
     // 認証済みならホームへ
     next('/');
   } else {
@@ -45,27 +67,28 @@ const routes = [
     path: '/result',
     name: 'Result',
     component: Result,
+    beforeEnter: notSearched
   },
   // ログイン
   {
     path: '/login',
     name: 'Login',
     component: Login,
-    beforeEnter: authGuard
+    beforeEnter: Authorized
   },
   // 新規登録
   {
     path: '/register',
     name: 'Register',
     component: Register,
-    beforeEnter: authGuard
+    beforeEnter: Authorized
   },
   // パスワードリセット
   {
     path: '/reset',
     name: 'Reset',
     component: Reset,
-    beforeEnter: authGuard
+    beforeEnter: Authorized
   },
   // 予約完了ページ
   {
@@ -75,6 +98,7 @@ const routes = [
     props: (route) => ({
       reservation: Object(route.query.reservation)
     }),
+    beforeEnter: notAuthorized
   },
   // マイページ
   {
@@ -84,12 +108,14 @@ const routes = [
     props: (route) => ({
       tab: String(route.query.tab)
     }),
+    beforeEnter: notAuthorized
   },
   // 店舗詳細
   {
     path: '/detail/:id/:tab',
     name: 'detail',
     component: Detail,
+    beforeEnter: notSearched,
     props: (route) => ({
       tab: Number(route.params.tab),
       id: String(route.params.id)
