@@ -2,7 +2,7 @@
   <div id="myPageFavorite">
     <div class="wrapper p-3">
       <h2 class="mb-3 title">お気に入りのお店</h2>
-      <div class="wrapper pb-2">
+      <div v-if="favorites.length" class="wrapper pb-2">
         <carousel :per-page="getPerPage" :navigation-enabled="true">
           <slide v-for="(favorite, i) in favorites" :key="i">
             <div class="items px-2">
@@ -27,6 +27,9 @@
             </div>
           </slide>
         </carousel>
+      </div>
+      <div v-else class="nothing">
+        <p>登録したお気に入りはありません</p>
       </div>
     </div>
   </div>

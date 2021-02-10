@@ -29,9 +29,7 @@
         <b-link @click.prevent="onClick('comment')"
           ><b-list-group-item>投稿したレビュー</b-list-group-item></b-link
         >
-        <b-link
-          ><b-list-group-item>未実装コンテンツ..</b-list-group-item></b-link
-        >
+        <Withdrawal />
       </b-list-group>
 
       <b-card-body>
@@ -56,9 +54,13 @@
 
 <script>
 import { mapGetters } from "vuex";
+import Withdrawal  from "./../components/Withdrawal.vue";
 
 export default {
   name: "MypageAccount",
+  components: {
+    Withdrawal
+  },
   props: {
     user: {
       type: Object,
@@ -95,19 +97,19 @@ export default {
   color: black;
 }
 
-.list-group-flush > .list-group-item:last-child {
+/deep/ .list-group-flush > .list-group-item:last-child {
   border-width: 0 0 1px;
 }
 
-.list-group > a {
+/deep/ .list-group a {
   color: #404e5fcc;
   text-decoration: none;
 }
-.list-group-item:hover {
+/deep/ .list-group-item:hover {
   background-color: #4755611a;
 }
 
-.list-group-item {
+/deep/ .list-group-item {
   border: none;
   border-bottom-color: rgba(0, 0, 0, 0.125);
   border-bottom-style: solid;

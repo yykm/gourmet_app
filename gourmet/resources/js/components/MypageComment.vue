@@ -2,7 +2,7 @@
   <div id="myPageComment">
     <div class="wrapper p-3">
       <h2 class="title mb-3">投稿したレビュー</h2>
-      <div class="comments px-2">
+      <div v-if="comments.length" class="comments px-2">
         <b-card
           v-for="(comment, i) in comments"
           :key="i"
@@ -24,6 +24,9 @@
             </p>
           </b-card-text>
         </b-card>
+      </div>
+      <div v-else class="nothing">
+        <p>投稿したレビューはありません</p>
       </div>
     </div>
   </div>

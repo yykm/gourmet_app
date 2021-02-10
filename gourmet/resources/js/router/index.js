@@ -5,7 +5,6 @@ import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Reset from '../views/Reset.vue';
-import SystemError from '../views/Err/SystemError.vue';
 import Detail from '../views/Detail.vue';
 import Info from '../views/Info.vue';
 import PhotoList from '../views/PhotoList.vue';
@@ -14,6 +13,9 @@ import Access from '../views/Access.vue';
 import Result from '../views/Result.vue';
 import Reserved from '../views/Reserved.vue';
 import Mypage from '../views/Mypage.vue';
+import Thanks from '../views/Thanks.vue';
+import SystemError from '../views/Err/SystemError.vue';
+import NotFound from '../views/Err/NotFound.vue';
 
 Vue.use(VueRouter);
 
@@ -71,7 +73,7 @@ const routes = [
     name: 'Reserved',
     component: Reserved,
     props: (route) => ({
-      reservation : Object(route.query.reservation)
+      reservation: Object(route.query.reservation)
     }),
   },
   // マイページ
@@ -80,7 +82,7 @@ const routes = [
     name: 'Mypage',
     component: Mypage,
     props: (route) => ({
-      tab : String(route.query.tab)
+      tab: String(route.query.tab)
     }),
   },
   // 店舗詳細
@@ -93,39 +95,50 @@ const routes = [
       id: String(route.params.id)
     }),
     children: [{
-        path: 'info',
-        name: 'info',
-        components: {
-          content: Info
-        }
+      path: 'info',
+      name: 'info',
+      components: {
+        content: Info
+      }
+    },
+    {
+      path: 'photoList',
+      name: 'photoList',
+      components: {
+        content: PhotoList
       },
-      {
-        path: 'photoList',
-        name: 'photoList',
-        components: {
-          content: PhotoList
-        },
-      },
-      {
-        path: 'review',
-        name: 'review',
-        components: {
-          content: ReviewList
-        }
-      },
-      {
-        path: 'access',
-        name: 'access',
-        components: {
-          content: Access
-        }
-      },
+    },
+    {
+      path: 'review',
+      name: 'review',
+      components: {
+        content: ReviewList
+      }
+    },
+    {
+      path: 'access',
+      name: 'access',
+      components: {
+        content: Access
+      }
+    },
     ]
+  },
+  // 退会完了ページ
+  {
+    path: '/thanks',
+    name: 'thanks',
+    component: Thanks,
   },
   // 500エラー
   {
     path: '/500',
     component: SystemError
+  },
+  // 404エラー
+  {
+    path: '*',
+    component: NotFound
   }
 ];
 

@@ -77,9 +77,9 @@
                   >リセット</b-button
                 >
               </div>
-              <div class="text-center mt-3">
+              <!-- <div class="text-center mt-3">
                 <b-link to="reset">パスワードをお忘れですか？</b-link>
-              </div>
+              </div> -->
             </b-form>
           </ValidationObserver>
         </b-card>

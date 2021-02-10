@@ -50,7 +50,7 @@
                     </b-link>
                   </p>
                 </div>
-                <div class="p-reserve text-center mt-4">
+                <div v-if="isLogin" class="p-reserve text-center mt-4">
                   <Reserve :shop="shop" />
                 </div>
               </b-col>
@@ -146,7 +146,7 @@ export default {
     Reserve,
   },
   computed: {
-    ...mapGetters(["shopsCount", "getShopsByPage", "getShops"]),
+    ...mapGetters(["shopsCount", "getShopsByPage", "getShops", "isLogin"]),
   },
   data() {
     return {

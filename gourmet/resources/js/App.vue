@@ -30,11 +30,11 @@ import _ from "lodash";
 export default {
   name: "App",
   components: {
-    Message
+    Message,
   },
   data() {
     return {
-      scrolled: 0
+      scrolled: 0,
     };
   },
   computed: {
@@ -42,7 +42,7 @@ export default {
 
     isChange() {
       return this.scrolled > 400;
-    }
+    },
   },
   methods: {
     ...mapActions([ERR.SET_CODE]),
@@ -50,14 +50,14 @@ export default {
     toTop() {
       window.scroll({
         top: 0,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     },
 
     // スクロール量を取得
     getPageYOffset() {
       this.scrolled = window.pageYOffset;
-    }
+    },
   },
   created() {
     // 4000msごとにスクロール量をスクロール毎に取得
@@ -66,20 +66,32 @@ export default {
   },
   watch: {
     [ERR.GET_CODE]: {
-      handler(code) {
+      async handler(code) {
         switch (code) {
           // 500エラー
           case ERR.INTERNAL_SERVER_ERROR:
             this.$router.push("/500");
             break;
+          // 認証エラー
+          case ERR.UNAUTHORIZED:
+            // トークンをリフレッシュ
+            await axios.get("/api/refresh-token");
+            // ストアのuserをクリア
+            this.$store.commit("App/setUser", null);
+            // ログイン画面へ
+            this.$router.push("/login");
+          // 500エラー
+          case ERR.NOT_FOUND:
+            this.$router.push("/not-found");
+            break;
         }
       },
-      immediate: true
+      immediate: true,
     },
     $route() {
       this[ERR.SET_CODE](null);
-    }
-  }
+    },
+  },
 };
 </script>
 

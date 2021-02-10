@@ -48,12 +48,12 @@
                 </li>
               </ul>
 
-              <b-card-footer class="clear-float reservation py-2">
+              <b-card-footer class="reservation border-0 clear-float py-2">
                 <span>営業時間：{{ shop.open }}</span
                 ><br />
                 <span>定休日：{{ shop.close }}</span
                 ><br />
-                <div class="text-center my-2">
+                <div v-if="isLogin" class="text-center my-2">
                   <Reserve :shop="shop" />
                 </div>
               </b-card-footer>
@@ -105,7 +105,7 @@ export default {
     Reserve,
   },
   computed: {
-    ...mapGetters("App", ["getShop"]),
+    ...mapGetters("App", ["getShop", "isLogin"]),
 
     // 各種サービスの有無
     services() {

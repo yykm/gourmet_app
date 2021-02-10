@@ -76,3 +76,13 @@ Route::post('/reserve', 'ReserveController@reserve')->name('reserve.reserve');
 Route::get('/reserve/byUser', 'ReserveController@getByUser')->name('reserve.getByUser');
 Route::get('/comments/byUser', 'CommentController@getByUser')->name('comment.getByUser');
 Route::get('/photos/byUser', 'PhotoController@getByUser')->name('photo.getByUser');
+
+// 退会
+Route::delete('/withdrawal', 'WithdrawalController@withdrawal');
+
+// トークンリフレッシュ
+Route::get('/reflesh-token', function (Illuminate\Http\Request $request) {
+    $request->session()->regenerateToken();
+
+    return response()->json();
+});

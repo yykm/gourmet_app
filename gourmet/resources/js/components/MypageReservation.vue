@@ -3,7 +3,13 @@
     <div class="wrapper p-3">
       <h2 class="mb-3 title">お気に入りのお店</h2>
 
-      <b-table :items="items" :fields="fields" striped responsive="sm">
+      <b-table
+        v-if="reservations.length"
+        :items="items"
+        :fields="fields"
+        striped
+        responsive="sm"
+      >
         <!-- 概要表示部 -->
         <template #cell(show_details)="row">
           <b-button size="sm" @click="row.toggleDetails" class="mr-2">
@@ -27,6 +33,9 @@
           </b-card>
         </template>
       </b-table>
+      <div v-else class="nothing">
+        <p>予約履歴はありません</p>
+      </div>
     </div>
   </div>
 </template>

@@ -2,6 +2,7 @@
   <div id="mypagePhoto">
     <h2 class="title mb-3 px-3 pt-3">投稿した写真</h2>
     <b-carousel
+      v-if="photos.length"
       :interval="0"
       controls
       indicators
@@ -17,6 +18,9 @@
         :img-src="photo.url"
       ></b-carousel-slide>
     </b-carousel>
+    <div v-else class="nothing px-3 pb-3">
+      <p>投稿した写真ありません</p>
+    </div>
   </div>
 </template>
 
