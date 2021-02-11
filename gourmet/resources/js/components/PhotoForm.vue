@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLogin" id="photoList">
+  <div id="photoList">
     <b-button id="toggle-btn" pill @click="toggleModal" class="px-3 py-2"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
@@ -115,11 +115,6 @@ export default {
     // 選択された画像、さもなければ初期画像
     rePreview() {
       return this.preview ?? "/img/l_e_others_500.png";
-    },
-
-    // 認証状態
-    isLogin() {
-      return this.$store.getters["App/isLogin"];
     },
   },
   methods: {

@@ -39,7 +39,7 @@
             <b-row class="p-content mt-4" align-h="between">
               <b-col cols="12" md="3">
                 <!-- お店の画像  -->
-                <div class="p-main-img">
+                <div class="p-main-img text-center">
                   <p>
                     <b-link
                       :to="{ id: shop.id, tab: 'review' } | detailURL"
@@ -50,7 +50,7 @@
                     </b-link>
                   </p>
                 </div>
-                <div v-if="isLogin" class="p-reserve text-center mt-4">
+                <div v-if="isLogin" class="p-reserve text-center my-4">
                   <Reserve :shop="shop" />
                 </div>
               </b-col>
@@ -304,7 +304,34 @@ td {
 @media (max-width: 767.98px) {
   .p-main-img {
     text-align: center;
-    margin-bottom: 4vw;
+  }
+
+  .p-main-img img {
+    max-width: 60%;
+  }
+
+  .p-name,
+  .result-count {
+    font-size: 1rem;
+  }
+
+  .p-catch,
+  .p-table th,
+  td {
+    font-size: 0.9rem;
+  }
+
+  li + li {
+    margin-top: 34px !important;
+    padding-top: 34px !important;
+  }
+
+  .p-category {
+    font-size: 0.67rem;
+  }
+  
+  /deep/ .reserve__btn {
+    width: 200px !important;
   }
 }
 /* リストのマーク除去 */
@@ -315,13 +342,17 @@ td {
 li + li {
   border-width: 0 0 1px 0;
   border-top: 1px solid rgba(0, 0, 0, 0.125);
-  margin-top: 50px !important;
-  padding-top: 50px !important;
+  margin-top: 50px;
+  padding-top: 50px;
 }
 
 .spin {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/deep/ .reserve__btn{
+  width: 90%;
 }
 </style>

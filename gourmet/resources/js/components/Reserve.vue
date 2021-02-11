@@ -4,8 +4,8 @@
       <b-button
         variant="warning"
         @click="showDateModal"
-        class="px-3"
-        >空室確認・予約</b-button
+        class="reserve__btn"
+        >予約する</b-button
       >
     </div>
     <!-- 日付入力モーダル -->

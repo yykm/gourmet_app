@@ -6,12 +6,18 @@
         no-gutters
         class="content__wrapper justify-content-around flex-column flex-lg-row"
       >
-        <b-col cols="10" lg="4" xl="3" class="bg__white shadow-sm mb-5 mb-ml-0"
+        <b-col
+          cols="10"
+          md="8"
+          lg="4"
+          xl="3"
+          class="bg__white shadow-sm mb-sm-5 mb-ml-0"
           ><aside class="account__info">
             <MypageAccount @componentShow="componentShow" :user="user" /></aside
         ></b-col>
         <b-col
           cols="10"
+          md="8"
           lg="7"
           xl="8"
           class="d-flex flex-column justify-content-between"
@@ -105,8 +111,8 @@ export default {
       this.reservations = await this.fetchInfo("reserve");
 
       // 初期表示項目の切り替え
-      if (this.tab === 'reservation') {
-        this.componentShow('reservation');
+      if (this.tab === "reservation") {
+        this.componentShow("reservation");
       }
     },
     // お気に入り情報
@@ -151,6 +157,23 @@ export default {
 @media (max-width: 991.98px) {
   .content__wrapper {
     align-items: center;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .container-fluid {
+    padding: 0px;
+  }
+
+  .col-10 {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /deep/ .account__info .card-body {
+    border-bottom-color: rgba(0, 0, 0, 0.125);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
   }
 }
 </style>

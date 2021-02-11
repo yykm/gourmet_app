@@ -29,7 +29,7 @@
         </carousel>
       </div>
       <div v-else class="nothing">
-        <p>登録したお気に入りはありません</p>
+        <p>登録したお気に入りのお店はありません</p>
       </div>
     </div>
   </div>

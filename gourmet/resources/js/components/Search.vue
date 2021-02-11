@@ -37,7 +37,7 @@
       </b-container>
     </div>
     <div class="spin" v-show="loading">
-      <Loader height="10rem" width="10rem" label="Large Spinner" />
+      <Loader height="7rem" width="7rem" label="Large Spinner" />
     </div>
   </div>
 </template>
@@ -129,6 +129,10 @@ export default {
     },
 
     getGourmet: async function () {
+      // 検索ワードが入力されていない場合は無効
+      if (!this.keyword.length) {
+        return;
+      }
       // ローダー表示フラグ
       this.loading = true;
 

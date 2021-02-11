@@ -2,7 +2,10 @@
   <div id="photoList">
     <div class="wrapper mt-5 mb-4">
       <b-container fluid>
-        <b-row>
+        <div v-if="!photos" class="text-center no-photos">
+          <p>まだ投稿された写真がありません。</p>
+        </div>
+        <b-row v-if="isLogin">
           <b-col>
             <div class="photo__form text-center mb-2">
               <PhotoForm @photoPost="onPost" :shopId="shopId" /></div
@@ -14,20 +17,16 @@
         <div v-else-if="photos" class="photos py-4 mx-auto">
           <b-row class="mb-5">
             <b-col
-              col
               cols="6"
               md="4"
               lg="3"
-              class="my-2"
+              class="photos__wrapper"
               v-for="photo in photos"
               :key="photo.id"
               ><Photo :photo="photo"
             /></b-col>
           </b-row>
           <Pagination :last-page="lastPage" />
-        </div>
-        <div v-else class="text-center mt-4">
-          <p>まだ投稿された写真がありません。</p>
         </div>
       </b-container>
     </div>
@@ -39,7 +38,7 @@ import Photo from "./../components/Photo.vue";
 import Loader from "./../components/Loader.vue";
 import PhotoForm from "./../components/PhotoForm.vue";
 import Pagination from "./../components/Pagination.vue";
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import { ERR } from "./../store/const.js";
 
 export default {
@@ -49,6 +48,9 @@ export default {
     PhotoForm,
     Loader,
     Pagination,
+  },
+  computed: {
+    ...mapGetters("App", ["isLogin"]),
   },
   data() {
     return {
@@ -117,7 +119,16 @@ export default {
 <style scoped>
 @media (min-width: 768px) {
   .photos {
-    width: 87%;
+    width: 90%;
   }
+}
+
+.no-photos {
+  margin-bottom: 2rem;
+}
+
+.photos__wrapper {
+  margin-bottom: 15px;
+  margin-top: 15px;
 }
 </style>

@@ -8,7 +8,7 @@
         <!-- コメント -->
         <b-form-textarea
           v-model="comment"
-          rows="7"
+          rows="6"
           max-rows="7"
         ></b-form-textarea>
 

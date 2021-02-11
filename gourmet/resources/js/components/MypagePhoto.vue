@@ -19,7 +19,7 @@
       ></b-carousel-slide>
     </b-carousel>
     <div v-else class="nothing px-3 pb-3">
-      <p>投稿した写真ありません</p>
+      <p>投稿した写真はありません</p>
     </div>
   </div>
 </template>

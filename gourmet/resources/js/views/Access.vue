@@ -35,7 +35,7 @@
             <b-button
               @click="center = position = initPosition"
               variant="primary"
-              class="px-3 py-2 d-block mx-auto mb-5"
+              class="px-3 py-2 d-block mx-auto mb-4 mb-md-5"
               pill
               ><svg
                 xmlns="http://www.w3.org/2000/svg"

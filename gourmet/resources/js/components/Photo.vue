@@ -97,9 +97,9 @@ export default {
     // 写真オブジェクト
     photo: {
       type: Object,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 
@@ -113,16 +113,19 @@ export default {
 
 .photo {
   position: relative;
+  background: #000;
 }
 
 .photo__controls,
 .photo__username {
   position: absolute;
+  opacity: 0;
 }
 
 .photo__controls {
   top: 0;
   right: 0;
+  opacity: 0;
 }
 
 .photo__username {
@@ -139,12 +142,19 @@ export default {
 
 .photo__wrapper {
   outline: none;
-  background: #000;
 }
 
-.photo__img:hover {
-  opacity: 0.7;
-  transition-duration: 0.6s;
+.photo:hover .photo__img,
+.photo:hover .photo__controls,
+.photo:hover .photo__username {
+  opacity: 0.82;
+  transition-duration: 0.4s;
+}
+
+.photo__controls:hover,
+.photo__username:hover {
+  opacity: 1 !important;
+  transition-duration: 0.4s !important;
 }
 
 .photo__action {

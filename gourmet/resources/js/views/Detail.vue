@@ -3,11 +3,11 @@
     <Header :site_name="'Gourmet'"></Header>
     <b-container v-if="shop" class="shadow-sm py-1 mt-4">
       <!-- 店舗トップ写真 -->
-      <b-card no-body class="overflow-hidden mt-4 w-100 border-0 ">
+      <b-card no-body class="overflow-hidden mt-4 w-100 border-0">
         <b-row no-gutters align-h="between">
           <b-col
             sm="12"
-            md="6"
+            md="5"
             lg="4"
             class="d-flex align-items-center bg-wrapper"
           >
@@ -20,12 +20,17 @@
           </b-col>
 
           <!-- 店舗概要 -->
-          <b-col sm="12" md="6" lg="8">
+          <b-col sm="12" md="7" lg="8">
             <b-card-body>
               <div class="title__wrapper">
-                <div class="title__inner d-flex flex-column-reverse flex-md-row align-items-center align-items-md-start justify-content-between">
+                <div
+                  class="title__inner d-flex flex-column-reverse flex-md-row align-items-center align-items-md-start justify-content-between"
+                >
                   <b-card-title>{{ shop.name }}</b-card-title>
-                  <FavoriteBtn :shop="shop" class="flex-shrink-0 ml-md-2 mb-3 mb-md-0" />
+                  <FavoriteBtn
+                    :shop="shop"
+                    class="flex-shrink-0 ml-md-2 mb-3 mb-md-0"
+                  />
                 </div>
                 <small class="mb-2">{{ shop.kana }}</small>
               </div>
@@ -42,7 +47,7 @@
                 <li
                   v-for="(message, i) in services"
                   :key="i"
-                  class="tag-list__item"
+                  class="tag-list__item mt-3"
                 >
                   <span class="tag-list__item-inner">{{ message }}</span>
                 </li>
@@ -251,6 +256,11 @@ export default {
   .card-img {
     max-width: 65%;
   }
+
+  .tabs,
+  .card-footer {
+    font-size: 0.9rem;
+  }
 }
 @media (min-width: 768px) {
   .card-img {
@@ -279,11 +289,11 @@ export default {
 }
 
 .background {
-  max-height: 280px;
-  max-width: 280px;
+  max-height: 265px;
+  max-width: 265px;
 }
 
-.bg-wrapper {
-  padding: 1.25rem;
+.card-title {
+  font-size: 1.3rem;
 }
 </style>

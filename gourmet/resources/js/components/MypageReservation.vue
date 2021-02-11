@@ -1,7 +1,7 @@
 <template>
   <div id="mypageReservaiton">
     <div class="wrapper p-3">
-      <h2 class="mb-3 title">お気に入りのお店</h2>
+      <h2 class="mb-3 title">予約履歴</h2>
 
       <b-table
         v-if="reservations.length"
@@ -9,6 +9,7 @@
         :fields="fields"
         striped
         responsive="sm"
+        stacked="lg"
       >
         <!-- 概要表示部 -->
         <template #cell(show_details)="row">

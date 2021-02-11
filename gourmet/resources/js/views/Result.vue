@@ -2,84 +2,82 @@
   <div class="research">
     <Header />
     <div class="research-form" :class="{ 'is-fix': isFix }">
-      <div class="wrapper">
-        <b-container>
-          <div class="wrapper py-4">
-            <b-form
-              inline
-              class="justify-content-center flex-column flex-md-row flex-md-nowrap"
-            >
-              <b-form-input
-                class="keyword"
-                placeholder="フリーワード検索（店名 地名、駅名など）"
-                v-model="keyword"
-              ></b-form-input>
-              <!-- v-model="keyword" -->
-
-              <b-button
-                variant="light"
-                class="buttons ml-md-4 text-nowrap"
-                @click.prevent="getGeo"
-                >現在地から検索</b-button
-              >
-              <div class="selects ml-md-4" v-show="geoActive">
-                <b-form-select
-                  v-model="range"
-                  :options="options"
-                  required
-                  @change="changeGeo"
-                ></b-form-select>
-              </div>
-            </b-form>
-
-            <!-- 検索結果表示領域 -->
-
-            <div
-              class="d-flex align-items-center justify-content-center flex-column flex-md-row"
-            >
-              <p class="research-conditions mb-0 mx-2 px-1 mt-3" v-if="keyword">
-                キーワード：『{{ keyword }}』
-              </p>
-              <p
-                class="research-conditions mb-0 mx-2 px-1 mt-3"
-                v-if="range == 1"
-              >
-                現在地から300m圏内
-              </p>
-              <p
-                class="research-conditions mb-0 mx-2 px-1 mt-3"
-                v-else-if="range == 2"
-              >
-                現在地から500m圏内
-              </p>
-              <p
-                class="research-conditions mb-0 mx-2 px-1 mt-3"
-                v-else-if="range == 4"
-              >
-                現在地から2000m圏内
-              </p>
-              <p
-                class="research-conditions mb-0 mx-2 px-1 mt-3"
-                v-else-if="range == 5"
-              >
-                現在地から3000m圏内
-              </p>
-              <p
-                class="research-conditions mb-0 mx-2 px-1 mt-3"
-                v-show="geoActive"
-                v-else
-              >
-                現在地から1000m圏内
-              </p>
-            </div>
-          </div>
-        </b-container>
-        <div class="credit">
-          Powered by
-          <a href="http://webservice.recruit.co.jp/"
-            >ホットペッパー Webサービス</a
+      <b-container>
+        <div class="pt-4 pb-3 pb-md-4">
+          <b-form
+            inline
+            class="justify-content-center flex-column flex-md-row flex-md-nowrap"
           >
+            <b-form-input
+              class="keyword"
+              placeholder="フリーワード検索（店名 地名、駅名など）"
+              v-model="keyword"
+            ></b-form-input>
+            <!-- v-model="keyword" -->
+
+            <b-button
+              variant="light"
+              class="buttons ml-md-4 text-nowrap"
+              @click.prevent="getGeo"
+              >現在地から検索</b-button
+            >
+            <div class="selects ml-md-4" v-show="geoActive">
+              <b-form-select
+                v-model="range"
+                :options="options"
+                required
+                @change="changeGeo"
+              ></b-form-select>
+            </div>
+          </b-form>
+
+          <!-- 検索結果表示領域 -->
+
+          <div
+            class="d-flex align-items-center justify-content-center flex-column flex-md-row"
+          >
+            <p class="research-conditions mb-0 mx-2 px-1 mt-3" v-if="keyword">
+              キーワード：『{{ keyword }}』
+            </p>
+            <p
+              class="research-conditions mb-0 mx-2 px-1 mt-3"
+              v-if="range == 1"
+            >
+              現在地から300m圏内
+            </p>
+            <p
+              class="research-conditions mb-0 mx-2 px-1 mt-3"
+              v-else-if="range == 2"
+            >
+              現在地から500m圏内
+            </p>
+            <p
+              class="research-conditions mb-0 mx-2 px-1 mt-3"
+              v-else-if="range == 4"
+            >
+              現在地から2000m圏内
+            </p>
+            <p
+              class="research-conditions mb-0 mx-2 px-1 mt-3"
+              v-else-if="range == 5"
+            >
+              現在地から3000m圏内
+            </p>
+            <p
+              class="research-conditions mb-0 mx-2 px-1 mt-3"
+              v-show="geoActive"
+              v-else
+            >
+              現在地から1000m圏内
+            </p>
+          </div>
         </div>
+      </b-container>
+      <div class="credit text-center pb-2 text-md-right mr-md-2">
+        Powered by
+        <a href="http://webservice.recruit.co.jp/"
+          >ホットペッパー Webサービス</a
+        >
       </div>
     </div>
     <!-- 検索結果表示領域 -->
@@ -320,16 +318,6 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
-  position: relative;
-}
-
-.credit {
-  position: absolute;
-  right: 3px;
-  bottom: 3px;
-}
-
 @media (min-width: 768px) {
   .is-fix {
     position: fixed;
@@ -372,5 +360,9 @@ export default {
   .keyword {
     width: 400px !important;
   }
+}
+
+.credit {
+  font-size: 0.85rem;
 }
 </style>

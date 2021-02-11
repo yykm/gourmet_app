@@ -114,8 +114,8 @@ body {
 
 @media (max-width: 767.98px) {
   #fixed__btn {
-    right: 10px;
-    bottom: 10px;
+    right: 20px;
+    bottom: 20px;
   }
 }
 </style>
