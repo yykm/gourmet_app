@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Shop;
 use App\User;
 use App\Reservation;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ReservationPosted;
+// use Illuminate\Support\Facades\Mail;
+// use App\Mail\ReservationPosted;
 use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isNull;
@@ -134,7 +134,7 @@ class ReserveController extends Controller
             //     ->reservation;
 
             // ３．メール送信
-            Mail::to(Auth::user())->queue(new ReservationPosted($reservation));
+            // Mail::to(Auth::user())->queue(new ReservationPosted($reservation));
 
             DB::commit();
         } catch (\Exception $exception) {
