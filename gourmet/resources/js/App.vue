@@ -98,6 +98,7 @@ export default {
 <style>
 body {
   background-color: rgb(150 174 183 / 4%) !important;
+  font-family: "M PLUS Rounded 1c" !important;
 }
 
 #fixed__btn {

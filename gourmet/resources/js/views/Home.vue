@@ -104,4 +104,8 @@ export default {
 .access__area a {
   color: #37383bb5 !important;
 }
+
+h1 {
+  font-family: "Truculenta", sans-serif;
+}
 </style>

@@ -83,7 +83,8 @@ export default {
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   color: rgb(0 0 0 / 67%) !important;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  font-family: 'Truculenta', sans-serif;
 }
 
 li.nav-item {
