@@ -1,4 +1,5 @@
 <template>
+  <!-- 404 Not Found画面 -->
   <div id="notFound">
     <div class="wrapper__outer">
       <div class="wrapper__inner text-center">

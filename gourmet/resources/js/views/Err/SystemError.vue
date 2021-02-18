@@ -1,4 +1,5 @@
 <template>
+  <!-- 500 System Error画面 -->
   <div id="systemError">
     <div class="wrapper__outer">
       <div class="wrapper__inner text-center">
