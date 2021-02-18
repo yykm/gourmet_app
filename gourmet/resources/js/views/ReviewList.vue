@@ -1,6 +1,8 @@
 <template>
+  <!-- 口コミ投稿画面 -->
   <div id="reviews">
     <div class="wrapper mt-5 mb-4">
+      <!-- 画面上部の口コミ投稿フォームへのスクロールボタン -->
       <div v-if="isLogin && reviews" class="review__header mb-2">
         <div class="text-center">
           <b-button
@@ -23,7 +25,9 @@
           >
         </div>
       </div>
-      <div v-if="reviews" class="review__body p-4">
+
+      <!-- 口コミ一覧表示領域 -->
+      <div v-if="reviews && !loading" class="review__body p-4">
         <div class="paginate__area mb-3">
           <Pagination :lastPage="lastPage" />
         </div>
@@ -38,9 +42,18 @@
           <Pagination :lastPage="lastPage" />
         </div>
       </div>
+
+      <!-- ローダー表示部 -->
+      <div v-else-if="loading" class="loader text-center mt-5">
+        <Loader height="5rem" width="5rem" />
+      </div>
+
+      <!-- 投稿が1件も無い場合メッセージ表示 -->
       <div v-else class="text-center">
         <p>まだ投稿された口コミがありません。</p>
       </div>
+
+      <!-- 口コミ投稿フォーム -->
       <div v-if="isLogin" class="form__area mt-4">
         <ReviewForm @reviewPost="onPost" :shop="shop" />
       </div>
@@ -62,6 +75,7 @@ export default {
     ReviewForm,
     Pagination,
     Review,
+    Loader,
   },
   data() {
     return {
@@ -83,7 +97,7 @@ export default {
   methods: {
     ...mapMutations("Err", ["setCode"]),
 
-    // フォームへスクロール
+    // 口コミ投稿フォームへスクロール
     scrollToForm() {
       document.getElementsByClassName("form__area")[0].scrollIntoView({
         behavior: "smooth",
@@ -94,7 +108,6 @@ export default {
 
     // 口コミ一覧取得
     async fetchReviews() {
-      // ローディング表示
       this.loading = true;
 
       // クエリパラメータのページ番号を取得
@@ -103,7 +116,7 @@ export default {
           ? this.$route.query.page * 1
           : 1
       );
-      // shop_idをクエリパラメータに
+      // 店舗ID、ページ番号を元に対応する口コミ情報を取得
       const response = await axios
         .get("/api/comments", {
           params: {
@@ -113,6 +126,8 @@ export default {
         })
         .catch((err) => err.response || err);
 
+      this.loading = false;
+
       // ステ－タスコード200以外エラー
       if (response.status !== ERR.OK) {
         this.setCode("setCode", response.status);
@@ -120,8 +135,7 @@ export default {
         this.loading = false;
         return;
       }
-      // ローダー非表示
-      this.loading = false;
+
       // レスポンス各値を取得
       this.reviews =
         response.data.data.length === 0 ? null : response.data.data;
@@ -137,6 +151,8 @@ export default {
       }
     },
   },
+  // ペジネーションリンク遷移だとインスタンスが使いまわされるためcreatedではなく、
+  // ルート情報の変更を監視するwatchで都度対応するページの口コミ情報の取得処理を呼び出す
   watch: {
     $route: {
       async handler() {
@@ -145,6 +161,7 @@ export default {
       immediate: true,
     },
   },
+  // 店舗情報を取得
   created() {
     this.shop = this.getShop(this.shop_id);
   },

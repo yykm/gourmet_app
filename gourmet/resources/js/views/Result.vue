@@ -103,7 +103,7 @@ export default {
 
   watch: {
     // フリーワード入力ごとに遅延関数に登録された検索処理を発火
-    keyword: function (keyWord) {
+    keyword: function () {
       this.loading = true;
       this.delayFunc();
     },
