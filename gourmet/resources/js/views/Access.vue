@@ -1,4 +1,5 @@
 <template>
+<!-- アクセス -->
   <div id="access">
     <div class="wrapper mt-5 mb-4">
       <b-container class="bv-example-row">
@@ -72,9 +73,7 @@
           </b-col>
           <b-col cols="10">
             <div class="text-left mt-3 mb-5">
-              <p class="ml-3">
-                駐車場&nbsp;-&nbsp;{{ shop.parking }}
-              </p>
+              <p class="ml-3">駐車場&nbsp;-&nbsp;{{ shop.parking }}</p>
             </div>
           </b-col>
         </b-row>
