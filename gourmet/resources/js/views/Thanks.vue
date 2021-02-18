@@ -1,4 +1,5 @@
 <template>
+  <!-- 退会画面 -->
   <div id="thanks">
     <div class="wrapper__outer">
       <div class="wrapper__inner text-center">
