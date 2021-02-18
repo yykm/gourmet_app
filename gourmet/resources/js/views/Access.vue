@@ -1,16 +1,19 @@
 <template>
-<!-- アクセス -->
+  <!-- アクセス画面 -->
   <div id="access">
     <div class="wrapper mt-5 mb-4">
       <b-container class="bv-example-row">
         <b-row class="flex-column align-items-center">
-          <b-col cols="10" md="8"
-            ><div class="access__title">
+          <!-- 店舗住所 -->
+          <b-col cols="10" md="8">
+            <div>
               <p class="shop__address text-center">
                 {{ shop.name }}<br />{{ shop.address }}
               </p>
             </div></b-col
           >
+
+          <!-- Google Map -->
           <b-col cols="10">
             <GmapMap
               :center="center"
@@ -25,6 +28,7 @@
               class="mx-auto my-4 mb-5"
               @center_changed="delayFunc"
             >
+              <!-- 地図上のマーカー -->
               <GmapMarker
                 :position="position"
                 :clickable="true"
@@ -52,7 +56,8 @@
               >店舗の位置へ戻る</b-button
             ></b-col
           >
-          <!-- アクセス 電車 -->
+
+          <!-- 交通手段：電車 -->
           <b-col cols="10">
             <div class="transportation text-left my-3">
               <span class="ml-3">電車でお越しの方</span>
@@ -65,7 +70,8 @@
               </p>
             </div>
           </b-col>
-          <!-- アクセス 車 -->
+
+          <!-- 交通手段：車 -->
           <b-col cols="10">
             <div class="transportation text-left my-3">
               <span class="ml-3">車でお越しの方</span>
@@ -91,29 +97,31 @@ export default {
   data() {
     return {
       shop_id: this.$route.params.id, // 店舗ID
-      shop: null, // 店舗オブジェクト
-      position: null,
-      center: null,
-      initPosition: null,
+      shop: null, // 店舗情報
+      position: null, // マーカーの座標
+      initPosition: null, // マーカーの初期位置
+      center: null, // 地図の中央座標
     };
   },
   computed: {
     ...mapGetters("App", ["getShop"]),
   },
-  // クリックでマーカ位置に画面を中央に戻す
   methods: {
+    // マーカークリックで地図の中央座標をその地点へ設定
     markerClick($event) {
       this.position = this.center = {
         lat: $event.latLng.lat(),
         lng: $event.latLng.lng(),
       };
     },
+    // マーカー移動でマーカ―座標を再設定
     markerMove($event) {
       this.position = {
         lat: $event.latLng.lat(),
         lng: $event.latLng.lng(),
       };
     },
+    // 地図の中央位置移動で中央座標を再設定
     mapMove($event) {
       this.center = {
         lat: $event.lat(),
@@ -122,15 +130,16 @@ export default {
     },
   },
   created() {
-    // 店舗オブジェクトの取得及び、googleMapの表示位置設定
+    // 店舗情報の取得
     this.shop = this.getShop(this.shop_id);
-    // 初期位置の設定と保存
+
+    // 地図の中央座標とマーカーの座標を店舗の座標へ初期設定
     this.center = this.position = this.initPosition = {
       lat: this.shop.lat,
       lng: this.shop.lng,
     };
 
-    // マップ中央位置の取得を遅延させる
+    // 連続して発生するマップ移動イベントを1500msごとに遅延させるため、遅延関数に設定
     this.delayFunc = _.debounce(this.mapMove, 1500);
   },
 };
