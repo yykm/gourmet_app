@@ -1,9 +1,12 @@
 <template>
+  <!-- 予約完了画面 -->
   <div class="reserved">
+    <!-- ヘッダー -->
     <Header />
 
     <b-container class="shadow-sm mb-3 mt-4">
       <div class="link__area py-3">
+        <!-- トップに戻る -->
         <b-link to="/"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
@@ -20,6 +23,8 @@
           >トップに戻る</b-link
         >
       </div>
+
+      <!-- 予約完了メッセージ -->
       <div class="result__area">
         <b-card body-class="text-center bg-color">
           <b-card-title class="mb-3"
@@ -53,6 +58,7 @@ export default {
     Header,
   },
   props: {
+    // 予約情報
     reservation: {
       type: Object,
       required: true,

@@ -1,6 +1,9 @@
 <template>
-  <div class="research">
+  <!-- 検索フォーム及び検索結果表示領域 -->
+  <div id="research">
+    <!-- ヘッダー -->
     <Header />
+
     <div class="research-form" :class="{ 'is-fix': isFix }">
       <b-container>
         <div class="pt-4 pb-3 pb-md-4">
@@ -8,13 +11,14 @@
             inline
             class="justify-content-center flex-column flex-md-row flex-md-nowrap"
           >
+            <!-- フリーワード入力 -->
             <b-form-input
               class="keyword"
               placeholder="フリーワード検索（店名 地名、駅名など）"
               v-model="keyword"
             ></b-form-input>
-            <!-- v-model="keyword" -->
 
+            <!-- 現在地からの範囲入力 -->
             <b-button
               variant="light"
               class="buttons ml-md-4 text-nowrap"
@@ -31,8 +35,7 @@
             </div>
           </b-form>
 
-          <!-- 検索結果表示領域 -->
-
+          <!-- 検索条件表示領域 -->
           <div
             class="d-flex align-items-center justify-content-center flex-column flex-md-row"
           >
@@ -41,38 +44,15 @@
             </p>
             <p
               class="research-conditions mb-0 mx-2 px-1 mt-3"
-              v-if="range == 1"
-            >
-              現在地から300m圏内
-            </p>
-            <p
-              class="research-conditions mb-0 mx-2 px-1 mt-3"
-              v-else-if="range == 2"
-            >
-              現在地から500m圏内
-            </p>
-            <p
-              class="research-conditions mb-0 mx-2 px-1 mt-3"
-              v-else-if="range == 4"
-            >
-              現在地から2000m圏内
-            </p>
-            <p
-              class="research-conditions mb-0 mx-2 px-1 mt-3"
-              v-else-if="range == 5"
-            >
-              現在地から3000m圏内
-            </p>
-            <p
-              class="research-conditions mb-0 mx-2 px-1 mt-3"
               v-show="geoActive"
-              v-else
             >
-              現在地から1000m圏内
+              現在地から{{ options[range].text }}
             </p>
           </div>
         </div>
       </b-container>
+
+      <!-- クレジット表示 -->
       <div class="credit text-center pb-2 text-md-right mr-md-2">
         Powered by
         <a href="http://webservice.recruit.co.jp/"
@@ -80,13 +60,14 @@
         >
       </div>
     </div>
+
     <!-- 検索結果表示領域 -->
-    <ShopList :loading="loading"></ShopList>
+    <ShopList :loading="loading" />
   </div>
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex";
+import { createNamespacedHelpers, mapMutations } from "vuex";
 const { mapGetters, mapActions } = createNamespacedHelpers("App");
 import ShopList from "./../components/ShopList.vue";
 import Header from "./../components/Header.vue";
@@ -101,8 +82,8 @@ export default {
   data() {
     return {
       keyword: "", // キーワード
-      range: 3, //範囲
-      loading: false,
+      range: 3, // 範囲
+      // 現在地からの範囲指定の選択ボックス入力オプション
       options: [
         { value: "0", text: "範囲を指定しない" },
         { value: "1", text: "300m圏内" },
@@ -113,95 +94,73 @@ export default {
       ],
       lat: "", // 緯度
       lon: "", // 経度
-      geoActive: false, //現在地が有効かどうか
-      timer: null, // タイマー
+      geoActive: false, // 範囲検索が有効か否か
       iniPosition: 0, // 検索フォーム初期位置
-      curPosition: 0, // 検索フォーム現在位置
+      scrollY: 0, // Y方向のスクロール量
+      loading: false, // ローダー表示フラグ
     };
   },
 
   watch: {
+    // フリーワード入力ごとに遅延関数に登録された検索処理を発火
     keyword: function (keyWord) {
       this.loading = true;
-      this.delayFunc(keyWord);
+      this.delayFunc();
     },
-    range: function () {
-      this.loading = true;
-    },
-  },
-
-  mounted: function () {
-    // イベント登録
-    window.addEventListener("scroll", this.onScroll);
-    window.addEventListener("resize", this.onResize);
-    // 検索フォームの初期位置を取得
-    this.setIniPosition();
-  },
-
-  created() {
-    this.delayFunc = _.debounce(this.onInput, 800);
-  },
-
-  beforeDestroy: function () {
-    // イベント解除
-    window.removeEventListener("scroll", this.onScroll);
-    window.removeEventListener("resize", this.onResize);
   },
 
   computed: {
     ...mapGetters(["getURLs"]),
 
-    // 検索フォームがウィンドウ内かを判定して返す
+    // 下へスクロールした際に、検索フォームをウィンドウ上部へ固定するスタイルクラスの付与フラグ
     isFix: function () {
-      if (this.iniPosition < this.curPosition) return true;
+      if (this.iniPosition < this.scrollY) return true;
       else return false;
     },
   },
 
+  mounted() {
+    // 入力イベントの度に発火される連続する検索処理をキャンセルし、
+    // 800ms間隔が空いた時に処理するよう遅延関数に登録する
+    this.delayFunc = _.debounce(this.getGourmet, 800);
+
+    // スクロール、リサイズイベントのハンドラ登録
+    window.addEventListener("scroll", this.onScroll);
+    window.addEventListener("resize", this.onResize);
+  },
+
   methods: {
     ...mapActions(["updateShops"]),
+    ...mapMutations("Message", ["setContent"]),
 
-    setIniPosition() {
-      // 検索フォームの位置を取得
-      const rect = document.querySelector(".research").getBoundingClientRect();
+    // ウィンドウのリサイズの度に検索フォームの初期位置を再設定
+    onResize() {
+      const rect = document.querySelector("#research").getBoundingClientRect();
       this.iniPosition = window.pageYOffset + rect.top;
     },
-    // 検索フォームの現在位置を取得
-    onScroll: function () {
-      this.curPosition = window.pageYOffset;
-    },
-    // ウィンドウのサイズを変える度に検索フォームの初期位置を取得
-    onResize: function () {
-      clearTimeout(this.timer);
 
-      this.timer = setTimeout(
-        function () {
-          this.setIniPosition();
-        }.bind(this),
-        50
-      );
-    },
-    // 検索処理
-    onInput: function (value) {
-      this.geoActive
-        ? this.getGourmet(this.keyword, this.lat, this.lon, this.range)
-        : this.getGourmet(this.keyword);
+    // Y方向のスクロール量を取得
+    onScroll() {
+      this.scrollY = window.pageYOffset;
     },
 
-    getGourmet: async function () {
+    // 検索処理本体
+    async getGourmet() {
       const params = new URLSearchParams();
+
+      // キーワードが入力されている場合条件に含める
       if (this.keyword !== "") {
         params.append("keyword", this.keyword);
       }
+      // 範囲検索が有効な場合条件に含める
       if (this.geoActive === true) {
         params.append("lat", this.lat);
         params.append("lon", this.lon);
         params.append("range", this.range);
       }
-      // 検索条件が無い場合は問い合わせを実行しない
+      // いずれの検索条件も指定されていない場合は問い合わせを実行しない
       if (params.toString() === "") {
         this.updateShops(null);
-        // ローダ非表示
         this.loading = false;
         return;
       }
@@ -253,35 +212,42 @@ export default {
             lunch: getted_shop.lunch, // ランチ
           }));
 
-          // ストアへ更新
+          // ストアへ検索情報を保存
           $this.updateShops(shops);
         })
         .catch(function (error) {
-          // ローダ非表示
-          this.loading = false;
-          // 失敗時
+          // 失敗メッセージ表示
+          this.setContent({
+            success: false,
+            content: "検索サービスが只今お使いになれません",
+            timeout: 1500,
+          });
         });
 
-      // ローダ非表示
       this.loading = false;
     },
+
     // 現在位置の取得
-    getGeo: function () {
+    getGeo() {
       // 成功時の処理
       const successCallback = (position) => {
+        this.loading = true;
         // 範囲を初期化
         this.range = 3;
+        // 範囲検索有効化
         this.geoActive = true;
 
-        (this.lat = position.coords.latitude), // 緯度
-          (this.lon = position.coords.longitude); // 経度
+        (this.lat = position.coords.latitude), // 緯度取得
+          (this.lon = position.coords.longitude); // 経度取得
 
-        this.getGourmet(this.keyword, this.lat, this.lon, this.range);
+        this.getGourmet();
       };
       // 失敗時の処理
       const errorCallback = (error) => {
+        // 範囲検索無効化
         this.geoActive = false;
 
+        // 失敗事由を通知
         if (error.code == 1) {
           alert("位置情報取得が許可されていません。");
         } else if (error.code == 2) {
@@ -291,28 +257,39 @@ export default {
         }
       };
 
-      /* Geolocation APIを利用できる環境向けの処理 */
+      /* Geolocation APIを利用できる環境の場合 */
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           successCallback,
           errorCallback
         );
       } else {
+        /* 利用できない環境の場合 */
         this.geoActive = false;
-
-        /* Geolocation APIを利用できない環境向けの処理 */
         alert("この端末では位置情報取得ができません。");
       }
     },
-    changeGeo: function (selected) {
+
+    // 範囲検索の範囲が変更された場合
+    changeGeo(selected) {
+      this.loading = true;
+
+      // 範囲を指定しない、へ変更した場合
       if (selected === "0") {
         this.geoActive = false;
-        this.getGourmet(this.keyword);
       } else {
+        // 指定範囲を変更した場合
         this.geoActive = true;
-        this.getGourmet(this.keyword, this.lat, this.lon, this.range);
       }
+
+      this.getGourmet();
     },
+  },
+
+  // 後処理としてイベント解除
+  beforeDestroy: function () {
+    window.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener("resize", this.onResize);
   },
 };
 </script>

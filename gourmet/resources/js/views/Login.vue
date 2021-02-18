@@ -1,4 +1,5 @@
 <template>
+  <!-- ログイン画面 -->
   <div id="login">
     <!-- ヘッダー -->
     <Header />
