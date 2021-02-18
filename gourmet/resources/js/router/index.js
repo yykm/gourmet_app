@@ -4,7 +4,7 @@ import store from './../store';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
-import Reset from '../views/Reset.vue';
+// import Reset from '../views/Reset.vue';
 import Detail from '../views/Detail.vue';
 import Info from '../views/Info.vue';
 import PhotoList from '../views/PhotoList.vue';
@@ -19,10 +19,10 @@ import NotFound from '../views/Err/NotFound.vue';
 
 Vue.use(VueRouter);
 
-// 認証状態で認証済ページへ遷移時にガード
+// ログイン状態で要ログインページへ遷移時にガード
 const Authorized = function (to, from, next) {
   if (store.getters['App/isLogin']) {
-    // 認証済みならホームへ
+    // ログイン済みならホームへ
     next('/');
   } else {
     // そうでなければ遷移先へ
@@ -30,10 +30,10 @@ const Authorized = function (to, from, next) {
   }
 }
 
-// 認証されていない状態で要認証ページへ遷移時にガード
+// 未ログイン状態で要ログインページへ遷移時にガード
 const notAuthorized = function (to, from, next) {
   if (!store.getters['App/isLogin']) {
-    // 認証済みならホームへ
+    // 未ログインならホームへ
     next('/');
   } else {
     // そうでなければ遷移先へ
@@ -44,7 +44,7 @@ const notAuthorized = function (to, from, next) {
 // 検索してストアに店舗情報がない状態で店舗詳細ページへ遷移した場合にガード
 const notSearched = function (to, from, next) {
   if (!store.getters['App/getShops']) {
-    // 認証済みならホームへ
+    // ストアに店舗情報が無い場合はホームへ
     next('/');
   } else {
     // そうでなければ遷移先へ
@@ -53,7 +53,7 @@ const notSearched = function (to, from, next) {
 }
 
 const routes = [
-  // top
+  // ホーム
   {
     path: '/',
     name: 'Home',
@@ -63,6 +63,7 @@ const routes = [
       next();
     }
   },
+  // 検索結果
   {
     path: '/result',
     name: 'Result',
@@ -83,13 +84,14 @@ const routes = [
     component: Register,
     beforeEnter: Authorized
   },
-  // パスワードリセット
+  /* パスワードリセット（未実装のためコメントアウト）
   {
     path: '/reset',
     name: 'Reset',
     component: Reset,
     beforeEnter: Authorized
   },
+  */
   // 予約完了ページ
   {
     path: '/reserved',
@@ -120,6 +122,7 @@ const routes = [
       tab: Number(route.params.tab),
       id: String(route.params.id)
     }),
+    // 店舗詳細ページ
     children: [{
       path: 'info',
       name: 'info',
@@ -127,6 +130,7 @@ const routes = [
         content: Info
       }
     },
+    // 写真投稿ページ
     {
       path: 'photoList',
       name: 'photoList',
@@ -134,6 +138,7 @@ const routes = [
         content: PhotoList
       },
     },
+    // 口コミ投稿ページ
     {
       path: 'review',
       name: 'review',
@@ -141,6 +146,7 @@ const routes = [
         content: ReviewList
       }
     },
+    // アクセス情報ページ
     {
       path: 'access',
       name: 'access',
@@ -169,15 +175,17 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  mode: 'history', // historyモード
+  base: process.env.BASE_URL, // .envより基底フォルダを取得、設定
+
+  // ページ遷移ごとにページ最上部へ遷移
   scrollBehavior() {
     return {
       x: 0,
       y: 0
     }
   },
-  routes
+  routes // ルート情報読み込み
 });
 
 export default router;
