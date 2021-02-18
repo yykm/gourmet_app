@@ -4,7 +4,7 @@ import store from './store';
 import App from './App.vue';
 import './bootstrap';
 
-// 認証状態を取得してからVueインスタンス生成
+// Vue 起動時にログイン状態を取得してからVueインスタンス生成
 const createApp = async () => {
   await store.dispatch('App/currentUser');
 
