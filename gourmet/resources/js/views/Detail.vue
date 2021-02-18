@@ -2,7 +2,7 @@
   <!-- 店舗詳細画面 -->
   <div id="detail">
     <!-- ヘッダー -->
-    <Header :site_name="'Gourmet'" />
+    <Header />
 
     <b-container class="shadow-sm py-1 mt-4">
       <b-card no-body class="overflow-hidden mt-4 w-100 border-0">

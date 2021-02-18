@@ -1,21 +1,26 @@
 <template>
-  <div class="register">
-        <Header />
+  <div id="register">
+    <!-- ヘッダー -->
+    <Header />
+
     <main class="py-4">
       <b-container>
         <b-card class="mx-auto" tag="main">
+          <!-- ログイン/新規登録切り替えタブ -->
           <template #header>
             <b-nav tabs>
               <b-nav-item to="login">ログイン</b-nav-item>
               <b-nav-item active>新規登録</b-nav-item>
             </b-nav>
           </template>
+
           <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
             <b-form
               @submit.prevent="handleSubmit(onSubmit)"
               @reset.prevent="onReset"
             >
               <!-- 名前 -->
+              <!-- バリデーション：「必須」かつ「20文字以内」 -->
               <validation-provider
                 :rules="{ required: true, max: 20 }"
                 v-slot="validationContext"
@@ -29,6 +34,8 @@
                     v-model="form.name"
                     placeholder="お名前（20文字以内）"
                   ></b-form-input>
+
+                  <!-- バリデーション結果のメッセージ表示部 -->
                   <b-form-invalid-feedback>
                     {{ validationContext.errors[0] }}
                   </b-form-invalid-feedback>
@@ -39,6 +46,7 @@
               </validation-provider>
 
               <!-- メールアドレス -->
+              <!-- バリデーション：「必須」かつ「Eメール形式」 -->
               <validation-provider
                 :rules="{ required: true, email: true }"
                 v-slot="validationContext"
@@ -52,6 +60,8 @@
                     :state="getValidationState(validationContext)"
                     placeholder="hoge@example.com"
                   ></b-form-input>
+
+                  <!-- バリデーション結果のメッセージ表示部 -->
                   <b-form-invalid-feedback>
                     有効なメールアドレスではありません。
                   </b-form-invalid-feedback>
@@ -62,6 +72,7 @@
               </validation-provider>
 
               <!-- パスワード  -->
+              <!-- バリデーション：「必須」かつ「英数字」かつ「8文字以上20文字以内」 -->
               <validation-provider
                 :rules="{ required: true, alpha_num: true, min: 8, max: 20 }"
                 v-slot="validationContext"
@@ -76,6 +87,8 @@
                     :state="getValidationState(validationContext)"
                     placeholder="パスワード（8から20文字の英数字）"
                   ></b-form-input>
+
+                  <!-- バリデーション結果のメッセージ表示部 -->
                   <b-form-invalid-feedback>
                     {{ validationContext.errors[0] }}
                   </b-form-invalid-feedback>
@@ -86,13 +99,11 @@
               </validation-provider>
 
               <!-- パスワード確認用 -->
+              <!-- バリデーション：「必須」かつ「パスワード項目と値が一致すること」」 -->
               <validation-provider
                 :rules="{
                   required: true,
-                  alpha_num: true,
-                  min: 8,
-                  max: 20,
-                  confirmed: 'form.password'
+                  confirmed: 'form.password',
                 }"
                 name="パスワード（確認用）"
                 v-slot="validationContext"
@@ -105,6 +116,8 @@
                     :state="getValidationState(validationContext)"
                     placeholder="パスワード（確認用）"
                   ></b-form-input>
+
+                  <!-- バリデーション結果のメッセージ表示部 -->
                   <b-form-invalid-feedback>
                     {{ validationContext.errors[0] }}
                   </b-form-invalid-feedback>
@@ -112,10 +125,12 @@
                 </b-form-group>
               </validation-provider>
 
+              <!-- 登録済などエラーメッセージ表示部 -->
               <div v-if="registerErrors" class="errors text-danger text-center">
                 {{ registerErrors }}
               </div>
 
+              <!-- サブミット・入力リセットボタン -->
               <div class="text-center mb-2 mt-4 mt-md-5 mb-md-4">
                 <b-button
                   type="submit"
@@ -146,62 +161,67 @@ export default {
   components: {
     ValidationObserver,
     ValidationProvider,
-    Header
+    Header,
   },
   data() {
     return {
       form: {
-        name: "",
-        email: "",
-        password: "",
-        password_confirmation: ""
+        name: "", // 名前
+        email: "", // Eメール
+        password: "", // パスワード
+        password_confirmation: "", // パスワード確認用
       },
-      password: ""
     };
   },
   computed: {
     ...mapGetters({
       apiStatus: APP.getAppURI(APP.GET_API_STATUS),
-      registerErrors: ERR.getErrURI(ERR.GET_REGISTER_ERROR_MESSAGE)
-    })
+      registerErrors: ERR.getErrURI(ERR.GET_REGISTER_ERROR_MESSAGE),
+    }),
   },
   methods: {
     ...mapActions({
       regist: APP.getAppURI(APP.REGISTER),
-      setRegisterErrorMessage: ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE)
+      setRegisterErrorMessage: ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE),
     }),
 
+    // バリデーション状態を返却
+    /*
+     dirty:フィールド値が一度でも操作により変更された
+     validated:1度でもバリデートチェックされた
+     valid:trueである場合、有効なフォールド値
+     */
     getValidationState({ dirty, validated, valid = null }) {
       return dirty || validated ? valid : null;
     },
 
-    // ユーザ登録
+    // 新規登録処理
     async onSubmit() {
-      // ストアのsetUserアクションを呼び出す
+      // 新規登録API呼び出し
       await this["regist"](this.form);
 
-      // API通信成功時
+      // API通信が成功した場合にトップページへ遷移
       if (this["apiStatus"]) {
-        // トップページに移動する
         this.$router.push("/");
       }
     },
+    // フォーム値の初期化
     onReset() {
       // Reset our form values
       this.form.name = "";
       this.form.email = "";
       this.form.password = "";
       this.form.password_confirmation = "";
-      // Trick to reset/clear native browser form validation state
       this["setRegisterErrorMessage"](null);
       this.$nextTick(() => {
         this.$refs.observer.reset();
       });
-    }
+    },
   },
+  // タブ切り替え時にエラーメッセージを初期化
   created() {
     this["setRegisterErrorMessage"](null);
-  }
+  },
 };
 </script>
 
