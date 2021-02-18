@@ -65,7 +65,7 @@ export default {
   },
   data() {
     return {
-      shopId: this.$route.params.id, // 店舗ID
+      shop_id: this.$route.params.shop_id, // 店舗ID
       shop: null, // 店舗情報
       reviews: null, // 口コミ一覧オブジェクトの配列
       loading: null, // ローディング表示フラグ
@@ -107,7 +107,7 @@ export default {
       const response = await axios
         .get("/api/comments", {
           params: {
-            shop_id: this.shopId,
+            shop_id: this.shop_id,
             page,
           },
         })
@@ -146,7 +146,7 @@ export default {
     },
   },
   created() {
-    this.shop = this.getShop(this.shopId);
+    this.shop = this.getShop(this.shop_id);
   },
 };
 </script>

@@ -25,7 +25,10 @@
                   <p class="p-catch">{{ shop.catch }}</p>
                   <p class="p-name">
                     <router-link
-                      :to="{ id: shop.id, tab: 'info' } | detailURL"
+                      :to="{
+                        path: `detail/${shop.id}`,
+                        query: { tab: 0 },
+                      }"
                       rel="noopener noreferrer"
                     >
                       <span>{{ shop.name }}</span>
@@ -42,7 +45,10 @@
                 <div class="p-main-img text-center">
                   <p>
                     <b-link
-                      :to="{ id: shop.id, tab: 'review' } | detailURL"
+                      :to="{
+                        path: `detail/${shop.id}`,
+                        query: { tab: 2 },
+                      }"
                       rel="noopener noreferrer"
                     >
                       <img :src="shop.photo" :alt="shop.name" /><br />
@@ -184,36 +190,6 @@ export default {
       this.shops = this.getShopsByPage(this.curPage, this.perPage);
     },
   },
-  // 店舗詳細ページへのURLを返却
-  filters: {
-    detailURL: function ({ id, tab }) {
-      if (typeof id !== "string") {
-        return "/";
-      }
-      // タブ番号
-      var tabNo = 0;
-
-      switch (tab) {
-        case "info":
-          tabNo = 0;
-          break;
-        case "photoList":
-          tabNo = 1;
-          break;
-        case "review":
-          tabNo = 2;
-          break;
-        case "access":
-          tabNo = 3;
-          break;
-        default:
-          tabNo = 0;
-      }
-
-      // /detail/店舗id/タブ番号
-      return ["", "detail", id, tabNo, tab].join("/");
-    },
-  },
 };
 </script>
 
@@ -329,7 +305,7 @@ td {
   .p-category {
     font-size: 0.67rem;
   }
-  
+
   /deep/ .reserve__btn {
     width: 200px !important;
   }
@@ -352,7 +328,7 @@ li + li {
   align-items: center;
 }
 
-/deep/ .reserve__btn{
+/deep/ .reserve__btn {
   width: 90%;
 }
 </style>

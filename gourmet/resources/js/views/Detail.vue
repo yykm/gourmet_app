@@ -1,10 +1,13 @@
 <template>
+  <!-- 店舗詳細画面 -->
   <div id="detail">
-    <Header :site_name="'Gourmet'"></Header>
-    <b-container v-if="shop" class="shadow-sm py-1 mt-4">
-      <!-- 店舗トップ写真 -->
+    <!-- ヘッダー -->
+    <Header :site_name="'Gourmet'" />
+
+    <b-container class="shadow-sm py-1 mt-4">
       <b-card no-body class="overflow-hidden mt-4 w-100 border-0">
         <b-row no-gutters align-h="between">
+          <!-- 店舗写真 -->
           <b-col
             sm="12"
             md="5"
@@ -19,14 +22,17 @@
             ></b-img>
           </b-col>
 
-          <!-- 店舗概要 -->
+          <!-- 店舗情報 -->
           <b-col sm="12" md="7" lg="8">
             <b-card-body>
+              <!-- 店舗名 -->
               <div class="title__wrapper">
                 <div
                   class="title__inner d-flex flex-column-reverse flex-md-row align-items-center align-items-md-start justify-content-between"
                 >
                   <b-card-title>{{ shop.name }}</b-card-title>
+
+                  <!-- お気に入りボタン -->
                   <FavoriteBtn
                     :shop="shop"
                     class="flex-shrink-0 ml-md-2 mb-3 mb-md-0"
@@ -34,11 +40,11 @@
                 </div>
                 <small class="mb-2">{{ shop.kana }}</small>
               </div>
+
+              <!-- アクセス・平均予算 -->
               <b-card-text class="mt-2">
-                <!-- アクセス -->
                 <span>アクセス：{{ shop.access }}</span
                 ><br />
-                <!-- 平均予算 -->
                 <span>平均予算：{{ shop.average }}</span>
               </b-card-text>
 
@@ -53,11 +59,14 @@
                 </li>
               </ul>
 
+              <!-- 営業時間・定休日 -->
               <b-card-footer class="reservation border-0 clear-float py-2">
                 <span>営業時間：{{ shop.open }}</span
                 ><br />
                 <span>定休日：{{ shop.close }}</span
                 ><br />
+
+                <!-- 予約 -->
                 <div v-if="isLogin" class="text-center my-2">
                   <Reserve :shop="shop" />
                 </div>
@@ -67,9 +76,9 @@
         </b-row>
       </b-card>
 
-      <!-- タブ -->
+      <!-- 「店舗詳細」「写真」「口コミ」「地図」タブ -->
       <b-tabs
-        v-model="tabIndex"
+        v-model="tab_index"
         @activate-tab="onChange"
         nav-class="flex-nowrap"
         :fill="true"
@@ -81,12 +90,9 @@
         <b-tab title="地図"></b-tab>
       </b-tabs>
 
-      <!-- コンテンツ -->
-      <router-view name="content"></router-view>
+      <!-- 「店舗詳細」「写真」「口コミ」「地図」コンテンツ表示部 -->
+      <router-view name="content" />
     </b-container>
-    <div v-else class="text-center mt-4 text-danger">
-      <span>該当のお店は存在しません。</span>
-    </div>
   </div>
 </template>
 
@@ -98,23 +104,34 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "Detail",
-  data() {
-    return {
-      tabIndex: Number(this.tab),
-      shop: null,
-    };
-  },
   components: {
     Header,
     FavoriteBtn,
     Reserve,
   },
+  data() {
+    return {
+      tab_index: null, // タブ番号
+      shop: null, // 店舗情報
+    };
+  },
+  props: {
+    // 店舗ID
+    shop_id: {
+      type: String,
+      required: true,
+    },
+    // タブ番号
+    tab: {
+      type: Number,
+      required: true,
+    },
+  },
   computed: {
     ...mapGetters("App", ["getShop", "isLogin"]),
 
-    // 各種サービスの有無
+    // 利用可能なサービス一覧を表示メッセージに整形した配列を返却する
     services() {
-      // 使用可能なサービスのメッセージ配列
       var messages = [];
       let message = {
         wifi: "WiFi",
@@ -163,46 +180,40 @@ export default {
       return messages;
     },
   },
-  props: {
-    // 店舗ID
-    id: {
-      type: String,
-      required: true,
-    },
-    // タブ番号
-    tab: {
-      type: Number,
-      required: true,
-    },
-  },
-  // リンク移動
+  // タブ押下時のページ遷移
   methods: {
-    onChange(newTabIndex, prevTabIndex, bvEvent) {
-      // 移動先
-      var prefix = ["", "detail", this.id, newTabIndex].join("/");
+    onChange(newTabIndex) {
+      var path = "";
 
       switch (newTabIndex) {
         case 0:
-          prefix += "/info";
+          path += "info";
           break;
         case 1:
-          prefix += "/photoList";
+          path += "photoList";
           break;
         case 2:
-          prefix += "/review";
+          path += "review";
           break;
         case 3:
-          prefix += "/access";
+          path += "access";
           break;
         default:
-          prefix += "/";
+          path += "/";
       }
 
-      this.$router.push(prefix);
+      // 新しいtab番号に改めて設定
+      this.tab_index = newTabIndex;
+      // 新しいタブに対応するページへ遷移
+      this.$router.replace({ name: path });
     },
   },
   created() {
-    this.shop = this.getShop(this.id) ?? null;
+    // 店舗情報を取得
+    this.shop = this.getShop(this.shop_id) ?? null;
+
+    // 初期表示するタブに対応するページを表示
+    this.onChange(this.tab);
   },
 };
 </script>

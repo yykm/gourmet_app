@@ -96,7 +96,7 @@ export default {
   name: "Access",
   data() {
     return {
-      shop_id: this.$route.params.id, // 店舗ID
+      shop_id: this.$route.params.shop_id, // 店舗ID
       shop: null, // 店舗情報
       position: null, // マーカーの座標
       initPosition: null, // マーカーの初期位置

@@ -11,7 +11,7 @@ export default {
   name: "Info",
   data() {
     return {
-      shopId: this.$route.params.id,
+      shop_id: this.$route.params.shop_id,
     };
   },
 };

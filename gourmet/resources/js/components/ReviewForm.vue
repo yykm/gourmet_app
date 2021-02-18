@@ -18,8 +18,7 @@
           class="mt-3"
           browse-text="画像を選択"
           placeholder="jpg jpeg png gif 形式"
-          ></b-form-file
-        >
+        ></b-form-file>
 
         <div v-if="errors" class="errors text-danger">
           <ul v-if="errors.content">
@@ -54,8 +53,8 @@ export default {
   props: {
     shop: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     ...mapMutations("Err", ["setCode"]),
@@ -73,7 +72,7 @@ export default {
 
         const response = await axios
           .post(`/api/photos`, formData)
-          .catch(err => err.response || err);
+          .catch((err) => err.response || err);
 
         // バリデーションエラー
         if (response.status === ERR.UNPROCESSABLE_ENTITY) {
@@ -88,7 +87,7 @@ export default {
           this.setContent({
             success: false,
             content: "コメントの投稿に失敗しました",
-            timeout: 3000
+            timeout: 3000,
           });
           return;
         }
@@ -106,7 +105,7 @@ export default {
 
       const response = await axios
         .post(`/api/comments`, formData)
-        .catch(err => err.response || err);
+        .catch((err) => err.response || err);
 
       // バリデーションエラー
       if (response.status === ERR.UNPROCESSABLE_ENTITY) {
@@ -114,7 +113,13 @@ export default {
         this.errors = response.data.errors;
         this.comment = "";
         return;
-      } else if (response.status !== ERR.CREATED) {
+      }
+
+      // 入力値初期化
+      this.photo = null;
+      this.comment = "";
+
+      if (response.status !== ERR.CREATED) {
         // エラーコード設定
         this.setCode(response.status);
 
@@ -122,12 +127,10 @@ export default {
         this.setContent({
           success: false,
           content: "コメントの投稿に失敗しました",
-          timeout: 3000
+          timeout: 3000,
         });
         return;
       }
-
-      this.comment = "";
 
       // エラーメッセージをクリア
       this.errors = null;
@@ -139,9 +142,9 @@ export default {
       this.setContent({
         success: true,
         content: "レビューが投稿されました！",
-        timeout: 3000
+        timeout: 3000,
       });
-    }
+    },
   },
 };
 </script>

@@ -8,7 +8,7 @@
         <b-row v-if="isLogin">
           <b-col>
             <div class="photo__form text-center mb-2">
-              <PhotoForm @photoPost="onPost" :shopId="shopId" /></div
+              <PhotoForm @photoPost="onPost" :shop_id="shop_id" /></div
           ></b-col>
         </b-row>
         <div v-if="loading" class="loader text-center mt-5">
@@ -54,7 +54,7 @@ export default {
   },
   data() {
     return {
-      shopId: this.$route.params.id, // 店舗ID
+      shop_id: this.$route.params.shop_id, // 店舗ID
       photos: null, // 写真一覧オブジェクトの配列
       loading: null, // ローディング表示フラグ
       lastPage: 1, // ページングの最終ページ番号
@@ -73,16 +73,17 @@ export default {
           ? this.$route.query.page * 1
           : 1
       );
+
       // shop_idをクエリパラメータに
       const response = await axios
         .get("/api/photos", {
           params: {
-            shop_id: this.shopId,
+            shop_id: this.shop_id,
             page,
           },
         })
         .catch((err) => err.response || err);
-
+      console.log(response);
       // ステ－タスコード200以外エラー
       if (response.status !== ERR.OK) {
         this.setCode("setCode", response.status);

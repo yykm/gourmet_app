@@ -104,7 +104,7 @@ export default {
     };
   },
   props: {
-    shopId: {
+    shop_id: {
       type: String,
       required: true,
     },
@@ -209,7 +209,7 @@ export default {
   },
   created() {
     // 店舗オブジェクトの取得
-    this.shop = this.getShop(this.shopId);
+    this.shop = this.getShop(this.shop_id);
   },
 };
 </script>

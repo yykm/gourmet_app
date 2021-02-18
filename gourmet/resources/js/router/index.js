@@ -114,13 +114,13 @@ const routes = [
   },
   // 店舗詳細
   {
-    path: '/detail/:id/:tab',
+    path: '/detail/:shop_id',
     name: 'detail',
     component: Detail,
     beforeEnter: notSearched,
     props: (route) => ({
-      tab: Number(route.params.tab),
-      id: String(route.params.id)
+      tab: Number(route.query.tab),
+      shop_id: String(route.params.shop_id)
     }),
     // 店舗詳細ページ
     children: [{
