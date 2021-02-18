@@ -1,7 +1,10 @@
 <template>
   <div id="app">
+    <!-- 全ページ共通の通知用トーストコンポーネント -->
     <Message />
+    <!-- ページコンポーネントのレンダリング部 -->
     <router-view></router-view>
+    <!-- 全ページ共通の画面右下に表示されるページ上部へのスクロールボタン -->
     <b-button id="fixed__btn" @click.prevent="toTop" v-show="isChange"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
@@ -34,12 +37,13 @@ export default {
   },
   data() {
     return {
-      scrolled: 0,
+      scrolled: 0, // 画面Y方向のスクロール量
     };
   },
   computed: {
     ...mapGetters([ERR.GET_CODE]),
 
+    // 400px以上の移動でスクロールボタンを表示
     isChange() {
       return this.scrolled > 400;
     },
@@ -47,6 +51,7 @@ export default {
   methods: {
     ...mapActions([ERR.SET_CODE]),
 
+    // 画面Ｙ方向最上部へ移動
     toTop() {
       window.scroll({
         top: 0,
@@ -54,17 +59,20 @@ export default {
       });
     },
 
-    // スクロール量を取得
+    // 画面Y方向のスクロール量を取得
     getPageYOffset() {
       this.scrolled = window.pageYOffset;
     },
   },
   created() {
-    // 4000msごとにスクロール量をスクロール毎に取得
+    // 遅延関数で連続するイベントをキャンセル
+    // 400msごとにY方向のスクロール量をスクロール毎に取得
     this.delayFunc = _.debounce(this.getPageYOffset, 400);
     window.addEventListener("scroll", this.delayFunc);
   },
   watch: {
+    // Errストアで保持しているエラーコード値を監視
+    // 変化があればコード値によって対応するエラーハンドリングを行う
     [ERR.GET_CODE]: {
       async handler(code) {
         switch (code) {
@@ -72,22 +80,26 @@ export default {
           case ERR.INTERNAL_SERVER_ERROR:
             this.$router.push("/500");
             break;
+
           // 認証エラー
           case ERR.UNAUTHORIZED:
-            // トークンをリフレッシュ
+            // CSRFトークンをリフレッシュ
             await axios.get("/api/refresh-token");
-            // ストアのuserをクリア
+            // ログイン状態を初期化
             this.$store.commit("App/setUser", null);
-            // ログイン画面へ
+            // ログインページへ遷移
             this.$router.push("/login");
-          // 500エラー
+
+          // 404エラー
           case ERR.NOT_FOUND:
+            // not foundページへ遷移
             this.$router.push("/not-found");
             break;
         }
       },
       immediate: true,
     },
+    // エラーコード値をページ遷移のタイミングで初期化
     $route() {
       this[ERR.SET_CODE](null);
     },
