@@ -1,4 +1,5 @@
 <template>
+  <!-- 退会確認用モーダル -->
   <div class="withdrawal">
     <b-link @click.prevent="toggleModal">
       <b-list-group-item>退会する</b-list-group-item>
@@ -59,12 +60,12 @@ export default {
         });
         return;
       }
-      
+
       // フロント側を未ログイン状態に
       this.setUser(null);
-      
+
       // 退会完了ページへ
-      this.$router.push('/thanks');
+      this.$router.push("/thanks");
     },
   },
 };

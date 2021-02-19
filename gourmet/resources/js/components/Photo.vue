@@ -1,4 +1,5 @@
 <template>
+  
   <div class="photo">
     <figure class="photo__wrapper" v-b-modal="photo.id">
       <b-img
