@@ -220,7 +220,7 @@ export default {
           this.setContent({
             success: false,
             content: "検索サービスが只今お使いになれません",
-            timeout: 1500,
+            timeout: 5000,
           });
         });
 

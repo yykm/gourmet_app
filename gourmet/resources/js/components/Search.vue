@@ -1,17 +1,19 @@
 <template>
-  <div class="search">
+  <!-- 店舗検索フォーム -->
+  <div id="search">
     <div class="search-form">
       <b-container>
         <div class="wrapper py-4">
           <b-form inline @submit.prevent="getGourmet" class="flex-column">
             <div class="control d-flex flex-column flex-md-row flex-md-nowrap">
+              <!-- フリーワード入力 -->
               <b-form-input
                 class="keyword"
                 placeholder="フリーワード検索（店名 地名、駅名など）"
                 v-model="keyword"
               ></b-form-input>
-              <!-- v-model="keyword" -->
 
+              <!-- 現在地からの範囲入力 -->
               <b-button
                 variant="light"
                 @click.prevent="getGeo"
@@ -28,6 +30,7 @@
               ></b-form-select>
             </div>
             <div>
+              <!-- 検索ボタン -->
               <b-button type="submit" class="px-4 py-2 mt-md-4 mt-4"
                 >検索する</b-button
               >
@@ -36,6 +39,8 @@
         </div>
       </b-container>
     </div>
+
+    <!-- ローダー -->
     <div class="spin" v-show="loading">
       <Loader height="7rem" width="7rem" label="Large Spinner" />
     </div>
@@ -43,7 +48,7 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex";
+import { createNamespacedHelpers, mapMutations } from "vuex";
 const { mapGetters, mapActions } = createNamespacedHelpers("App");
 import Loader from "./../components/Loader.vue";
 
@@ -56,6 +61,7 @@ export default {
     return {
       keyword: "", // キーワード
       range: 3, //範囲
+      // 現在地からの範囲指定の選択ボックス入力オプション
       options: [
         { value: "0", text: "範囲を指定しない" },
         { value: "1", text: "300m圏内" },
@@ -67,7 +73,7 @@ export default {
       lat: "", // 緯度
       lon: "", // 経度
       geoActive: false, // 範囲表示
-      loading: false,
+      loading: false, // ローダー表示フラグ
     };
   },
 
@@ -77,9 +83,10 @@ export default {
 
   methods: {
     ...mapActions(["updateShops"]),
+    ...mapMutations("Message", ["setContent"]),
 
     // 現在位置の取得
-    getGeo: function () {
+    getGeo() {
       // 成功時の処理
       const successCallback = (position) => {
         this.geoActive = true;
@@ -103,22 +110,22 @@ export default {
         }
       };
 
-      /* Geolocation APIを利用できる環境向けの処理 */
+      /* Geolocation APIを利用できる環境の場合 */
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           successCallback,
           errorCallback
         );
       } else {
+        /* 利用できない環境の場合 */
         this.geoActive = false;
 
-        /* Geolocation APIを利用できない環境向けの処理 */
         alert("この端末では位置情報取得ができません。");
       }
     },
 
     // 範囲変更
-    changeGeo: function (selected) {
+    changeGeo(selected) {
       // 範囲を検索条件に指定しない時
       if (selected === "0") {
         this.geoActive = false;
@@ -128,12 +135,11 @@ export default {
       }
     },
 
-    getGourmet: async function () {
+    async getGourmet() {
       // 検索ワードが入力されていない場合は無効
       if (!this.keyword.length) {
         return;
       }
-      // ローダー表示フラグ
       this.loading = true;
 
       const params = new URLSearchParams();
@@ -203,12 +209,14 @@ export default {
           $this.updateShops(shops);
         })
         .catch(function (error) {
-          // 失敗時
-          // ローダ非表示
-          this.loading = false;
+          // 失敗メッセージ表示
+          this.setContent({
+            success: false,
+            content: "検索サービスが只今お使いになれません",
+            timeout: 5000,
+          });
         });
 
-      // ローダ非表示
       this.loading = false;
       // 検索結果画面へ
       this.$router.push("/result");
