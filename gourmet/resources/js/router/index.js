@@ -68,6 +68,9 @@ const routes = [
     path: '/result',
     name: 'Result',
     component: Result,
+    props: (route) => ({
+      page: Number(route.query.page),
+    }),
     beforeEnter: notSearched
   },
   // ログイン

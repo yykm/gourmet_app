@@ -1,4 +1,5 @@
 <template>
+  <!-- 口コミ -->
   <div id="review">
     <b-card
       :img-src="url"
@@ -9,6 +10,7 @@
       class="py-4 border-0"
       body-class="text-border py-2"
     >
+      <!-- 投稿者 / 投稿日 -->
       <b-card-text>
         <h6 class="mt-0 mb-3">
           {{ review.id + "." }}
@@ -29,18 +31,20 @@
 export default {
   name: "Review",
   props: {
+    // 口コミ情報
     review: {
       type: Object,
-      required: false
-    }
+      required: false,
+    },
   },
   computed: {
+    // 口コミ画像URLを返却
     url() {
       return this.review.photo !== null
         ? this.review.photo.url
         : "/img/l_e_others_500.png";
-    }
-  }
+    },
+  },
 };
 </script>
 

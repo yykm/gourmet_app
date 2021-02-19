@@ -1,24 +1,22 @@
-<!-- props:shops/shopsCount -->
 <template>
+  <!-- 検索結果の店舗一覧 -->
   <div class="search-result" v-if="shopsCount !== null">
     <div class="container shadow-sm mt-4 p-4">
-      <!-- 検索件数表示部 -->
+      <!-- 検索結果の件数 -->
       <div v-if="shopsCount > 0 && !loading">
-        <p class="result-count text-right">
-          ({{ curPage * perPage }}&thinsp;/&thinsp;{{
-            shopsCount
-          }})&thinsp;件表示中
-        </p>
-        <!-- 店舗情報表示部   -->
+        <p class="result-count text-right">{{ shopsCount }}&thinsp;件表示中</p>
+
+        <!-- 店舗情報   -->
         <ul class="shops-list p-0 mb-5">
           <li v-for="shop of shops" v-bind:key="shop.id">
-            <!-- 店舗ヘッダー部 -->
+            <!-- 店舗情報ヘッダー部 -->
             <div class="p-name-wrap">
               <div class="d-flex align-items-center">
                 <!-- ロゴ画像 -->
                 <div class="p-shop-logo">
                   <img :src="shop.logo" alt="" />
                 </div>
+
                 <!-- 	店舗ジャンル名・お店ジャンルキャッチ・掲載店名 -->
                 <div class="p-name-content ml-4">
                   <p class="p-category mr-3 text-center">{{ shop.category }}</p>
@@ -38,10 +36,10 @@
               </div>
             </div>
 
-            <!-- お店のメインコンテンツ -->
+            <!-- 店舗情報ボディー部 -->
             <b-row class="p-content mt-4" align-h="between">
               <b-col cols="12" md="3">
-                <!-- お店の画像  -->
+                <!-- 店舗の画像  -->
                 <div class="p-main-img text-center">
                   <p>
                     <b-link
@@ -56,13 +54,15 @@
                     </b-link>
                   </p>
                 </div>
+
+                <!-- 予約 -->
                 <div v-if="isLogin" class="p-reserve text-center my-4">
                   <Reserve :shop="shop" />
                 </div>
               </b-col>
 
+              <!-- 店舗の詳細情報 -->
               <b-col cols="12" md="9">
-                <!-- お店の詳細情報 -->
                 <table class="p-table">
                   <tr>
                     <th>住所</th>
@@ -119,19 +119,20 @@
           </li>
         </ul>
 
-        <b-pagination
-          :value="curPage"
-          :total-rows="shopsCount"
-          :per-page="perPage"
-          align="center"
-          @change="onChange"
-        ></b-pagination>
+        <!-- ペジネーションリンク -->
+        <div class="pagination__area d-flex justify-content-center">
+          <Pagination :lastPage="lastPage" />
+        </div>
       </div>
+
+      <!-- 検索結果が１件もない場合 -->
       <div v-else-if="!loading">
         <p class="result-count text-center text-danger">
           検索結果に該当するお店はありません。別のキーワードでお試しください。
         </p>
       </div>
+
+      <!-- ローダー -->
       <div v-else class="spin mt-5">
         <Loader height="5rem" width="5rem" label="Medium Spinner" />
       </div>
@@ -144,50 +145,69 @@ import { createNamespacedHelpers } from "vuex";
 const { mapGetters } = createNamespacedHelpers("App");
 import Loader from "./../components/Loader.vue";
 import Reserve from "./../components/Reserve.vue";
+import Pagination from "./../components/Pagination.vue";
 
 export default {
   name: "Result",
   components: {
     Loader,
     Reserve,
+    Pagination,
   },
   computed: {
     ...mapGetters(["shopsCount", "getShopsByPage", "getShops", "isLogin"]),
+
+    // ページング最終番号を返却
+    lastPage() {
+      return Math.ceil(this.shopsCount / this.perPage);
+    },
   },
   data() {
     return {
-      shops: [],
+      shops: [], // 店舗情報
       perPage: 5, // ページ毎に表示する店舗数
-      curPage: 1, // 現在のページ番号
     };
   },
   props: {
+    // ローダー表示フラグ
     loading: {
       type: Boolean,
       default: false,
       required: false,
     },
+    // ペジネーションのページ番号
+    page: {
+      type: Number,
+      required: false,
+    },
   },
   watch: {
-    // 検索しなおしの都度、１ページ目の店舗情報取得
+    // 検索しなおしの度1ページ目の店舗情報取得し
+    // ページ最上部へ遷移
     getShops: function () {
-      this.onChange(1);
+      this.onChange(true);
+      window.scrollTo(0, 0);
     },
 
-    shops: function () {
-      this.$nextTick(() => {
-        window.scrollTo(0, 0);
-      });
+    // ページ遷移時に対応するページの検索結果を表示
+    $route: {
+      async handler() {
+        this.onChange(false);
+      },
+      immediate: true,
     },
   },
-  created() {
-    this.onChange(1);
-  },
   methods: {
-    // ページ番号が変わるたびに対応する店舗情報取得
-    onChange(page) {
-      this.curPage = page;
-      this.shops = this.getShopsByPage(this.curPage, this.perPage);
+    // 店舗情報の再取得処理
+    onChange(research_flag) {
+      // 再検索の場合1ページ目を設定
+      var curPage = 1;
+      // ページ遷移の場合クエリパラメータよりページ数を設定
+      if (!research_flag) {
+        curPage = this.$route.query.page ?? 1;
+      }
+      // ページ番号に対応する店舗情報取得
+      this.shops = this.getShopsByPage(curPage, this.perPage);
     },
   },
 };
@@ -199,7 +219,6 @@ export default {
   min-height: 90vh;
 }
 
-/* pタグのマージンをリセット */
 p {
   margin-bottom: 0px;
 }
@@ -223,7 +242,6 @@ td {
   vertical-align: baseline;
   padding-bottom: 0.75rem;
 }
-/* フォント調整  */
 .result-count {
   font-size: 1.1rem;
   line-height: 1.7;
@@ -310,11 +328,10 @@ td {
     width: 200px !important;
   }
 }
-/* リストのマーク除去 */
 .shops-list {
   list-style: none;
 }
-/* リスト間の枠線 */
+
 li + li {
   border-width: 0 0 1px 0;
   border-top: 1px solid rgba(0, 0, 0, 0.125);
