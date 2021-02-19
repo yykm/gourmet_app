@@ -1,11 +1,12 @@
 <template>
-  
-  <div class="photo">
+  <!-- 写真単体 -->
+  <div id="photo">
+    <!-- 画像描画領域 -->
     <figure class="photo__wrapper" v-b-modal="photo.id">
       <b-img
         :src="photo.url"
         :alt="'Photo by ${item.user.name}'"
-        class="photo__img"
+        class="photo__img border"
       ></b-img>
     </figure>
     <div class="photo__controls mt-2 mr-2 d-flex align-items-stretch">
@@ -80,6 +81,8 @@
           >Download
         </a>
       </div>
+
+      <!-- モーダル画像描画領域 -->
       <figure class="modal__wrapper">
         <b-img
           :src="photo.url"
@@ -95,7 +98,7 @@
 export default {
   name: "Photo",
   props: {
-    // 写真オブジェクト
+    // 写真情報オブジェクト
     photo: {
       type: Object,
       required: true,
@@ -105,16 +108,17 @@ export default {
 </script>
 
 <style scoped>
-.photo,
+#photo,
 .photo__wrapper,
 .photo__img {
-  height: 100%;
-  width: 100%;
+  height: 220px;
+  width: 220px;
+  border-radius: 3px;
 }
 
-.photo {
+#photo {
   position: relative;
-  background: #000;
+  background-color: rgb(0, 0, 0);
 }
 
 .photo__controls,
@@ -145,9 +149,9 @@ export default {
   outline: none;
 }
 
-.photo:hover .photo__img,
-.photo:hover .photo__controls,
-.photo:hover .photo__username {
+#photo:hover .photo__img,
+#photo:hover .photo__controls,
+#photo:hover .photo__username {
   opacity: 0.82;
   transition-duration: 0.4s;
 }

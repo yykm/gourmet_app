@@ -1,14 +1,13 @@
 <template>
-  <div class="reserve">
+  <!-- 予約フォーム -->
+  <div id="reserve">
     <div class="reserve__btn-area">
-      <b-button
-        variant="warning"
-        @click="showDateModal"
-        class="reserve__btn"
+      <b-button variant="warning" @click="showDateModal" class="reserve__btn"
         >予約する</b-button
       >
     </div>
-    <!-- 日付入力モーダル -->
+
+    <!-- 日付・人数入力モーダル -->
     <b-modal
       :ref="'date-modal' + shop.id"
       centered
@@ -33,6 +32,7 @@
               ></b-form-select
             ></b-col>
           </b-row>
+
           <!-- 来店日 -->
           <b-row class="my-2 justify-content-center">
             <b-col cols="4" class="text-center reserve__items">来店日</b-col>
@@ -52,6 +52,7 @@
               ></b-form-datepicker
             ></b-col>
           </b-row>
+
           <!-- 時間 -->
           <b-row class="my-2 justify-content-center">
             <b-col cols="4" class="text-center reserve__items border-0"
@@ -73,13 +74,13 @@
             type="submit"
             block
             variant="warning"
-            >上記で予約する</b-button
+            >上記で予約を進める</b-button
           >
         </b-form>
       </b-container>
     </b-modal>
 
-    <!-- 個人情報入力モーダル -->
+    <!-- 予約詳細・個人情報入力モーダル -->
     <b-modal
       :ref="'info-modal' + this.shop.id"
       centered
@@ -87,6 +88,7 @@
       hide-footer
       hide-header
     >
+      <!-- 前画面で設定した日時・人数・予約対象の店舗名をタイトルに表示 -->
       <div class="reserve__info-header text-center mb-4">
         <h4>
           {{ shop.name }}
@@ -115,6 +117,7 @@
               </b-form-group>
             </b-col>
           </b-row>
+
           <!-- ふりがな -->
           <b-row class="justify-content-center">
             <b-col cols="12" md="5" lg="3" class="text-center text-md-right">
@@ -168,6 +171,7 @@
               </b-form-group>
             </b-col>
           </b-row>
+
           <!-- 利用目的 -->
           <b-row class="justify-content-center">
             <b-col cols="12" md="5" lg="3" class="text-center text-md-right">
@@ -200,7 +204,8 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <!-- バリデーション領域 -->
+
+          <!-- バリデーションエラー表示領域 -->
           <div v-if="errors" class="error text-danger">
             <ul v-for="(field, index) in errors" :key="index">
               {{
@@ -211,6 +216,8 @@
               </li>
             </ul>
           </div>
+
+          <!-- 予約確定 / キャンセル -->
           <b-button
             type="submit"
             class="mt-3 w-50 mx-auto"
@@ -241,16 +248,17 @@ export default {
   data() {
     return {
       form: {
-        date: null,
-        number: null,
-        time: null,
-        email: null,
-        name: null,
-        kana: null,
-        phone_num: null,
-        purpose: null,
-        request: null,
+        date: null, // 来店予定日
+        number: null, // 人数
+        time: null, // 来店予定日時
+        email: null, // Eメールアドレス
+        name: null, // 名前
+        kana: null, // かな
+        phone_num: null, // 電話番号
+        purpose: null, // 利用目的
+        request: null, // 要望・相談
       },
+      // 利用目的選択オプション
       purposes: [
         { value: null, text: "お選びください", disabled: true },
         { value: "1", text: "誕生日" },
@@ -267,11 +275,11 @@ export default {
         { value: "12", text: "合コン" },
         { value: "99", text: "その他" },
       ],
-      errors: null,
+      errors: null, // エラーメッセージ
     };
   },
   computed: {
-    // 人数選択項目のオプション
+    // 人数選択項目のオプション(1~99人)
     options() {
       let numbers = [];
       numbers.push({
@@ -290,17 +298,21 @@ export default {
     ...mapMutations("Err", ["setCode"]),
     ...mapMutations("Message", ["setContent"]),
 
+    // 日付・人数入力モーダルを開く
     showDateModal() {
       this.$refs["date-modal" + this.shop.id].show();
     },
+    // 予約詳細・個人情報入力モーダルを開く
     showInfoModal() {
       this.$refs["info-modal" + this.shop.id].show();
       this.$refs["date-modal" + this.shop.id].hide();
     },
+    // 日付・人数入力モーダルを閉じる
     hideDateModal() {
       this.$refs["date-modal" + this.shop.id].hide();
       this.onReset();
     },
+    // 予約詳細・個人情報入力モーダルを閉じる
     hideInfoModal() {
       this.$refs["info-modal" + this.shop.id].hide();
       this.hideDateModal();
@@ -353,20 +365,21 @@ export default {
       }
 
       // 成功時は予約情報を予約完了ページに送信しページ遷移
-      this.$router.push({
+      this.$router.replace({
         path: "/reserved",
         query: { reservation: response.data },
       });
     },
   },
   props: {
+    // 店舗情報
     shop: {
       type: Object,
       required: true,
     },
   },
   filters: {
-    // hh:mm
+    // hh:mm形式へ変換
     formatted_time(time) {
       if (!time) {
         return null;
