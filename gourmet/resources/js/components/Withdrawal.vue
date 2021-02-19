@@ -50,7 +50,7 @@ export default {
 
       // ステ－タスコード200以外エラー
       if (response.status !== ERR.OK) {
-        this.setCode("setCode", response.status);
+        this.setCode(response.status);
 
         // API通信失敗時（ユーザ削除処理失敗）
         this.setContent({

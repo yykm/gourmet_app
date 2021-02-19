@@ -75,6 +75,8 @@ export default {
     // 変化があればコード値によって対応するエラーハンドリングを行う
     [ERR.GET_CODE]: {
       async handler(code) {
+        if (!code) return;
+        
         switch (code) {
           // 500エラー
           case ERR.INTERNAL_SERVER_ERROR:
@@ -96,12 +98,10 @@ export default {
             this.$router.push("/not-found");
             break;
         }
+
+        this[ERR.SET_CODE](null);
       },
       immediate: true,
-    },
-    // エラーコード値をページ遷移のタイミングで初期化
-    $route() {
-      this[ERR.SET_CODE](null);
     },
   },
 };

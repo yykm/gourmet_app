@@ -6,7 +6,7 @@
         <p>ご利用ありがとうございました！</p>
         <b-img
           class="d-block m-auto"
-          src="img/yanwari14.png"
+          src="/img/yanwari14.png"
           fluid
           alt="Responsive image"
         ></b-img>

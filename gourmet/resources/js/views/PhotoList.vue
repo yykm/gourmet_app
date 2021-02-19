@@ -84,7 +84,7 @@ export default {
           : 1
       );
 
-      // 店舗IDとページ番号を元に対応する店舗情報を取得
+      // 店舗IDとページ番号を元に対応する写真情報を取得
       const response = await axios
         .get("/api/photos", {
           params: {
@@ -99,7 +99,7 @@ export default {
 
       // ステ－タスコード200以外エラー
       if (response.status !== ERR.OK) {
-        this.setCode("setCode", response.status);
+        this.setCode(response.status);
 
         return;
       }

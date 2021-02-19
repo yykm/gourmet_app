@@ -130,7 +130,7 @@ export default {
 
       // ステ－タスコード200以外エラー
       if (response.status !== ERR.OK) {
-        this.setCode("setCode", response.status);
+        this.setCode(response.status);
         // ローダー非表示
         this.loading = false;
         return;

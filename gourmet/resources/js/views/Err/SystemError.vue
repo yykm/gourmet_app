@@ -6,9 +6,9 @@
         <p>システムエラーが発生しました。管理者にご連絡下さい。</p>
         <b-img
           class="d-block m-auto"
-          src="img/yanwari19.png"
+          src="/img/yanwari19.png"
           fluid
-          alt="Responsive image"
+          alt=""
         ></b-img>
         <b-link href="/">ホームに戻る</b-link>
       </div>

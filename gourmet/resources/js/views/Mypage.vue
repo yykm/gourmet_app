@@ -4,6 +4,11 @@
     <!-- ヘッダー -->
     <Header />
 
+    <!-- エラーメッセージ表示領域 -->
+    <div v-if="errors" class="errors text-center">
+      <p class="text-danger mt-3">{{ errors }}</p>
+    </div>
+
     <b-container fluid id="wrapper" class="mt-4">
       <b-row
         no-gutters
@@ -90,6 +95,7 @@ export default {
       comments: null, // 口コミ情報
       photos: null, // 写真情報
       flag: null, // コンテンツ表示切替フラグ
+      errors: null, // エラーメッセージ表示
     };
   },
   methods: {
@@ -112,11 +118,10 @@ export default {
           },
         })
         .catch((err) => err.response || err);
-
       // ステ－タスコード200以外エラー
       if (response.status !== ERR.OK) {
-        this.setCode("setCode", response.status);
-        return;
+        this.setCode(response.status);
+        throw new Error("ユーザ情報が取得できませんでした");
       }
 
       // 取得結果がfalsyな値であればnullを返却
@@ -166,14 +171,15 @@ export default {
   created() {
     // ユーザ情報を初期設定
     this.user = this.$store.getters["App/getUser"];
-    // 予約情報取得
-    this.fetchReseveInfo();
-    // お気に入り情報取得
-    this.fetchFavoriteInfo();
-    // 口コミ情報取得
-    this.fetchReviewInfo();
-    // 写真情報取得
-    this.fetchPhotoInfo();
+
+    /* 予約情報 / お気に入り情報 / 口コミ情報 / 写真情報 */
+    // promise.allで非同期に並列で取得を明示
+    Promise.all([
+      this.fetchReseveInfo(),
+      this.fetchFavoriteInfo(),
+      this.fetchReviewInfo(),
+      this.fetchPhotoInfo(),
+    ]).catch((err) => (this.errors = err));
   },
   props: {
     // 他ページより遷移した場合に、初期表示コンテンツ切り替え用
