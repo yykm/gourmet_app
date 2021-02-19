@@ -1,8 +1,12 @@
 <template>
+  <!-- 口コミ履歴 -->
   <div id="myPageComment">
     <div class="wrapper p-3">
-      <h2 class="title mb-3">投稿したレビュー</h2>
+      <!-- タイトル -->
+      <h2 class="title mb-3">投稿した口コミ</h2>
+
       <div v-if="comments.length" class="comments px-2">
+        <!-- 投稿した口コミ一覧 -->
         <b-card
           v-for="(comment, i) in comments"
           :key="i"
@@ -25,6 +29,8 @@
           </b-card-text>
         </b-card>
       </div>
+
+      <!-- 投稿した口コミが１つも無い場合に表示 -->
       <div v-else class="nothing">
         <p>投稿したレビューはありません</p>
       </div>
@@ -36,12 +42,14 @@
 export default {
   name: "MypageComment",
   props: {
+    // 口コミ情報
     comments: {
       type: Array,
       required: false,
     },
   },
   methods: {
+    // 口コミと一緒に投稿した写真のURLを返却
     url(comment) {
       return comment.photo ? comment.photo.url : "/img/l_e_others_500.png";
     },

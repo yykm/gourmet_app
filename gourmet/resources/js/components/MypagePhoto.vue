@@ -1,6 +1,10 @@
 <template>
+  <!-- 写真の投稿履歴 -->
   <div id="mypagePhoto">
+    <!-- タイトル -->
     <h2 class="title mb-3 px-3 pt-3">投稿した写真</h2>
+
+    <!-- 投稿した写真の履歴一覧のカルーセル表示 -->
     <b-carousel
       v-if="photos.length"
       :interval="0"
@@ -9,7 +13,6 @@
       background="#ababab"
       style="text-shadow: 1px 1px 2px #333"
     >
-      <!-- Text slides with image -->
       <b-carousel-slide
         v-for="(photo, i) in photos"
         :key="i"
@@ -18,6 +21,8 @@
         :img-src="photo.url"
       ></b-carousel-slide>
     </b-carousel>
+
+    <!-- 投稿した写真が１枚もない場合 -->
     <div v-else class="nothing px-3 pb-3">
       <p>投稿した写真はありません</p>
     </div>
@@ -28,6 +33,7 @@
 export default {
   name: "MypagePhoto",
   props: {
+    // 写真情報
     photos: {
       type: Array,
       required: false,

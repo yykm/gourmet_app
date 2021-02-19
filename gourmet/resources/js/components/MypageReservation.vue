@@ -1,8 +1,11 @@
 <template>
+  <!-- 予約履歴 -->
   <div id="mypageReservaiton">
     <div class="wrapper p-3">
+      <!-- タイトル -->
       <h2 class="mb-3 title">予約履歴</h2>
 
+      <!-- 予約履歴一覧表示 -->
       <b-table
         v-if="reservations.length"
         :items="items"
@@ -11,7 +14,7 @@
         responsive="sm"
         stacked="lg"
       >
-        <!-- 概要表示部 -->
+        <!-- 概要表示 -->
         <template #cell(show_details)="row">
           <b-button size="sm" @click="row.toggleDetails" class="mr-2">
             詳細{{ row.detailsShowing ? "を閉じる" : "を表示" }}
@@ -34,6 +37,8 @@
           </b-card>
         </template>
       </b-table>
+
+      <!-- 予約履歴がない場合 -->
       <div v-else class="nothing">
         <p>予約履歴はありません</p>
       </div>
@@ -46,7 +51,7 @@ export default {
   name: "MypageReservation",
   data() {
     return {
-      // テーブルヘッダー
+      // テーブルヘッダー項目
       fields: [
         { key: "date", label: "予約日" },
         { key: "shop", label: "予約した日時" },
@@ -55,18 +60,20 @@ export default {
     };
   },
   props: {
+    // 予約情報
     reservations: {
       type: Array,
       required: false,
     },
   },
   computed: {
-    // セルデータ
+    // 予約情報をセルデータに整形して返却
     items() {
       let items = [];
 
       this.reservations.forEach((reservation) => {
         items.push({
+          /**  概要表示部 */
           date: reservation.created_at, // 予約日
           shop: reservation.shop.name, //予約した店舗
           /**  詳細表示部 */

@@ -31,7 +31,7 @@
           ><b-list-group-item>投稿した写真</b-list-group-item></b-link
         >
         <b-link @click.prevent="onClick('comment')"
-          ><b-list-group-item>投稿したレビュー</b-list-group-item></b-link
+          ><b-list-group-item>投稿した口コミ</b-list-group-item></b-link
         >
         <Withdrawal />
       </b-list-group>
