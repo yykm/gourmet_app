@@ -1,18 +1,20 @@
 <template>
+  <!-- 口コミ投稿フォーム -->
   <div class="review__form">
+    <!-- 口コミ投稿フォームタイトル -->
     <div class="review__title text-left">
       <p>口コミを投稿する</p>
     </div>
     <div class="review__controls">
       <b-form @submit.prevent="addComment">
-        <!-- コメント -->
+        <!-- 口コミ内容 -->
         <b-form-textarea
           v-model="comment"
           rows="6"
           max-rows="7"
         ></b-form-textarea>
 
-        <!-- 写真データ -->
+        <!-- 写真ファイル -->
         <b-form-file
           v-model="photo"
           class="mt-3"
@@ -20,11 +22,12 @@
           placeholder="jpg jpeg png gif 形式"
         ></b-form-file>
 
-        <div v-if="errors" class="errors text-danger">
-          <ul v-if="errors.content">
-            <li v-for="msg in errors.content" :key="msg">{{ msg }}</li>
-          </ul>
+        <!-- エラーメッセージ表示領域 -->
+        <div v-if="errors" class="errors">
+          <p class="text-danger">{{ errors }}</p>
         </div>
+
+        <!-- サブミット -->
         <b-button
           type="submit"
           variant="primary"
@@ -33,7 +36,6 @@
         >
       </b-form>
     </div>
-    <div class="review__image"></div>
   </div>
 </template>
 
@@ -45,12 +47,13 @@ export default {
   name: "ReviewForm",
   data() {
     return {
-      photo: null,
-      comment: "",
-      errors: null,
+      photo: null, // 写真ファイル
+      comment: "", // 口コミ内容
+      errors: null, // エラーメッセージ
     };
   },
   props: {
+    // 店舗情報
     shop: {
       type: Object,
       required: true,
@@ -62,66 +65,61 @@ export default {
 
     // コメント投稿
     async addComment() {
-      const formData = new FormData();
-
-      formData.append("shop", JSON.stringify(this.shop));
-      // 写真が指定されている場合
-      if (this.photo) {
-        // 写真があれば写真投稿APIを呼び出す
-        formData.append("photo", this.photo);
-
-        const response = await axios
-          .post(`/api/photos`, formData)
-          .catch((err) => err.response || err);
-
-        // バリデーションエラー
-        if (response.status === ERR.UNPROCESSABLE_ENTITY) {
-          // エラーメッセージを設定
-          this.errors = response.data.errors;
-          return;
-        } else if (response.status !== ERR.CREATED) {
-          // エラーコード設定
-          this.setCode(response.status);
-
-          // 失敗メッセージ表示
-          this.setContent({
-            success: false,
-            content: "コメントの投稿に失敗しました",
-            timeout: 3000,
-          });
-          return;
-        }
-
-        // photoフィールドを削除
-        formData.delete("photo");
-        // photo_idフィールドに投稿した写真のidを追加
-        formData.append("photo_id", response.data.id);
-      }
-
-      // コメント内容を格納
-      if (this.comment) {
-        formData.append("content", this.comment);
-      }
-
-      const response = await axios
-        .post(`/api/comments`, formData)
-        .catch((err) => err.response || err);
-
-      // バリデーションエラー
-      if (response.status === ERR.UNPROCESSABLE_ENTITY) {
-        // エラーメッセージを設定
-        this.errors = response.data.errors;
-        this.comment = "";
+      // 口コミ内容未入力の場合通知して処理中断
+      if (!this.comment) {
+        // 失敗メッセージ表示
+        this.setContent({
+          success: false,
+          content: "口コミを入力してください",
+          timeout: 1500,
+        });
         return;
       }
 
-      // 入力値初期化
-      this.photo = null;
-      this.comment = "";
+      // multipart/form-data形式で送信
+      const formData = new FormData();
 
-      if (response.status !== ERR.CREATED) {
-        // エラーコード設定
-        this.setCode(response.status);
+      // 店舗情報をパラメータに追加
+      formData.append("shop", JSON.stringify(this.shop));
+
+      try {
+        // 写真が入力されている場合
+        if (this.photo) {
+          // 写真ファイルオブジェクトをパラメータに追加
+          formData.append("photo", this.photo);
+
+          // 写真投稿処理呼び出し
+          const response = await this.postPhoto(formData);
+
+          // photoパラメータを削除
+          formData.delete("photo");
+          // 投稿した写真のidをパタメータに追加
+          formData.append("photo_id", response.data.id);
+        }
+
+        // 口コミ内容をパラメータに追加
+        formData.append("content", this.comment);
+
+        // 口コミ投稿処理呼び出し
+        await this.postComment(formData);
+
+        // エラーメッセージ及び入力値初期化
+        this.photo = null;
+        this.comment = "";
+        this.errors = null;
+
+        // 写真投稿イベントを発火
+        this.$emit("reviewPost");
+
+        // 成功メッセージ表示
+        this.setContent({
+          success: true,
+          content: "レビューが投稿されました！",
+          timeout: 3000,
+        });
+      } catch (err) {
+        // エラーメッセージを格納
+        this.errors = err;
 
         // 失敗メッセージ表示
         this.setContent({
@@ -129,21 +127,49 @@ export default {
           content: "コメントの投稿に失敗しました",
           timeout: 3000,
         });
-        return;
+      }
+    },
+
+    // 写真投稿処理
+    async postPhoto(formData) {
+      // 写真投稿API呼び出し
+      const response = await axios
+        .post(`/api/photos`, formData)
+        .catch((err) => err.response || err);
+
+      // バリデーションエラー
+      if (response.status === ERR.UNPROCESSABLE_ENTITY) {
+        throw new Error("バリデーション_写真ファイル");
+      }
+      // その他エラー
+      else if (response.status !== ERR.CREATED) {
+        // エラーコード設定
+        this.setCode(response.status);
+        throw new Error("その他エラー、お手数ですが管理者にご連絡下さい");
       }
 
-      // エラーメッセージをクリア
-      this.errors = null;
+      return response;
+    },
 
-      // 写真投稿イベントを発火
-      this.$emit("reviewPost");
+    // 口コミ投稿処理
+    async postComment(formData) {
+      // 口コミ投稿API呼び出し
+      const response = await axios
+        .post(`/api/comments`, formData)
+        .catch((err) => err.response || err);
 
-      // 成功メッセージ表示
-      this.setContent({
-        success: true,
-        content: "レビューが投稿されました！",
-        timeout: 3000,
-      });
+      // バリデーションエラー
+      if (response.status === ERR.UNPROCESSABLE_ENTITY) {
+        throw new Error("バリデーション_口コミ");
+      }
+
+      if (response.status !== ERR.CREATED) {
+        // エラーコード設定
+        this.setCode(response.status);
+        throw new Error("その他エラー、お手数ですが管理者にご連絡下さい");
+      }
+
+      return response;
     },
   },
 };

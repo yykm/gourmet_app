@@ -112,7 +112,9 @@ export default {
 .photo__wrapper,
 .photo__img {
   height: 220px;
+  max-height: 100%;
   width: 220px;
+  max-width: 100%;
   border-radius: 3px;
 }
 
