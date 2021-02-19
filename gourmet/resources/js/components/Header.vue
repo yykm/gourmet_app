@@ -1,4 +1,5 @@
 <template>
+  <!-- 共通ヘッダー -->
   <div class="header">
     <b-navbar
       toggleable="lg"
@@ -6,14 +7,13 @@
       variant="light"
       class="nav__wrapper shadow-sm"
     >
-      <b-navbar-brand to="/" class="site_title">Gourmet</b-navbar-brand>
+      <b-navbar-brand to="/" class="site_title">{{ app_name }}</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
-        <!--  ログイン時 -->
+        <!--  ログイン状態 -->
         <b-navbar-nav v-if="isLogin" class="ml-auto">
           <b-nav-item-dropdown right class="mx-0">
-            <!-- Using 'button-content' slot -->
             <template #button-content>
               <em class="mr-1">{{ userName }}</em>
             </template>
@@ -23,7 +23,8 @@
             >
           </b-nav-item-dropdown>
         </b-navbar-nav>
-        <!-- ログアウト時 -->
+
+        <!-- 未ログイン状態 -->
         <b-navbar-nav v-else class="ml-auto">
           <b-nav-item to="/login">ログイン</b-nav-item>
           <b-nav-item to="/register">新規登録</b-nav-item>
@@ -34,7 +35,7 @@
 </template>
 
 <script>
-import { APP, ERR } from "./../store/const.js";
+import { APP } from "./../store/const.js";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -46,6 +47,11 @@ export default {
       apiStatus: APP.getAppURI(APP.GET_API_STATUS),
     }),
   },
+  data() {
+    return {
+      app_name: process.env.MIX_APP_NAME, // アプリ名
+    };
+  },
   methods: {
     ...mapActions({
       logout: APP.getAppURI(APP.LOGOUT),
@@ -53,7 +59,7 @@ export default {
 
     // ログアウト
     async onClick() {
-      // ストアのlogoutアクションを呼び出す
+      // ログアウトAPI呼び出し
       await this["logout"]();
 
       // API通信成功時
@@ -84,7 +90,7 @@ export default {
   -ms-transform: translate(-50%, -50%);
   color: rgb(0 0 0 / 67%) !important;
   font-size: 2rem;
-  font-family: 'Truculenta', sans-serif;
+  font-family: "Truculenta", sans-serif;
 }
 
 li.nav-item {

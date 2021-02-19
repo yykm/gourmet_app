@@ -1,6 +1,7 @@
 <template>
+  <!-- お気に入りボタン -->
   <div class="favorite__wrapper">
-    <!-- お気に入りボタン -->
+    <!-- 'btn__action--liked'スタイルクラスでいいね済か否かで表示を切り替える -->
     <button
       title="Like Shop"
       @click.prevent="onClickLike"
@@ -20,8 +21,10 @@
         <path
           fill-rule="evenodd"
           d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
-        /></svg
-      ><span>{{ favorite.likes_count }}</span>
+        />
+      </svg>
+      <!-- お気に入り数 -->
+      <span>{{ favorite.likes_count }}</span>
     </button>
   </div>
 </template>
@@ -33,7 +36,7 @@ export default {
   name: "FavoriteBtn",
   data() {
     return {
-      favorite: false,
+      favorite: false, // お気に入り情報
     };
   },
   props: {
@@ -57,21 +60,22 @@ export default {
         this.$store.commit("Err/setCode", response.status);
         return;
       }
-      
+
       // 紐づく店舗がない場合
       if (!response.data) {
         this.favorite = {
-          liked_by_user : false,
-          likes_count : 0
-        }
+          liked_by_user: false,
+          likes_count: 0,
+        };
         return;
       }
 
       this.favorite = response.data;
     },
 
-    // いいねボタン押下のハンドラ
+    // いいねボタン押下時のハンドラ
     onClickLike() {
+      // ログイン済でなければ、通知して処理を終える
       if (!this.isLogin) {
         this.setContent({
           success: false,
@@ -81,6 +85,8 @@ export default {
         return;
       }
 
+      // いいね済であればお気に入り解除処理
+      // いいねしていなければ、お気に入り登録処理
       if (this.favorite.liked_by_user) {
         this.unlike();
       } else {
@@ -88,14 +94,16 @@ export default {
       }
     },
 
-    // いいね
+    // お気に入り登録
     async like() {
-      const formData = new FormData();
-      formData.append("shop", JSON.stringify(this.shop));
+      
+      // application/x-www-form-urlencoded形式で送信
+      var params = new URLSearchParams();
+      params.append("shop", JSON.stringify(this.shop));
 
-      // 送信
+      // お気に入り登録API
       const response = await axios
-        .post("/api/favorites", formData)
+        .post("/api/favorites", params)
         .catch((err) => err.response || err);
 
       // お気に入り登録失敗
@@ -104,36 +112,44 @@ export default {
         return;
       }
 
+      // お気に入り登録成功の通知
       this.setContent({
         success: true,
         content: "お気に入りに登録しました",
         timeout: 1500,
       });
+      // お気に入り数を+1、お気に入り済に設定
       this.favorite.likes_count = this.favorite.likes_count + 1;
       this.favorite.liked_by_user = true;
     },
 
-    // いいね解除
+    // お気に入り解除
     async unlike() {
+      // お気に入り解除API
       const response = await axios.delete(`/api/favorites/${this.shop.id}`);
 
+      // お気に入り解除失敗
       if (response.status !== ERR.OK) {
         this.$store.commit("Err/setCode", response.status);
         return;
       }
 
+      // お気に入り登録失敗の通知
       this.setContent({
         success: true,
         content: "お気に入りから解除しました",
         timeout: 1500,
       });
+      
+      // お気に入り数を-1、お気に入り未登録に設定
       this.favorite.likes_count = this.favorite.likes_count - 1;
       this.favorite.liked_by_user = false;
     },
   },
 
-  async created() {
-    await this.fetchFavorite();
+  created() {
+    // お気に入りボタンの画面表示の際に、お気に入り情報を取得
+    this.fetchFavorite();
   },
 };
 </script>
