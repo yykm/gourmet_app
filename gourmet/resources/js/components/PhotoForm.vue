@@ -1,5 +1,7 @@
 <template>
+  <!-- 写真投稿フォーム -->
   <div id="photoList">
+    <!-- "写真を投稿する"ボタン -->
     <b-button id="toggle-btn" pill @click="toggleModal" class="px-3 py-2"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
@@ -14,6 +16,8 @@
         /></svg
       >写真を投稿する</b-button
     >
+
+    <!-- 投稿フォームをモーダル表示 -->
     <b-modal
       ref="my-modal"
       :centered="true"
@@ -35,6 +39,7 @@
         </ul>
       </div>
 
+      <!-- 投稿フォーム本体 -->
       <b-form
         @submit.prevent="onSubmit"
         @reset.prevent="toggleModal"
@@ -53,8 +58,8 @@
           />
         </output>
 
+        <!-- 写真投稿コントロール -->
         <b-form-group description="jpg, jpeg, png, gif 形式">
-          <!-- 写真投稿コントロール -->
           <b-form-file
             v-model="file"
             ref="file-input"
@@ -69,7 +74,7 @@
         </label>
 
         <!-- 店舗IDを送信するためhiddenフィールドを用意 -->
-        <input type="hidden" name="shop" :value="shop" />
+        <!-- <input type="hidden" name="shop" :value="shop" /> -->
 
         <!-- 投稿 / 入力内容リセットボタン -->
         <b-button type="submit" class="mt-2" variant="outline-danger" block
@@ -79,6 +84,8 @@
           >キャンセル</b-button
         >
       </b-form>
+
+      <!-- ローダー -->
       <Loader v-else>Sending your photo...</Loader>
     </b-modal>
   </div>
@@ -96,14 +103,15 @@ export default {
   },
   data() {
     return {
-      file: null, // 入力されたファイル名
-      preview: null, // プレビュー表示フラグ
-      errors: null, // エラーメッセージ用
+      file: null, // 入力されたファイルオブジェクト
+      preview: null, // プレビュー領域表示フラグ
+      errors: null, // エラーメッセージ
       loading: null, // ローダー表示フラグ
       shop: null, // 店舗情報
     };
   },
   props: {
+    // 店舗ID
     shop_id: {
       type: String,
       required: true,
@@ -112,7 +120,7 @@ export default {
   computed: {
     ...mapGetters("App", ["getShop"]),
 
-    // 選択された画像、さもなければ初期画像
+    // プレビュー領域の表示画像URLを返却
     rePreview() {
       return this.preview ?? "/img/l_e_others_500.png";
     },
@@ -121,7 +129,7 @@ export default {
     ...mapMutations("Err", ["setCode"]),
     ...mapMutations("Message", ["setContent"]),
 
-    // ファイルの入力値を初期化
+    // 入力値を初期化
     reset() {
       this.file = null;
       this.preview = null;
@@ -132,7 +140,7 @@ export default {
       this.errors = null;
       this.$refs["my-modal"].toggle("#toggle-btn");
     },
-    // フォームでファイルが選択されたら実行される
+    // フォームでファイルが選択される度実行される
     onFileChange(event) {
       // 何も選択されていなかったら処理中断
       if (!this.file) {
@@ -142,6 +150,13 @@ export default {
 
       // ファイルが画像ではなかったら処理中断
       if (!this.file.type.match("image.*")) {
+        // 画像ファイルではない胸をメッセージ表示
+        this.setContent({
+          success: false,
+          content: "画像ファイルではありません",
+          timeout: 1500,
+        });
+        
         this.reset();
         return;
       }
@@ -160,20 +175,18 @@ export default {
     },
     // ファイルアップロード
     async onSubmit() {
-      // ローダー表示
       this.loading = true;
 
       const formData = new FormData();
 
-      // FormDataオブジェクトに写真ファイルと店舗オブジェクト追加
+      // Content-Type=multipart/form-data形式で送信
       formData.append("photo", this.file);
       formData.append("shop", JSON.stringify(this.shop));
-      // 送信
+      // 写真投稿API呼び出し
       const response = await axios
         .post("/api/photos", formData)
         .catch((err) => err.response || err);
 
-      // ローダ非表示
       this.loading = false;
 
       // バリデーションエラー
@@ -197,6 +210,7 @@ export default {
         return;
       }
 
+      // 写真一覧画面を更新するために親コンポーネントに成功の際にイベント発火
       this.$emit("photoPost");
 
       // 成功メッセージ表示

@@ -1,4 +1,5 @@
 <template>
+  <!-- ペジネーション -->
   <div class="photos__pagination">
     <b-pagination-nav
       :link-gen="linkGen"
@@ -20,6 +21,7 @@ export default {
     }
   },
   methods: {
+    // 遷移先を返却
     linkGen(pageNum) {
       return {
         path: "",
