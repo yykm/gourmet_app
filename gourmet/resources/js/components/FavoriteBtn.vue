@@ -1,6 +1,6 @@
 <template>
   <!-- お気に入りボタン -->
-  <div class="favorite__wrapper">
+  <div id="favorite">
     <!-- 'btn__action--liked'スタイルクラスでいいね済か否かで表示を切り替える -->
     <button
       title="Like Shop"

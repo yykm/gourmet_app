@@ -1,6 +1,6 @@
 <template>
   <!-- ローダー -->
-  <div class="loader">
+  <div id="loader">
     <b-spinner :style="{ width, height }" :label="label"></b-spinner>
   </div>
 </template>

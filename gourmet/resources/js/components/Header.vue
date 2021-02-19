@@ -1,6 +1,6 @@
 <template>
   <!-- 共通ヘッダー -->
-  <div class="header">
+  <div id="header">
     <b-navbar
       toggleable="lg"
       type="light"

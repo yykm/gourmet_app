@@ -1,6 +1,8 @@
 <template>
+  <!-- マイページのサイドメニュー -->
   <div id="mypageAccount">
     <b-card no-body class="border-bottom-0">
+      <!-- ヘッダー -->
       <template #header>
         <p class="mb-0">
           こんにちは、{{ user.name }}さん<br />ご本人ではない場合は<b-link
@@ -10,12 +12,14 @@
         </p>
       </template>
 
+      <!-- ボディー（未実装） -->
       <b-card-body>
         <b-card-title>ほげほげポイント（未実装）</b-card-title>
         <b-card-sub-title class="mb-2">合計残高 xxxポイント</b-card-sub-title>
         <b-card-text> ポイント交換する場合は... </b-card-text>
       </b-card-body>
 
+      <!-- サービス利用履歴の表示リンク一覧 -->
       <b-list-group flush>
         <b-link @click.prevent="onClick('reservation')"
           ><b-list-group-item>予約履歴</b-list-group-item></b-link
@@ -32,6 +36,7 @@
         <Withdrawal />
       </b-list-group>
 
+      <!-- 参考リンク -->
       <b-card-body>
         <p class="referrences">
           ** Webサービス制作にあたって参考にさせて頂いたサイト **
@@ -52,8 +57,6 @@
             title="ホットペッパー Webサービス"
         /></a>
       </b-card-body>
-
-      <!-- <b-card-footer>This is a footer</b-card-footer> -->
     </b-card>
   </div>
 </template>
@@ -68,6 +71,7 @@ export default {
     Withdrawal,
   },
   props: {
+    // ユーザ情報
     user: {
       type: Object,
       required: false,
@@ -85,8 +89,10 @@ export default {
         this.$router.push("/login");
       }
     },
+
+    // サービス利用履歴の表示リンクが押下されたタイミングで
+    // 親コンポーネントへ表示コンポーネント切り替えフラグを付与してイベント発火
     onClick(flag) {
-      // コンポーネント切り替えフラグ
       this.$emit("componentShow", flag);
     },
   },
