@@ -173,8 +173,8 @@ export default {
     this.user = this.$store.getters["App/getUser"];
 
     /* 予約情報 / お気に入り情報 / 口コミ情報 / 写真情報 */
-    // promise.allで非同期に並列で取得を明示
-    Promise.all([
+    // 非同期に並列で取得を明示
+    Promise.race([
       this.fetchReseveInfo(),
       this.fetchFavoriteInfo(),
       this.fetchReviewInfo(),
