@@ -22,9 +22,7 @@ Gourmet
 * [テーブル一覧](https://gourmet-doc.s3-ap-northeast-1.amazonaws.com/gourmet-tables.html)
 * [機能一覧](https://gourmet-doc.s3-ap-northeast-1.amazonaws.com/gourmet-features.html)
 
-## フォルダ構成[^1]
-
-[^1]:主に作成・編集したもののみ掲示
+## フォルダ構成
 
 #### フロントエンド
 <p align="left"><a href="https://gourmet-doc.s3-ap-northeast-1.amazonaws.com/gourmet-tree-frontend.png" target="_blank"><img src="https://gourmet-doc.s3-ap-northeast-1.amazonaws.com/gourmet-tree-frontend.png" width="480" height="878"></a></p>
