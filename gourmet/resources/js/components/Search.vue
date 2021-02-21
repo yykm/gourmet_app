@@ -79,6 +79,7 @@ export default {
   methods: {
     ...mapActions("App", ["updateShops"]),
     ...mapMutations("Message", ["setContent"]),
+    ...mapMutations("Err", ["setCode"]),
 
     // 現在位置の取得
     getGeo() {
@@ -152,12 +153,9 @@ export default {
         return;
       }
 
-
-      let $this = this;
-
-      await axios
-        .post('/api/search', params)
-        .then(function (response) {
+      let response = await axios
+        .post("/api/search", params)
+        .then(response => {
           // 成功時
           let result = response.data.results;
 
@@ -201,20 +199,24 @@ export default {
           }));
 
           // ストアへ更新
-          $this.updateShops(shops);
+          this.updateShops(shops);
+
+          // 検索結果画面へ
+          this.$router.push("/result");
         })
-        .catch(function (error) {
+        .catch(error => {
           // 失敗メッセージ表示
           this.setContent({
             success: false,
-            content: "検索サービスが只今お使いになれません",
+            content: error.response.data,
             timeout: 5000,
           });
+          
+          // ステータスコードをせってお
+          this.setCode(error.response.status);
         });
 
       this.loading = false;
-      // 検索結果画面へ
-      this.$router.push("/result");
     },
   },
 };
