@@ -240,7 +240,7 @@
 </template>
 
 <script>
-import { ERR } from "./../store/const.js";
+import { STATUS } from "./../util.js";
 import { mapMutations } from "vuex";
 
 export default {
@@ -343,7 +343,7 @@ export default {
         .catch((err) => err.response || err);
 
       // バリデーションエラー
-      if (response.status === ERR.UNPROCESSABLE_ENTITY) {
+      if (response.status === STATUS.UNPROCESSABLE_ENTITY) {
         this.errors = response.data.errors;
         return;
       }
@@ -352,7 +352,7 @@ export default {
       this.hideInfoModal();
 
       // その他エラー
-      if (response.status !== ERR.CREATED) {
+      if (response.status !== STATUS.CREATED) {
         this.setCode(response.status);
 
         // 失敗メッセージ表示

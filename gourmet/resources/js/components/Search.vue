@@ -48,8 +48,7 @@
 </template>
 
 <script>
-import { createNamespacedHelpers, mapMutations } from "vuex";
-const { mapGetters, mapActions } = createNamespacedHelpers("App");
+import { mapActions, mapMutations } from "vuex";
 import Loader from "./../components/Loader.vue";
 
 export default {
@@ -77,12 +76,8 @@ export default {
     };
   },
 
-  computed: {
-    ...mapGetters(["getURLs"]),
-  },
-
   methods: {
-    ...mapActions(["updateShops"]),
+    ...mapActions("App", ["updateShops"]),
     ...mapMutations("Message", ["setContent"]),
 
     // 現在位置の取得
@@ -157,11 +152,11 @@ export default {
         return;
       }
 
-      const url = this.getURLs("search");
+
       let $this = this;
 
       await axios
-        .post(url, params)
+        .post('/api/search', params)
         .then(function (response) {
           // 成功時
           let result = response.data.results;

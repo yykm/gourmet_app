@@ -75,7 +75,7 @@ import MypageComment from "./../components/MypageComment.vue";
 import MypageFavorite from "./../components/MypageFavorite.vue";
 import MypageReservation from "./../components/MypageReservation.vue";
 import { mapMutations } from "vuex";
-import { ERR } from "./../store/const.js";
+import { STATUS } from "./../util.js";
 
 export default {
   name: "Mypage",
@@ -119,7 +119,7 @@ export default {
         })
         .catch((err) => err.response || err);
       // ステ－タスコード200以外エラー
-      if (response.status !== ERR.OK) {
+      if (response.status !== STATUS.OK) {
         this.setCode(response.status);
         throw new Error("ユーザ情報が取得できませんでした");
       }

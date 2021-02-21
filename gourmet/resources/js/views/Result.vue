@@ -67,8 +67,7 @@
 </template>
 
 <script>
-import { createNamespacedHelpers, mapMutations } from "vuex";
-const { mapGetters, mapActions } = createNamespacedHelpers("App");
+import { mapActions, mapMutations } from "vuex";
 import ShopList from "./../components/ShopList.vue";
 import Header from "./../components/Header.vue";
 import _ from "lodash";
@@ -110,8 +109,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["getURLs"]),
-
     // 下へスクロールした際に、検索フォームをウィンドウ上部へ固定するスタイルクラスの付与フラグ
     isFix: function () {
       if (this.iniPosition < this.scrollY) return true;
@@ -130,7 +127,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["updateShops"]),
+    ...mapActions("App",["updateShops"]),
     ...mapMutations("Message", ["setContent"]),
 
     // ウィンドウのリサイズの度に検索フォームの初期位置を再設定
@@ -165,11 +162,10 @@ export default {
         return;
       }
 
-      const url = this.getURLs("search");
       let $this = this;
 
       await axios
-        .post(url, params)
+        .post('/api/search', params)
         .then(function (response) {
           // 成功時
           let result = response.data.results;

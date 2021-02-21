@@ -6,15 +6,11 @@ import { mapState, mapMutations } from "vuex";
 
 export default {
   computed: {
-    ...mapState({
-      message: (state) => state.Message.content,
-      timeout: (state) => state.Message.timeout,
-      success: (state) => state.Message.success,
-    }),
+    ...mapState("Message", ["success", "content", "timeout"]),
   },
   watch: {
     // Messageストアの通知内容を監視し、変化があれば通知処理
-    message(newMsg) {
+    content(newMsg) {
       if (newMsg) {
         this.toast("b-toaster-top-center");
         // 初期化
@@ -27,7 +23,7 @@ export default {
 
     // 通知処理本体
     toast(toaster, append = false) {
-      this.$bvToast.toast(this.message, {
+      this.$bvToast.toast(this.content, {
         title: this.success ? "成功" : "失敗", // タイトル
         toaster: "b-toaster-top-center", // トースターのレンタリングの対象
         solid: true, // 半透明か無地のトースター指定

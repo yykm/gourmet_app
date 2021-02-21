@@ -49,7 +49,7 @@ import Loader from "./../components/Loader.vue";
 import PhotoForm from "./../components/PhotoForm.vue";
 import Pagination from "./../components/Pagination.vue";
 import { mapMutations, mapGetters } from "vuex";
-import { ERR } from "./../store/const.js";
+import { STATUS } from "./../util.js";
 
 export default {
   name: "PhotoList",
@@ -98,7 +98,7 @@ export default {
       this.loading = false;
 
       // ステ－タスコード200以外エラー
-      if (response.status !== ERR.OK) {
+      if (response.status !== STATUS.OK) {
         this.setCode(response.status);
 
         return;

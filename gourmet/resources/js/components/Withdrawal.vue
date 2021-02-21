@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { ERR } from "./../store/const.js";
+import { STATUS } from "./../util.js";
 import { mapMutations } from "vuex";
 
 export default {
@@ -49,7 +49,7 @@ export default {
         .catch((err) => err.response || err);
 
       // ステ－タスコード200以外エラー
-      if (response.status !== ERR.OK) {
+      if (response.status !== STATUS.OK) {
         this.setCode(response.status);
 
         // API通信失敗時（ユーザ削除処理失敗）

@@ -29,7 +29,7 @@
   </div>
 </template>
 <script>
-import { ERR } from "./../store/const.js";
+import { STATUS } from "./../util.js";
 import { mapMutations, mapGetters } from "vuex";
 
 export default {
@@ -56,7 +56,7 @@ export default {
     async fetchFavorite() {
       const response = await axios.get(`/api/favorites/${this.shop.id}`);
 
-      if (response.status !== ERR.OK) {
+      if (response.status !== STATUS.OK) {
         this.$store.commit("Err/setCode", response.status);
         return;
       }
@@ -107,7 +107,7 @@ export default {
         .catch((err) => err.response || err);
 
       // お気に入り登録失敗
-      if (response.status !== ERR.OK) {
+      if (response.status !== STATUS.OK) {
         this.$store.commit("Err/setCode", response.status);
         return;
       }
@@ -129,7 +129,7 @@ export default {
       const response = await axios.delete(`/api/favorites/${this.shop.id}`);
 
       // お気に入り解除失敗
-      if (response.status !== ERR.OK) {
+      if (response.status !== STATUS.OK) {
         this.$store.commit("Err/setCode", response.status);
         return;
       }

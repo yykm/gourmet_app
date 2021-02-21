@@ -93,7 +93,7 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-import { ERR } from "./../store/const.js";
+import { STATUS } from "./../util.js";
 import Loader from "./../components/Loader.vue";
 
 export default {
@@ -190,7 +190,7 @@ export default {
       this.loading = false;
 
       // バリデーションエラー
-      if (response.status === ERR.UNPROCESSABLE_ENTITY) {
+      if (response.status === STATUS.UNPROCESSABLE_ENTITY) {
         this.errors = response.data.errors;
         return;
       }
@@ -198,7 +198,7 @@ export default {
       this.toggleModal();
 
       // その他エラー
-      if (response.status !== ERR.CREATED) {
+      if (response.status !== STATUS.CREATED) {
         this.setCode(response.status);
 
         // 失敗メッセージ表示

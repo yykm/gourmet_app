@@ -127,8 +127,8 @@
               </validation-provider>
 
               <!-- 登録済などエラーメッセージ表示部 -->
-              <div v-if="registerErrors" class="errors text-danger text-center">
-                {{ registerErrors }}
+              <div v-if="getRegisterErrorMessage" class="errors text-danger text-center">
+                {{ getRegisterErrorMessage }}
               </div>
 
               <!-- サブミット・入力リセットボタン -->
@@ -153,7 +153,6 @@
 
 <script>
 import Header from "./../components/Header.vue";
-import { APP, ERR } from "./../store/const.js";
 import { mapActions, mapGetters } from "vuex";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 
@@ -175,16 +174,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      apiStatus: APP.getAppURI(APP.GET_API_STATUS),
-      registerErrors: ERR.getErrURI(ERR.GET_REGISTER_ERROR_MESSAGE),
-    }),
+    ...mapGetters("App", ["getApiStatus"]),
+    ...mapGetters("Err", ["getRegisterErrorMessage"]),
   },
   methods: {
-    ...mapActions({
-      regist: APP.getAppURI(APP.REGISTER),
-      setRegisterErrorMessage: ERR.getErrURI(ERR.SET_REGISTER_ERROR_MESSAGE),
-    }),
+    ...mapActions("App", ["register"]),
+    ...mapActions("Err", ["setRegisterErrorMessage"]),
 
     // バリデーション状態を返却
     /*
@@ -199,10 +194,10 @@ export default {
     // 新規登録処理
     async onSubmit() {
       // 新規登録API呼び出し
-      await this["regist"](this.form);
+      await this.register(this.form);
 
       // API通信が成功した場合にトップページへ遷移
-      if (this["apiStatus"]) {
+      if (this.getApiStatus) {
         this.$router.push("/");
       }
     },
@@ -213,7 +208,7 @@ export default {
       this.form.email = "";
       this.form.password = "";
       this.form.password_confirmation = "";
-      this["setRegisterErrorMessage"](null);
+      this.setRegisterErrorMessage(null);
       this.$nextTick(() => {
         this.$refs.observer.reset();
       });
@@ -221,7 +216,7 @@ export default {
   },
   // タブ切り替え時にエラーメッセージを初期化
   created() {
-    this["setRegisterErrorMessage"](null);
+    this.setRegisterErrorMessage(null);
   },
 };
 </script>

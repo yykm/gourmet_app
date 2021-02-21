@@ -41,7 +41,7 @@
 
 <script>
 import { mapMutations } from "vuex";
-import { ERR } from "./../store/const.js";
+import { STATUS } from "./../util.js";
 
 export default {
   name: "ReviewForm",
@@ -138,11 +138,11 @@ export default {
         .catch((err) => err.response || err);
 
       // バリデーションエラー
-      if (response.status === ERR.UNPROCESSABLE_ENTITY) {
+      if (response.status === STATUS.UNPROCESSABLE_ENTITY) {
         throw new Error("バリデーション_写真ファイル");
       }
       // その他エラー
-      else if (response.status !== ERR.CREATED) {
+      else if (response.status !== STATUS.CREATED) {
         // エラーコード設定
         this.setCode(response.status);
         throw new Error("その他エラー、お手数ですが管理者にご連絡下さい");
@@ -159,11 +159,11 @@ export default {
         .catch((err) => err.response || err);
 
       // バリデーションエラー
-      if (response.status === ERR.UNPROCESSABLE_ENTITY) {
+      if (response.status === STATUS.UNPROCESSABLE_ENTITY) {
         throw new Error("バリデーション_口コミ");
       }
 
-      if (response.status !== ERR.CREATED) {
+      if (response.status !== STATUS.CREATED) {
         // エラーコード設定
         this.setCode(response.status);
         throw new Error("その他エラー、お手数ですが管理者にご連絡下さい");

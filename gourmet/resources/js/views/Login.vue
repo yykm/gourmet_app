@@ -73,8 +73,8 @@
               </validation-provider>
 
               <!-- パスワードが間違っているなどエラーメッセージ表示部 -->
-              <div v-if="loginErrors" class="errors text-danger text-center">
-                {{ loginErrors }}
+              <div v-if="getLoginErrorMessage" class="errors text-danger text-center">
+                {{ getLoginErrorMessage }}
               </div>
 
               <!-- サブミット・入力リセットボタン -->
@@ -103,7 +103,6 @@
 </template>
 
 <script>
-import { APP, ERR } from "./../store/const.js";
 import { mapActions, mapGetters } from "vuex";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import Header from "./../components/Header.vue";
@@ -123,17 +122,13 @@ export default {
       },
     };
   },
-  computed: {
-    ...mapGetters({
-      apiStatus: APP.getAppURI(APP.GET_API_STATUS),
-      loginErrors: ERR.getErrURI(ERR.GET_LOGIN_ERROR_MESSAGE),
-    }),
+  computed: { 
+    ...mapGetters("App", ["getApiStatus"]),
+    ...mapGetters("Err", ["getLoginErrorMessage"]),
   },
-  methods: {
-    ...mapActions({
-      login: APP.getAppURI(APP.LOGIN),
-      setLoginErrorMessage: ERR.getErrURI(ERR.SET_LOGIN_ERROR_MESSAGE),
-    }),
+  methods: { 
+    ...mapActions('App',['login']),
+    ...mapActions('Err',['setLoginErrorMessage']),
 
     // バリデーション状態を返却
     /*
@@ -148,10 +143,10 @@ export default {
     // ログイン処理
     async onSubmit() {
       // ログインAPI呼び出し
-      await this["login"](this.form);
+      await this.login(this.form);
 
       // API通信が成功した場合にトップページへ遷移
-      if (this["apiStatus"]) {
+      if (this.getApiStatus) {
         this.$router.push("/");
       }
     },
@@ -159,7 +154,7 @@ export default {
     onReset() {
       this.form.email = "";
       this.form.password = "";
-      this["setLoginErrorMessage"](null);
+      this.setLoginErrorMessage(null);
       this.$nextTick(() => {
         this.$refs.observer.reset();
       });
@@ -167,7 +162,7 @@ export default {
   },
   // タブ切り替え時にエラーメッセージを初期化
   created() {
-    this["setLoginErrorMessage"](null);
+    this.setLoginErrorMessage(null);
   },
 };
 </script>

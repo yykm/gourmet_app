@@ -67,7 +67,7 @@ import Loader from "./../components/Loader.vue";
 import Pagination from "./../components/Pagination.vue";
 import Review from "./../components/Review.vue";
 import { mapMutations } from "vuex";
-import { ERR } from "./../store/const.js";
+import { STATUS } from "./../util.js";
 
 export default {
   name: "ReviewList",
@@ -129,7 +129,7 @@ export default {
       this.loading = false;
 
       // ステ－タスコード200以外エラー
-      if (response.status !== ERR.OK) {
+      if (response.status !== STATUS.OK) {
         this.setCode(response.status);
         // ローダー非表示
         this.loading = false;

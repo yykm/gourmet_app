@@ -1,5 +1,3 @@
-import { ERR } from './const';
-
 /**
  * モジュールストア:Err
  * エラーに関するデータ及び操作を定義
@@ -13,17 +11,17 @@ export default {
   },
 
   getters: {
-    [ERR.GET_CODE](state) {
+    getCode(state) {
       return state.code;
     },
-    [ERR.GET_LOGIN_ERROR_MESSAGE](state) {
+    getLoginErrorMessage(state) {
       if (state.LoginErrorMessage) {
         return ' ログインID、またはパスワードが間違っています。';
       };
 
       return null;
     },
-    [ERR.GET_REGISTER_ERROR_MESSAGE](state) {
+    getRegisterErrorMessage(state) {
       if (state.RegisterErrorMessage) {
 
         let message = '';
@@ -45,32 +43,32 @@ export default {
   },
 
   mutations: {
-    [ERR.SET_CODE](state, code) {
+    setCode(state, code) {
       state.code = code;
     },
-    [ERR.SET_LOGIN_ERROR_MESSAGE](state, message) {
+    setLoginErrorMessage(state, message) {
       state.LoginErrorMessage = message;
     },
-    [ERR.SET_REGISTER_ERROR_MESSAGE](state, message) {
+    setRegisterErrorMessage(state, message) {
       state.RegisterErrorMessage = message;
     },
   },
 
   actions: {
-    [ERR.SET_CODE]({
+    setCode({
       commit
     }, code) {
-      commit(ERR.SET_CODE, code);
+      commit('setCode', code);
     },
-    [ERR.SET_LOGIN_ERROR_MESSAGE]({
+    setLoginErrorMessage({
       commit
     }, message) {
-      commit(ERR.SET_LOGIN_ERROR_MESSAGE, message);
+      commit('setLoginErrorMessage', message);
     },
-    [ERR.SET_REGISTER_ERROR_MESSAGE]({
+    setRegisterErrorMessage({
       commit
     }, message) {
-      commit(ERR.SET_REGISTER_ERROR_MESSAGE, message);
+      commit('setRegisterErrorMessage', message);
     }
   }
 }

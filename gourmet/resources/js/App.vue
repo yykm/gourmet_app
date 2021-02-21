@@ -25,9 +25,9 @@
 
 <script>
 import Message from "./components/Message.vue";
-import { ERR } from "./store/const.js";
+import { STATUS } from "./util.js";
 import { createNamespacedHelpers } from "vuex";
-const { mapGetters, mapActions } = createNamespacedHelpers(ERR.STORE);
+const { mapGetters, mapActions } = createNamespacedHelpers("Err");
 import _ from "lodash";
 
 export default {
@@ -41,7 +41,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([ERR.GET_CODE]),
+    ...mapGetters(['getCode']),
 
     // 400px以上の移動でスクロールボタンを表示
     isChange() {
@@ -49,7 +49,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions([ERR.SET_CODE]),
+    ...mapActions(['setCode']),
 
     // 画面Ｙ方向最上部へ移動
     toTop() {
@@ -73,18 +73,18 @@ export default {
   watch: {
     // Errストアで保持しているエラーコード値を監視
     // 変化があればコード値によって対応するエラーハンドリングを行う
-    [ERR.GET_CODE]: {
+    getCode: {
       async handler(code) {
         if (!code) return;
-        
+
         switch (code) {
           // 500エラー
-          case ERR.INTERNAL_SERVER_ERROR:
+          case STATUS.INTERNAL_SERVER_ERROR:
             this.$router.push("/500");
             break;
 
           // 認証エラー
-          case ERR.UNAUTHORIZED:
+          case STATUS.UNAUTHORIZED:
             // CSRFトークンをリフレッシュ
             await axios.get("/api/refresh-token");
             // ログイン状態を初期化
@@ -93,13 +93,13 @@ export default {
             this.$router.push("/login");
 
           // 404エラー
-          case ERR.NOT_FOUND:
+          case STATUS.NOT_FOUND:
             // not foundページへ遷移
             this.$router.push("/not-found");
             break;
         }
 
-        this[ERR.SET_CODE](null);
+        this.setCode(null);
       },
       immediate: true,
     },

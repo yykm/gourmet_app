@@ -35,17 +35,12 @@
 </template>
 
 <script>
-import { APP } from "./../store/const.js";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Header",
   computed: {
-    ...mapGetters({
-      isLogin: APP.getAppURI(APP.IS_LOGIN),
-      userName: APP.getAppURI(APP.USER_NAME),
-      apiStatus: APP.getAppURI(APP.GET_API_STATUS),
-    }),
+    ...mapGetters("App", ["isLogin", "userName", "getApiStatus"]),
   },
   data() {
     return {
@@ -53,17 +48,15 @@ export default {
     };
   },
   methods: {
-    ...mapActions({
-      logout: APP.getAppURI(APP.LOGOUT),
-    }),
+    ...mapActions("App", ["logout"]),
 
     // ログアウト
     async onClick() {
       // ログアウトAPI呼び出し
-      await this["logout"]();
+      await this.logout();
 
       // API通信成功時
-      if (this["apiStatus"]) {
+      if (this.getApiStatus) {
         // トップページに移動する
         this.$router.push("/");
       }
