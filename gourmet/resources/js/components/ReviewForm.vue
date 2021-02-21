@@ -145,7 +145,7 @@ export default {
       else if (response.status !== STATUS.CREATED) {
         // エラーコード設定
         this.setCode(response.status);
-        throw new Error("その他エラー、お手数ですが管理者にご連絡下さい");
+        throw new Error(response.data.message);
       }
 
       return response;
@@ -166,7 +166,7 @@ export default {
       if (response.status !== STATUS.CREATED) {
         // エラーコード設定
         this.setCode(response.status);
-        throw new Error("その他エラー、お手数ですが管理者にご連絡下さい");
+        throw new Error(response.data.message);
       }
 
       return response;
