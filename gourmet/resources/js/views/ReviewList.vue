@@ -131,8 +131,7 @@ export default {
       // ステ－タスコード200以外エラー
       if (response.status !== STATUS.OK) {
         this.setCode(response.status);
-        // ローダー非表示
-        this.loading = false;
+
         return;
       }
 

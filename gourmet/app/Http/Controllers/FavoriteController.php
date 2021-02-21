@@ -88,21 +88,16 @@ class FavoriteController extends Controller
 
     /**
      * ユーザことのお気に入り情報取得
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function getByUser(Request $request)
+    public function getByUser()
     {
-        if (is_null($request->user_id)) {
-            abort(404);
-        }
-
+        // ログインしているユーザ情報に紐づくお気に入り情報を取得
         $favorites = User::with(['favorites'])
-            ->find($request->user_id)
+            ->find(Auth::id())
             ->favorites()
             ->with(['shop'])
             ->get();
-            
 
         return $favorites;
     }

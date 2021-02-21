@@ -148,17 +148,13 @@ class ReserveController extends Controller
 
     /**
      * ユーザことの予約情報取得
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function getByUser(Request $request)
+    public function getByUser()
     {
-        if (is_null($request->user_id)) {
-            abort(404);
-        }
-
+        // ログインしているユーザ情報に紐づく予約情報を取得
         $reservations = User::with(['reservations'])
-            ->find($request->user_id)
+            ->find(Auth::id())
             ->reservations()
             ->with(['shop'])
             ->get();
