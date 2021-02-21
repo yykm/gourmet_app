@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use App\Photo;
 use App\Shop;
 use App\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePhoto;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\Process\ExecutableFinder;
 
 class PhotoController extends Controller
 {
     public function __construct()
     {
         // 認証されていない場合422エラー
-        // 写真一覧取得, ダウンロードリンク取得に関しては認証不要とする
+        // 写真一覧取得, ダウンロードに関しては認証不要とする
         $this->middleware('auth')->except(['index', 'download']);
     }
 
@@ -28,9 +31,9 @@ class PhotoController extends Controller
      */
     public function download(Photo $photo)
     {
-        // 写真の存在チェック
+        // S3上の写真の存在チェック
         if (!Storage::cloud()->exists($photo->filename)) {
-            abort(404);
+            abort(404, '指定された写真が存在しません。');
         }
 
         // Content-Dispositionヘッダを指定することによって、
@@ -41,17 +44,20 @@ class PhotoController extends Controller
             'Content-Disposition' => $disposition,
         ];
 
+        // 画像（バイナリファイル）を返却
         return response(Storage::cloud()->get($photo->filename), 200, $headers);
     }
 
     /**
      * 写真一覧
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function index(Request $request)
     {
         // ある店舗に関する写真と、その写真を投稿したユーザ情報を取得
         $photos = Photo::with(['user'])
-            ->where('shop_id', '=', $request->shop_id)
+            ->where('shop_id', $request->shop_id)
             ->orderBy(Photo::CREATED_AT, 'desc')->paginate();
 
         return $photos;
@@ -88,6 +94,8 @@ class PhotoController extends Controller
         // トランザクションを利用する
         DB::beginTransaction();
         try {
+            
+            
             // 親テーブルの主キーが登録されていなければ登録
             Shop::firstOrCreate(
                 [
@@ -106,13 +114,27 @@ class PhotoController extends Controller
                 ]
             );
 
+            // ユーザに紐づく写真データとして写真テーブルに保存
             Auth::user()->photos()->save($photo);
+            
+            // コミット
             DB::commit();
-        } catch (\Exception $exception) {
+        } catch (Exception $e) {
+            // ロールバック
             DB::rollBack();
+
             // DBとの不整合を避けるためアップロードしたファイルを削除
             Storage::cloud()->delete($photo->filename);
-            throw $exception;
+
+            // エラー箇所のファイル・行・メッセージをエラーログに残す
+            Log::error(
+                'File: ' . $e->getFile() . "\n" .
+                    'Line: ' . $e->getLine() . "\n" .
+                    'Message: ' . $e->getMessage()
+            );
+
+            // 内部エラーとしてレスポンスを返却
+            abort(500, "内部エラー、お手数ですが管理者にご連絡下さい");
         }
 
         // リソースの新規作成なので
@@ -122,17 +144,13 @@ class PhotoController extends Controller
 
     /**
      * ユーザことの投稿写真情報取得
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function getByUser(Request $request)
+    public function getByUser()
     {
-        if (is_null($request->user_id)) {
-            abort(404);
-        }
-
+        // ログインしているユーザ情報に紐づく写真情報を取得
         $photos = User::with(['photos'])
-            ->find($request->user_id)
+            ->find(Auth::id())
             ->photos()
             ->with(['shop'])
             ->get();
