@@ -127,8 +127,9 @@ export default {
   },
 
   methods: {
-    ...mapActions("App",["updateShops"]),
+    ...mapActions("App", ["updateShops"]),
     ...mapMutations("Message", ["setContent"]),
+    ...mapMutations("Err", ["setCode"]),
 
     // ウィンドウのリサイズの度に検索フォームの初期位置を再設定
     onResize() {
@@ -162,11 +163,9 @@ export default {
         return;
       }
 
-      let $this = this;
-
       await axios
-        .post('/api/search', params)
-        .then(function (response) {
+        .post("/api/search", params)
+        .then((response) => {
           // 成功時
           let result = response.data.results;
 
@@ -209,15 +208,18 @@ export default {
           }));
 
           // ストアへ検索情報を保存
-          $this.updateShops(shops);
+          this.updateShops(shops);
         })
-        .catch(function (error) {
+        .catch((error) => {
           // 失敗メッセージ表示
           this.setContent({
             success: false,
-            content: "検索サービスが只今お使いになれません",
+            content: error.response.data,
             timeout: 5000,
           });
+
+          // ステータスコードをせってお
+          this.setCode(error.response.status);
         });
 
       this.loading = false;

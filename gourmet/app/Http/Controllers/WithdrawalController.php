@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class WithdrawalController extends Controller
 {
@@ -49,14 +51,24 @@ class WithdrawalController extends Controller
 
             /** 3.ユーザ削除 */
             $user->delete(); // ユーザが削除される。
-            
+
             DB::commit();
-        } catch (\Exception $exception) {
+        } catch (Exception $e) {
+            // ロールバック
             DB::rollBack();
-            throw $exception;
+
+            // エラー箇所のファイル・行・メッセージをエラーログに残す
+            Log::error(
+                'File: ' . $e->getFile() . "\n" .
+                    'Line: ' . $e->getLine() . "\n" .
+                    'Message: ' . $e->getMessage()
+            );
+
+            // 内部エラーとしてレスポンスを返却
+            abort(500, "内部エラー、お手数ですが管理者にご連絡下さい");
         }
 
-        /** 4.ステータス200を返却 */
+        /** 4.ステータス200で返却 */
         return response()->json();
     }
 }

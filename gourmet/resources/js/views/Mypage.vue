@@ -112,11 +112,7 @@ export default {
       let url = ["", "api", path, "byUser"].join("/");
       // ユーザIDをキーにして各種情報を取得するため、クエリパラメータに設定
       const response = await axios
-        .get(url, {
-          params: {
-            user_id: this.user.id,
-          },
-        })
+        .get(url)
         .catch((err) => err.response || err);
       // ステ－タスコード200以外エラー
       if (response.status !== STATUS.OK) {

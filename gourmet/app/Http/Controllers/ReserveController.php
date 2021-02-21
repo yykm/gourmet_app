@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreReserve;
 use Illuminate\Support\Facades\Auth;
 use App\Shop;
@@ -11,8 +10,8 @@ use App\Reservation;
 // use Illuminate\Support\Facades\Mail;
 // use App\Mail\ReservationPosted;
 use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\isNull;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class ReserveController extends Controller
 {
@@ -35,7 +34,7 @@ class ReserveController extends Controller
         foreach ($request->form as $key => $value) {
             $data = array_merge($data, array($key => $value));
         }
-        
+
         // json文字列からオブジェクトへ変換
         $shop = json_decode($request->shop);
 
@@ -118,8 +117,6 @@ class ReserveController extends Controller
                 );
 
             // ある予約対象の店舗に紐づくあるユーザに関する予約情報を格納
-            // １ユーザは１店舗のみ予約可能
-            $shop->subscriber()->detach(Auth::user()->id);
             $shop->subscriber()->attach(Auth::user()->id, $data);
 
             // 予約情報のリロード
@@ -137,9 +134,19 @@ class ReserveController extends Controller
             // Mail::to(Auth::user())->queue(new ReservationPosted($reservation));
 
             DB::commit();
-        } catch (\Exception $exception) {
+        } catch (Exception $e) {
+            // ロールバック
             DB::rollBack();
-            throw $exception;
+
+            // エラー箇所のファイル・行・メッセージをエラーログに残す
+            Log::error(
+                'File: ' . $e->getFile() . "\n" .
+                    'Line: ' . $e->getLine() . "\n" .
+                    'Message: ' . $e->getMessage()
+            );
+
+            // 内部エラーとしてレスポンスを返却
+            abort(500, "内部エラー、お手数ですが管理者にご連絡下さい");
         }
 
         // ４．作成した予約情報を返却
@@ -148,17 +155,13 @@ class ReserveController extends Controller
 
     /**
      * ユーザことの予約情報取得
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function getByUser(Request $request)
+    public function getByUser()
     {
-        if (is_null($request->user_id)) {
-            abort(404);
-        }
-
+        // ログインしているユーザ情報に紐づく予約情報を取得
         $reservations = User::with(['reservations'])
-            ->find($request->user_id)
+            ->find(Auth::id())
             ->reservations()
             ->with(['shop'])
             ->get();
