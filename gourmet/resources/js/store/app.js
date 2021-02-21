@@ -128,6 +128,15 @@ export default {
       if (response.status === STATUS.OK) {
         commit('setApiStatus', true);
         commit('setUser', response.data);
+
+        // 成功メッセージ
+        commit('Message/setContent', {
+          success: true,
+          content: "ログインしました",
+          timeout: 1500,
+        }, {
+          root: true
+        });
         return;
       }
 
@@ -160,6 +169,15 @@ export default {
       if (response.status === STATUS.OK) {
         commit('setApiStatus', true);
         commit('setUser', null);
+
+        // 成功メッセージ
+        commit('Message/setContent', {
+          success: true,
+          content: "ログアウトしました",
+          timeout: 1500,
+        }, {
+          root: true
+        });
         return;
       }
 
