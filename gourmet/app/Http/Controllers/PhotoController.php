@@ -12,7 +12,6 @@ use App\Http\Requests\StorePhoto;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\Process\ExecutableFinder;
 
 class PhotoController extends Controller
 {
