@@ -23,6 +23,8 @@ Gourmet
 * [機能一覧](https://gourmet-doc.s3-ap-northeast-1.amazonaws.com/gourmet-features.html)
 
 ## フォルダ構成
+主に作成・編集したもののみ記載
+
 
 #### フロントエンド
 <p align="left"><a href="https://gourmet-doc.s3-ap-northeast-1.amazonaws.com/gourmet-tree-frontend.png" target="_blank"><img src="https://gourmet-doc.s3-ap-northeast-1.amazonaws.com/gourmet-tree-frontend.png" width="480" height="878"></a></p>
@@ -34,17 +36,23 @@ Gourmet
 
 ## ポートフォリオの技術的な構成要素
 【言語】
+
 PHP 7.3 / HTML5 and CSS3/ JavaScript
 
 【フレームワーク】
+
 Laravel 6.x / Vue.js / BootStrap4
 
 【バージョン管理】
+
 Git Hub
 
 【インフラ・ネットワーク】
+
 Webサーバ：AWS EC2(Amazon Linux2 / Apache)
+
 DBサーバ：AWS EC2(Amazon Linux2 / MariaDB)
+
 メールサーバ：AWS EC2(Amazone Linux2 / Postfix) *開発環境のみ
 
 VPC(10.0.0.0/16) のうち、
