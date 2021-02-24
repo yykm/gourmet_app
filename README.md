@@ -1,10 +1,10 @@
 <h1 align="center" style="color: cornflowerblue">
-Gourmet
+ Gourmet(https://gourmet-search.work)
 </h1>
 
 ## Gourmetについて
 
- [Gourmet](https://gourmet-search.work)： ぐるな〇のようなグルメ情報サイトを模倣した転職活動用ポートフォリオ。
+ぐるな〇のようなグルメ情報サイトを模倣した転職活動用ポートフォリオ。
 
 * フリーワード・現在地より範囲を指定して飲食店
 * 写真投稿
