@@ -67,7 +67,7 @@
                 ><br />
 
                 <!-- 予約 -->
-                <div v-if="isLogin" class="text-center my-2">
+                <div class="text-center my-2">
                   <Reserve :shop="shop" />
                 </div>
               </b-card-footer>

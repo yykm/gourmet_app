@@ -29,7 +29,7 @@
                       }"
                       rel="noopener noreferrer"
                     >
-                      <span>{{ shop.name }}</span>
+                      <p>{{ shop.name }}<span>（詳細画面へ）</span></p>
                     </router-link>
                   </p>
                 </div>
@@ -56,7 +56,7 @@
                 </div>
 
                 <!-- 予約 -->
-                <div v-if="isLogin" class="p-reserve text-center my-4">
+                <div class="p-reserve text-center my-4">
                   <Reserve :shop="shop" />
                 </div>
               </b-col>
@@ -348,4 +348,11 @@ li + li {
 /deep/ .reserve__btn {
   width: 90%;
 }
+
+.p-name span {
+    font-size: 0.9rem;
+    color: #8e8e8e;
+    
+}
+
 </style>

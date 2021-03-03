@@ -118,7 +118,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("App", ["getShop"]),
+    ...mapGetters("App", ["isLogin", "getShop"]),
 
     // プレビュー領域の表示画像URLを返却
     rePreview() {
@@ -136,6 +136,16 @@ export default {
     },
     // モーダルの表示有無切り替え
     toggleModal() {
+      // ログイン状態ではない旨をメッセージ表示
+      if (!this.isLogin) {
+        this.setContent({
+          success: false,
+          content: "写真投稿機能を使うにはログインしてください",
+          timeout: 1500,
+        });
+        return;
+      }
+
       this.reset();
       this.errors = null;
       this.$refs["my-modal"].toggle("#toggle-btn");
@@ -150,13 +160,13 @@ export default {
 
       // ファイルが画像ではなかったら処理中断
       if (!this.file.type.match("image.*")) {
-        // 画像ファイルではない胸をメッセージ表示
+        // 画像ファイルではない旨をメッセージ表示
         this.setContent({
           success: false,
           content: "画像ファイルではありません",
           timeout: 1500,
         });
-        
+
         this.reset();
         return;
       }

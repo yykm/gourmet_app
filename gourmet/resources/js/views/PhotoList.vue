@@ -9,7 +9,7 @@
         </div>
 
         <!-- 写真投稿フォーム -->
-        <b-row v-if="isLogin">
+        <b-row>
           <b-col>
             <div class="photo__form text-center mb-2">
               <PhotoForm @photoPost="onPost" :shop_id="shop_id" /></div

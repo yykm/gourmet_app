@@ -2,29 +2,31 @@
   <!-- 口コミ投稿フォーム -->
   <div class="review__form">
     <!-- 口コミ投稿フォームタイトル -->
-    <div class="review__title text-left">
+    <div  v-if="login" class="review__title text-left">
       <p>口コミを投稿する</p>
     </div>
     <div class="review__controls">
       <b-form @submit.prevent="addComment">
-        <!-- 口コミ内容 -->
-        <b-form-textarea
-          v-model="comment"
-          rows="6"
-          max-rows="7"
-        ></b-form-textarea>
+        <div v-if="isLogin" class="inpute__area">
+          <!-- 口コミ内容 -->
+          <b-form-textarea
+            v-model="comment"
+            rows="6"
+            max-rows="7"
+          ></b-form-textarea>
 
-        <!-- 写真ファイル -->
-        <b-form-file
-          v-model="photo"
-          class="mt-3"
-          browse-text="画像を選択"
-          placeholder="jpg jpeg png gif 形式"
-        ></b-form-file>
+          <!-- 写真ファイル -->
+          <b-form-file
+            v-model="photo"
+            class="mt-3"
+            browse-text="画像を選択"
+            placeholder="jpg jpeg png gif 形式"
+          ></b-form-file>
 
-        <!-- エラーメッセージ表示領域 -->
-        <div v-if="errors" class="errors">
-          <p class="text-danger">{{ errors }}</p>
+          <!-- エラーメッセージ表示領域 -->
+          <div v-if="errors" class="errors">
+            <p class="text-danger">{{ errors }}</p>
+          </div>
         </div>
 
         <!-- サブミット -->
@@ -40,7 +42,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import { STATUS } from "./../util.js";
 
 export default {
@@ -59,12 +61,25 @@ export default {
       required: true,
     },
   },
+  computed: {
+    ...mapGetters("App", ["isLogin", "getShop"]),
+  },
   methods: {
     ...mapMutations("Err", ["setCode"]),
     ...mapMutations("Message", ["setContent"]),
 
     // コメント投稿
     async addComment() {
+      // ログイン状態ではない旨をメッセージ表示
+      if (!this.isLogin) {
+        this.setContent({
+          success: false,
+          content: "口コミ投稿機能を使うにはログインしてください",
+          timeout: 1500,
+        });
+        return;
+      }
+
       // 口コミ内容未入力の場合通知して処理中断
       if (!this.comment) {
         // 失敗メッセージ表示
