@@ -54,7 +54,7 @@
       </div>
 
       <!-- 口コミ投稿フォーム -->
-      <div v-if="isLogin" class="form__area mt-4">
+      <div class="form__area mt-4">
         <ReviewForm @reviewPost="onPost" :shop="shop" />
       </div>
     </div>

@@ -241,7 +241,7 @@
 
 <script>
 import { STATUS } from "./../util.js";
-import { mapMutations } from "vuex";
+import { mapMutations,mapGetters } from "vuex";
 
 export default {
   name: "Reserve",
@@ -279,6 +279,8 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("App", ["isLogin", "getShop"]),
+    
     // 人数選択項目のオプション(1~99人)
     options() {
       let numbers = [];
@@ -300,6 +302,15 @@ export default {
 
     // 日付・人数入力モーダルを開く
     showDateModal() {
+      // ログイン済でなければ、通知して処理を終える
+      if (!this.isLogin) {
+        this.setContent({
+          success: false,
+          content: "予約機能を使うにはログインしてください",
+          timeout: 1500,
+        });
+        return;
+      }
       this.$refs["date-modal" + this.shop.id].show();
     },
     // 予約詳細・個人情報入力モーダルを開く
